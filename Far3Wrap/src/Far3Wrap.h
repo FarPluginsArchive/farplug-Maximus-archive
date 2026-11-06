@@ -4,7 +4,7 @@
 struct WrapPluginInfo;
 
 typedef FARPROC (WINAPI* _GetProcAddressWrap)(struct WrapPluginInfo* wpi, HMODULE hModule, LPCSTR lpProcName);
-typedef void (WINAPI* _SetStartupInfoWrap)(struct WrapPluginInfo* wpi, PluginStartupInfo *Info);
+typedef void (WINAPI* _SetStartupInfoWrap)(struct WrapPluginInfo* wpi, const PluginStartupInfo *Info);
 typedef void (WINAPI* _GetGlobalInfoWrap)(struct WrapPluginInfo* wpi, GlobalInfo *Info);
 typedef void (WINAPI* _GetPluginInfoWrap)(struct WrapPluginInfo* wpi, PluginInfo *Info);
 typedef HANDLE (WINAPI* _OpenWrap)(struct WrapPluginInfo* wpi, const OpenInfo *Info);

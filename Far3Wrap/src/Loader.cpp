@@ -271,7 +271,7 @@ void ReportWrapperFail(bool bForce = false)
 #define CHECKFNRETF(n,r) if (!fwf.n) { ReportWrapperFail(true); return r; }
 
 
-FARPROC WINAPI FarWrapGetProcAddress(HMODULE hModule, LPCSTR lpProcName)
+extern "C" FARPROC WINAPI FarWrapGetProcAddress(HMODULE hModule, LPCSTR lpProcName)
 {
 	if (!gbLoadWrapperCalled)
 		LoadWrapper(gszWrapper);
@@ -281,7 +281,7 @@ FARPROC WINAPI FarWrapGetProcAddress(HMODULE hModule, LPCSTR lpProcName)
 	return GetProcAddress(hModule, lpProcName);
 }
 
-FARPROC WINAPI FarWrapGetOldProcAddress(HMODULE hModule, LPCSTR lpProcName)
+extern "C" FARPROC WINAPI FarWrapGetOldProcAddress(HMODULE hModule, LPCSTR lpProcName)
 {
 	if (!gbLoadWrapperCalled)
 		LoadWrapper(gszWrapper);
@@ -290,7 +290,7 @@ FARPROC WINAPI FarWrapGetOldProcAddress(HMODULE hModule, LPCSTR lpProcName)
 	return NULL;
 }
 
-int WINAPI GetMinFarVersionW(void)
+extern "C" int WINAPI GetMinFarVersionW(void)
 {
 	if (!gbLoadWrapperCalled)
 		LoadWrapper(gszWrapper);
@@ -298,7 +298,7 @@ int WINAPI GetMinFarVersionW(void)
 	return MAKEFARVERSION2(3,0,MVV_3);
 }
 
-void WINAPI SetStartupInfoW(PluginStartupInfo *Info)
+extern "C" void WINAPI SetStartupInfoW(const PluginStartupInfo *Info)
 {
 	if (!gbLoadWrapperCalled)
 		LoadWrapper(gszWrapper);
@@ -412,14 +412,14 @@ void   WINAPI ClosePanelW(const struct ClosePanelInfo *Info)
 		fwf.ClosePanelWrap(fwf.wpi, Info);
 }
 
-int    WINAPI CompareW(const CompareInfo *Info)
+intptr_t    WINAPI CompareW(const CompareInfo *Info)
 {
 	if (fwf.CompareWrap)
 		return fwf.CompareWrap(fwf.wpi, Info);
 	return -2;
 }
 
-int    WINAPI ConfigureW(const struct ConfigureInfo *Info)
+intptr_t    WINAPI ConfigureW(const struct ConfigureInfo *Info)
 {
 	if (!gbLoadWrapperCalled)
 		LoadWrapper(gszWrapper);
@@ -427,7 +427,7 @@ int    WINAPI ConfigureW(const struct ConfigureInfo *Info)
 	return fwf.ConfigureWrap(fwf.wpi, Info);
 }
 
-int    WINAPI DeleteFilesW(const DeleteFilesInfo *Info)
+intptr_t    WINAPI DeleteFilesW(const DeleteFilesInfo *Info)
 {
 	if (fwf.DeleteFilesWrap)
 		return fwf.DeleteFilesWrap(fwf.wpi, Info);
@@ -454,14 +454,14 @@ void   WINAPI FreeVirtualFindDataW(const FreeFindDataInfo *Info)
 		fwf.FreeVirtualFindDataWrap(fwf.wpi, Info);
 }
 
-int    WINAPI GetFilesW(GetFilesInfo *Info)
+intptr_t    WINAPI GetFilesW(GetFilesInfo *Info)
 {
 	if (fwf.GetFilesWrap)
 		return fwf.GetFilesWrap(fwf.wpi, Info);
 	return 0;
 }
 
-int    WINAPI GetFindDataW(GetFindDataInfo *Info)
+intptr_t    WINAPI GetFindDataW(GetFindDataInfo *Info)
 {
 	if (fwf.GetFindDataWrap)
 		return fwf.GetFindDataWrap(fwf.wpi, Info);
@@ -489,14 +489,14 @@ int    WINAPI GetVirtualFindDataW(GetVirtualFindDataInfo *Info)
 }
 #endif
 
-int    WINAPI MakeDirectoryW(MakeDirectoryInfo *Info)
+intptr_t    WINAPI MakeDirectoryW(MakeDirectoryInfo *Info)
 {
 	if (fwf.MakeDirectoryWrap)
 		return fwf.MakeDirectoryWrap(fwf.wpi, Info);
 	return 0;
 }
 
-int    WINAPI ProcessDialogEventW(const struct ProcessDialogEventInfo *Info)
+intptr_t    WINAPI ProcessDialogEventW(const struct ProcessDialogEventInfo *Info)
 {
 	if (!gbLoadWrapperCalled)
 		LoadWrapper(gszWrapper);
@@ -505,7 +505,7 @@ int    WINAPI ProcessDialogEventW(const struct ProcessDialogEventInfo *Info)
 	return 0;
 }
 
-int    WINAPI ProcessEditorEventW(const struct ProcessEditorEventInfo *Info)
+intptr_t    WINAPI ProcessEditorEventW(const struct ProcessEditorEventInfo *Info)
 {
 	if (!gbLoadWrapperCalled)
 		LoadWrapper(gszWrapper);
@@ -514,7 +514,7 @@ int    WINAPI ProcessEditorEventW(const struct ProcessEditorEventInfo *Info)
 	return 0;
 }
 
-int    WINAPI ProcessEditorInputW(const ProcessEditorInputInfo *Info)
+intptr_t    WINAPI ProcessEditorInputW(const ProcessEditorInputInfo *Info)
 {
 	if (!gbLoadWrapperCalled)
 		LoadWrapper(gszWrapper);
@@ -523,28 +523,28 @@ int    WINAPI ProcessEditorInputW(const ProcessEditorInputInfo *Info)
 	return 0;
 }
 
-int    WINAPI ProcessPanelEventW(const struct ProcessPanelEventInfo *Info)
+intptr_t    WINAPI ProcessPanelEventW(const struct ProcessPanelEventInfo *Info)
 {
 	if (fwf.ProcessPanelEventWrap)
 		return fwf.ProcessPanelEventWrap(fwf.wpi, Info);
 	return 0;
 }
 
-int    WINAPI ProcessHostFileW(const ProcessHostFileInfo *Info)
+intptr_t    WINAPI ProcessHostFileW(const ProcessHostFileInfo *Info)
 {
 	if (fwf.ProcessHostFileWrap)
 		return fwf.ProcessHostFileWrap(fwf.wpi, Info);
 	return 0;
 }
 
-int    WINAPI ProcessPanelInputW(const struct ProcessPanelInputInfo *Info)
+intptr_t    WINAPI ProcessPanelInputW(const struct ProcessPanelInputInfo *Info)
 {
 	if (fwf.ProcessPanelInputWrap)
 		return fwf.ProcessPanelInputWrap(fwf.wpi, Info);
 	return 0;
 }
 
-int    WINAPI ProcessConsoleInputW(struct ProcessConsoleInputInfo *Info)
+intptr_t    WINAPI ProcessConsoleInputW(struct ProcessConsoleInputInfo *Info)
 {
 	if (!gbLoadWrapperCalled)
 		LoadWrapper(gszWrapper);
@@ -553,7 +553,7 @@ int    WINAPI ProcessConsoleInputW(struct ProcessConsoleInputInfo *Info)
 	return 0;
 }
 
-int    WINAPI ProcessSynchroEventW(const struct ProcessSynchroEventInfo *Info)
+intptr_t    WINAPI ProcessSynchroEventW(const struct ProcessSynchroEventInfo *Info)
 {
 	if (!gbLoadWrapperCalled)
 		LoadWrapper(gszWrapper);
@@ -562,7 +562,7 @@ int    WINAPI ProcessSynchroEventW(const struct ProcessSynchroEventInfo *Info)
 	return 0;
 }
 
-int    WINAPI ProcessViewerEventW(const struct ProcessViewerEventInfo *Info)
+intptr_t    WINAPI ProcessViewerEventW(const struct ProcessViewerEventInfo *Info)
 {
 	if (!gbLoadWrapperCalled)
 		LoadWrapper(gszWrapper);
@@ -571,21 +571,21 @@ int    WINAPI ProcessViewerEventW(const struct ProcessViewerEventInfo *Info)
 	return 0;
 }
 
-int    WINAPI PutFilesW(const PutFilesInfo *Info)
+intptr_t    WINAPI PutFilesW(const PutFilesInfo *Info)
 {
 	if (fwf.PutFilesWrap)
 		return fwf.PutFilesWrap(fwf.wpi, Info);
 	return 0;
 }
 
-int    WINAPI SetDirectoryW(const SetDirectoryInfo *Info)
+intptr_t    WINAPI SetDirectoryW(const SetDirectoryInfo *Info)
 {
 	if (fwf.SetDirectoryWrap)
 		return fwf.SetDirectoryWrap(fwf.wpi, Info);
 	return 0;
 }
 
-int    WINAPI SetFindListW(const SetFindListInfo *Info)
+intptr_t    WINAPI SetFindListW(const SetFindListInfo *Info)
 {
 	if (!gbLoadWrapperCalled)
 		LoadWrapper(gszWrapper);
@@ -594,7 +594,7 @@ int    WINAPI SetFindListW(const SetFindListInfo *Info)
 	return 0;
 }
 
-int WINAPI GetCustomDataW(const wchar_t *FilePath, wchar_t **CustomData)
+extern "C" int WINAPI GetCustomDataW(const wchar_t *FilePath, wchar_t **CustomData)
 {
 	if (!gbLoadWrapperCalled)
 		LoadWrapper(gszWrapper);
@@ -603,7 +603,7 @@ int WINAPI GetCustomDataW(const wchar_t *FilePath, wchar_t **CustomData)
 	return 0;
 }
 
-void WINAPI FreeCustomDataW(wchar_t *CustomData)
+extern "C" void WINAPI FreeCustomDataW(wchar_t *CustomData)
 {
 	if (fwf.FreeCustomDataWrap)
 		fwf.FreeCustomDataWrap(fwf.wpi, CustomData);

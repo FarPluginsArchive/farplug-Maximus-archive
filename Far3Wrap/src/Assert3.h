@@ -1,3 +1,5 @@
+#define FAR_WRAP_WIDEN_LITERAL(s) L##s
+#define FAR_WRAP_WIDEN(s) FAR_WRAP_WIDEN_LITERAL(s)
 
 #pragma once
 
@@ -17,5 +19,5 @@ void AssertStructSize(size_t s3, size_t s2, LPCWSTR sName,
 	if (MessageBox(NULL, szDbgInfo, szTitle, MB_OKCANCEL|MB_ICONSTOP|MB_SYSTEMMODAL) == IDCANCEL)
 		gbIgnoreAssertStruct = true;
 }
-#define ASSERTSTRUCT(s) { if (sizeof(Far2::s)!=sizeof(s)) AssertStructSize(sizeof(s), sizeof(Far2::s), L#s, __FILE__, __LINE__); }
-#define ASSERTSTRUCTGT(s) { if (sizeof(Far2::s)>sizeof(s)) AssertStructSize(sizeof(s), sizeof(Far2::s), L#s, __FILE__, __LINE__); }
+#define ASSERTSTRUCT(s) { if (sizeof(Far2::s)!=sizeof(s)) AssertStructSize(sizeof(s), sizeof(Far2::s), FAR_WRAP_WIDEN(#s), __FILE__, __LINE__); }
+#define ASSERTSTRUCTGT(s) { if (sizeof(Far2::s)>sizeof(s)) AssertStructSize(sizeof(s), sizeof(Far2::s), FAR_WRAP_WIDEN(#s), __FILE__, __LINE__); }
