@@ -16,7 +16,7 @@ bool PutFilePathName1017(UnicodeFileName* aFullName, const wchar_t* pFileName)
 	bool result = false;
 	DWORD nLen = GetFullPathNameW(pFileName, nCount, sFullName, &pszPart);
 	if (!nLen)
-		return false; // не смогли?
+		return false; // РЅРµ СЃРјРѕРіР»Рё?
 	if (nLen > nCount) {
 		wchar_t* pszBuffer = (wchar_t*)malloc(nLen * sizeof(wchar_t));
 		_ASSERTE(pszBuffer);

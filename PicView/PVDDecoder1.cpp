@@ -69,7 +69,7 @@ bool PVDDecoderVer1::LoadFormatsFromPvd()
 {
 	if (!bInitialized) if (!InitPlugin()) return false;
 
-	// Â ïåðâîé âåðñèè íåâîçìîæíî îïðåäåëèòü ñïèñîê ðàñøèðåíèé
+	// Ð’ Ð¿ÐµÑ€Ð²Ð¾Ð¹ Ð²ÐµÑ€ÑÐ¸Ð¸ Ð½ÐµÐ²Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ Ð¾Ð¿Ñ€ÐµÐ´ÐµÐ»Ð¸Ñ‚ÑŒ ÑÐ¿Ð¸ÑÐ¾Ðº Ñ€Ð°ÑÑˆÐ¸Ñ€ÐµÐ½Ð¸Ð¹
 	if (lstrcmpi(pName, L"DJVU") == 0 || lstrcmpi(pName, L"DJVU.pvd") == 0) {
 		pDefActive = _wcsdup(L"DJV,DJVU");
 	} else if (lstrcmpi(pName, L"PVD_APL") == 0 || lstrcmpi(pName, L"PVD_APL.PVD") == 0) {
@@ -83,7 +83,7 @@ bool PVDDecoderVer1::LoadFormatsFromPvd()
 	return true;
 }
 
-// Çàãðóçèòü, èíèöèàëèçèðîâàòü, ïîëó÷èòü ñïèñîê ôîðìàòîâ
+// Ð—Ð°Ð³Ñ€ÑƒÐ·Ð¸Ñ‚ÑŒ, Ð¸Ð½Ð¸Ñ†Ð¸Ð°Ð»Ð¸Ð·Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ, Ð¿Ð¾Ð»ÑƒÑ‡Ð¸Ñ‚ÑŒ ÑÐ¿Ð¸ÑÐ¾Ðº Ñ„Ð¾Ñ€Ð¼Ð°Ñ‚Ð¾Ð²
 bool PVDDecoderVer1::InitPlugin(bool bAllowResort/*=false*/)
 {
 	if (bInitialized) return true;
@@ -176,7 +176,7 @@ bool PVDDecoderVer1::PluginInfo2()
 	}
 	
 	if (lbRc) {
-		nFlags = nCurrentFlags = PVD_IP_DECODE; // Â ïåðâîé âåðñèè - ÒÎËÜÊÎ äåêîäåð
+		nFlags = nCurrentFlags = PVD_IP_DECODE; // Ð’ Ð¿ÐµÑ€Ð²Ð¾Ð¹ Ð²ÐµÑ€ÑÐ¸Ð¸ - Ð¢ÐžÐ›Ð¬ÐšÐž Ð´ÐµÐºÐ¾Ð´ÐµÑ€
 		
 		if (!nDefPriority) {
 			HKEY hkey = 0; DWORD dwDisp;
@@ -187,7 +187,7 @@ bool PVDDecoderVer1::PluginInfo2()
 					if (RegQueryValueEx(hkey, L"Priority", 0, 0, (LPBYTE)&pData->nPriority, &nSize)
 						|| !pData->nPriority)
 					{
-						// Åñëè ïðèîðèòåò þçåðîì íè ðàçó íå çàäàâàëñÿ - òóò åùå 0. Çàïèøåì "óìîë÷àòåëüíûé"
+						// Ð•ÑÐ»Ð¸ Ð¿Ñ€Ð¸Ð¾Ñ€Ð¸Ñ‚ÐµÑ‚ ÑŽÐ·ÐµÑ€Ð¾Ð¼ Ð½Ð¸ Ñ€Ð°Ð·Ñƒ Ð½Ðµ Ð·Ð°Ð´Ð°Ð²Ð°Ð»ÑÑ - Ñ‚ÑƒÑ‚ ÐµÑ‰Ðµ 0. Ð—Ð°Ð¿Ð¸ÑˆÐµÐ¼ "ÑƒÐ¼Ð¾Ð»Ñ‡Ð°Ñ‚ÐµÐ»ÑŒÐ½Ñ‹Ð¹"
 						pData->nPriority = pip.Priority;
 						RegSetValueEx(hkey, L"Priority", 0, REG_DWORD, (LPBYTE)&pip.Priority, sizeof(pip.Priority));
 					}
@@ -195,7 +195,7 @@ bool PVDDecoderVer1::PluginInfo2()
 				RegCloseKey(hkey); hkey = NULL;
 			}
 		}
-		nDefPriority = max(1,pip.Priority); // 0 âî âòîðîé âåðñèè èíòåðôåéñà íåäîïóñòèì
+		nDefPriority = Max(1u,pip.Priority); // 0 Ð²Ð¾ Ð²Ñ‚Ð¾Ñ€Ð¾Ð¹ Ð²ÐµÑ€ÑÐ¸Ð¸ Ð¸Ð½Ñ‚ÐµÑ€Ñ„ÐµÐ¹ÑÐ° Ð½ÐµÐ´Ð¾Ð¿ÑƒÑÑ‚Ð¸Ð¼
 
 		SAFEFREE(pName);
 		SAFEFREE(pVersion);
@@ -280,12 +280,12 @@ BOOL PVDDecoderVer1::FileOpen2(const wchar_t *pFileName, INT64 lFileSize, const 
 	if (lbRc) {
 		ImageContextWrap* pi = (ImageContextWrap*)calloc(sizeof(ImageContextWrap),1);
 		pi->pImageContext = pImgContext;
-		pImageInfo->pImageContext = pi;              // [OUT] Êîíòåêñò, èñïîëüçóåìûé ïðè îáðàùåíèè ê ôàéëó
-		pImageInfo->nPages = pii.nPages;             // [OUT] êîëè÷åñòâî ñòðàíèö èçîáðàæåíèÿ
-		pImageInfo->Flags = pii.Flags;               // [OUT] âîçìîæíûå ôëàãè: PVD_IIF_xxx
-		pImageInfo->pFormatName = pi->pFormatName = ConvertToWide(pii.pFormatName);   // [OUT] íàçâàíèå ôîðìàòà ôàéëà
-		pImageInfo->pCompression = pi->pCompression = ConvertToWide(pii.pCompression); // [OUT] àëãîðèòì ñæàòèÿ
-		pImageInfo->pComments = pi->pComments = ConvertToWide(pii.pComments);       // [OUT] ðàçëè÷íûå êîììåíòàðèè î ôàéëå
+		pImageInfo->pImageContext = pi;              // [OUT] ÐšÐ¾Ð½Ñ‚ÐµÐºÑÑ‚, Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·ÑƒÐµÐ¼Ñ‹Ð¹ Ð¿Ñ€Ð¸ Ð¾Ð±Ñ€Ð°Ñ‰ÐµÐ½Ð¸Ð¸ Ðº Ñ„Ð°Ð¹Ð»Ñƒ
+		pImageInfo->nPages = pii.nPages;             // [OUT] ÐºÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ† Ð¸Ð·Ð¾Ð±Ñ€Ð°Ð¶ÐµÐ½Ð¸Ñ
+		pImageInfo->Flags = pii.Flags;               // [OUT] Ð²Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ñ‹Ðµ Ñ„Ð»Ð°Ð³Ð¸: PVD_IIF_xxx
+		pImageInfo->pFormatName = pi->pFormatName = ConvertToWide(pii.pFormatName);   // [OUT] Ð½Ð°Ð·Ð²Ð°Ð½Ð¸Ðµ Ñ„Ð¾Ñ€Ð¼Ð°Ñ‚Ð° Ñ„Ð°Ð¹Ð»Ð°
+		pImageInfo->pCompression = pi->pCompression = ConvertToWide(pii.pCompression); // [OUT] Ð°Ð»Ð³Ð¾Ñ€Ð¸Ñ‚Ð¼ ÑÐ¶Ð°Ñ‚Ð¸Ñ
+		pImageInfo->pComments = pi->pComments = ConvertToWide(pii.pComments);       // [OUT] Ñ€Ð°Ð·Ð»Ð¸Ñ‡Ð½Ñ‹Ðµ ÐºÐ¾Ð¼Ð¼ÐµÐ½Ñ‚Ð°Ñ€Ð¸Ð¸ Ð¾ Ñ„Ð°Ð¹Ð»Ðµ
 	}
 	return lbRc;
 }
@@ -304,13 +304,13 @@ BOOL PVDDecoderVer1::PageInfo2(void *pImageContext, pvdInfoPage2 *pPageInfo)
 		SetException(L"pvdPageInfo"); lbRc = FALSE;
 	}
 	if (lbRc) {
-		pi->lWidth = pip.lWidth;                 // Çàïîìíèòü, ïåðâàÿ âåðñèÿ èíòåðôåéñà íå èìåëà ñîîòâåòñâóþùèõ
-		pi->lHeight = pip.lHeight;               // ïîëåé â ñòðóêòóðå pvdInfoDecode
-		pPageInfo->lWidth = pip.lWidth;          // [OUT] øèðèíà ñòðàíèöû
-		pPageInfo->lHeight = pip.lHeight;        // [OUT] âûñîòà ñòðàíèöû
-		pPageInfo->nBPP = pip.nBPP;              // [OUT] êîëè÷åñòâî áèò íà ïèêñåëü (òîëüêî èíôîðìàöèîííîå ïîëå - â ðàñ÷¸òàõ íå èñïîëüçóåòñÿ)
-		pPageInfo->lFrameTime = pip.lFrameTime;  // [OUT] äëÿ àíèìèðîâàííûõ èçîáðàæåíèé - äëèòåëüíîñòü îòîáðàæåíèÿ ñòðàíèöû â òûñÿ÷íûõ ñåêóíäû;
-												 //       èíà÷å - íå èñïîëüçóåòñÿ
+		pi->lWidth = pip.lWidth;                 // Ð—Ð°Ð¿Ð¾Ð¼Ð½Ð¸Ñ‚ÑŒ, Ð¿ÐµÑ€Ð²Ð°Ñ Ð²ÐµÑ€ÑÐ¸Ñ Ð¸Ð½Ñ‚ÐµÑ€Ñ„ÐµÐ¹ÑÐ° Ð½Ðµ Ð¸Ð¼ÐµÐ»Ð° ÑÐ¾Ð¾Ñ‚Ð²ÐµÑ‚ÑÐ²ÑƒÑŽÑ‰Ð¸Ñ…
+		pi->lHeight = pip.lHeight;               // Ð¿Ð¾Ð»ÐµÐ¹ Ð² ÑÑ‚Ñ€ÑƒÐºÑ‚ÑƒÑ€Ðµ pvdInfoDecode
+		pPageInfo->lWidth = pip.lWidth;          // [OUT] ÑˆÐ¸Ñ€Ð¸Ð½Ð° ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ñ‹
+		pPageInfo->lHeight = pip.lHeight;        // [OUT] Ð²Ñ‹ÑÐ¾Ñ‚Ð° ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ñ‹
+		pPageInfo->nBPP = pip.nBPP;              // [OUT] ÐºÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ Ð±Ð¸Ñ‚ Ð½Ð° Ð¿Ð¸ÐºÑÐµÐ»ÑŒ (Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ð¸Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ð¸Ð¾Ð½Ð½Ð¾Ðµ Ð¿Ð¾Ð»Ðµ - Ð² Ñ€Ð°ÑÑ‡Ñ‘Ñ‚Ð°Ñ… Ð½Ðµ Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·ÑƒÐµÑ‚ÑÑ)
+		pPageInfo->lFrameTime = pip.lFrameTime;  // [OUT] Ð´Ð»Ñ Ð°Ð½Ð¸Ð¼Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð½Ñ‹Ñ… Ð¸Ð·Ð¾Ð±Ñ€Ð°Ð¶ÐµÐ½Ð¸Ð¹ - Ð´Ð»Ð¸Ñ‚ÐµÐ»ÑŒÐ½Ð¾ÑÑ‚ÑŒ Ð¾Ñ‚Ð¾Ð±Ñ€Ð°Ð¶ÐµÐ½Ð¸Ñ ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ñ‹ Ð² Ñ‚Ñ‹ÑÑÑ‡Ð½Ñ‹Ñ… ÑÐµÐºÑƒÐ½Ð´Ñ‹;
+												 //       Ð¸Ð½Ð°Ñ‡Ðµ - Ð½Ðµ Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·ÑƒÐµÑ‚ÑÑ
 	}
 	return lbRc;
 }
@@ -336,21 +336,21 @@ BOOL PVDDecoderVer1::PageDecode2(void *pImageContext, pvdInfoDecode2 *pDecodeInf
 		SetException(L"pvdPageDecode"); lbRc = FALSE;
 	}
 	if (lbRc) {
-		pDecodeInfo->lWidth = pi->lWidth;              // [OUT] Øèðèíà äåêîäèðîâàííîé îáëàñòè (pImage)
-		pDecodeInfo->lHeight = pi->lHeight;            // [OUT] Âûñîòà äåêîäèðîâàííîé îáëàñòè (pImage)
-		pDecodeInfo->nBPP = pid->nBPP;                 // [IN]  PicView ìîæåò çàïðîñèòü ïðåäïî÷òèòåëüíûé ôîðìàò
-								                       // [OUT] êîëè÷åñòâî áèò íà ïèêñåëü â äåêîäèðîâàííîì èçîáðàæåíèè
-								                       //       32 áèòà ìîæåò áûòü ïðè èñïîëüçîâàíèè PVD_IDF_ALPHA
-		pDecodeInfo->lImagePitch = pid->lImagePitch;   // [OUT] ìîäóëü - äëèíà ñòðîêè äåêîäèðîâàííîãî èçîáðàæåíèÿ â áàéòàõ;
-								                       //       ïîëîæèòåëüíûå çíà÷åíèÿ - ñòðîêè èäóò ñâåðõó âíèç, îòðèöàòåëüíûå - ñíèçó ââåðõ
-		pDecodeInfo->Flags = pid->Flags;               // [OUT] âîçìîæíûå ôëàãè: PVD_IDF_xxx
+		pDecodeInfo->lWidth = pi->lWidth;              // [OUT] Ð¨Ð¸Ñ€Ð¸Ð½Ð° Ð´ÐµÐºÐ¾Ð´Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð½Ð¾Ð¹ Ð¾Ð±Ð»Ð°ÑÑ‚Ð¸ (pImage)
+		pDecodeInfo->lHeight = pi->lHeight;            // [OUT] Ð’Ñ‹ÑÐ¾Ñ‚Ð° Ð´ÐµÐºÐ¾Ð´Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð½Ð¾Ð¹ Ð¾Ð±Ð»Ð°ÑÑ‚Ð¸ (pImage)
+		pDecodeInfo->nBPP = pid->nBPP;                 // [IN]  PicView Ð¼Ð¾Ð¶ÐµÑ‚ Ð·Ð°Ð¿Ñ€Ð¾ÑÐ¸Ñ‚ÑŒ Ð¿Ñ€ÐµÐ´Ð¿Ð¾Ñ‡Ñ‚Ð¸Ñ‚ÐµÐ»ÑŒÐ½Ñ‹Ð¹ Ñ„Ð¾Ñ€Ð¼Ð°Ñ‚
+								                       // [OUT] ÐºÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ Ð±Ð¸Ñ‚ Ð½Ð° Ð¿Ð¸ÐºÑÐµÐ»ÑŒ Ð² Ð´ÐµÐºÐ¾Ð´Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð½Ð¾Ð¼ Ð¸Ð·Ð¾Ð±Ñ€Ð°Ð¶ÐµÐ½Ð¸Ð¸
+								                       //       32 Ð±Ð¸Ñ‚Ð° Ð¼Ð¾Ð¶ÐµÑ‚ Ð±Ñ‹Ñ‚ÑŒ Ð¿Ñ€Ð¸ Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ð½Ð¸Ð¸ PVD_IDF_ALPHA
+		pDecodeInfo->lImagePitch = pid->lImagePitch;   // [OUT] Ð¼Ð¾Ð´ÑƒÐ»ÑŒ - Ð´Ð»Ð¸Ð½Ð° ÑÑ‚Ñ€Ð¾ÐºÐ¸ Ð´ÐµÐºÐ¾Ð´Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð½Ð¾Ð³Ð¾ Ð¸Ð·Ð¾Ð±Ñ€Ð°Ð¶ÐµÐ½Ð¸Ñ Ð² Ð±Ð°Ð¹Ñ‚Ð°Ñ…;
+								                       //       Ð¿Ð¾Ð»Ð¾Ð¶Ð¸Ñ‚ÐµÐ»ÑŒÐ½Ñ‹Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ñ - ÑÑ‚Ñ€Ð¾ÐºÐ¸ Ð¸Ð´ÑƒÑ‚ ÑÐ²ÐµÑ€Ñ…Ñƒ Ð²Ð½Ð¸Ð·, Ð¾Ñ‚Ñ€Ð¸Ñ†Ð°Ñ‚ÐµÐ»ÑŒÐ½Ñ‹Ðµ - ÑÐ½Ð¸Ð·Ñƒ Ð²Ð²ÐµÑ€Ñ…
+		pDecodeInfo->Flags = pid->Flags;               // [OUT] Ð²Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ñ‹Ðµ Ñ„Ð»Ð°Ð³Ð¸: PVD_IDF_xxx
 			if (pDecodeInfo->Flags < 1 && pid->nBPP == 32) pDecodeInfo->Flags |= PVD_IDF_ALPHA;
-		pDecodeInfo->nTransparentColor = -1;           // [OUT] Åñëè óêàçàí PVD_IDF_TRANSPARENT - ñîäåðæèò öâåò, êîòîðûé ñ÷èòàåòñÿ ïðîçðà÷íûì
-								                       //       Äëÿ ðåæèìîâ ñ ïàëèòðîé - ñîäåðæèò èíäåêñ ïðîçðà÷íîãî öâåòà
-		pDecodeInfo->pImage = pid->pImage;             // [OUT] óêàçàòåëü íà äàííûå èçîáðàæåíèÿ â äîïóñòèìîì ôîðìàòå (PVD_IDF_xxx, ïî óìîë÷àíèþ - RGB)
-		pDecodeInfo->pPalette = pid->pPalette;         // [OUT] óêàçàòåëü íà ïàëèòðó èçîáðàæåíèÿ, èñïîëüçóåòñÿ â ôîðìàòàõ 8 è ìåíüøå áèò íà ïèêñåëü
-		pDecodeInfo->nColorsUsed = pid->nColorsUsed;   // [OUT] êîëè÷åñòâî èñïîëüçóåìûõ öâåòîâ â ïàëèòðå; åñëè 0, òî èñïîëüçóþòñÿ âñå âîçìîæíûå öâåòà
-		pDecodeInfo->lParam = (LPARAM)pid;             // [OUT] Ñóáïëàãèí ìîæåò èñïîëüçîâàòü ýòî ïîëå íà ñâîå óñìîòðåíèå
+		pDecodeInfo->nTransparentColor = -1;           // [OUT] Ð•ÑÐ»Ð¸ ÑƒÐºÐ°Ð·Ð°Ð½ PVD_IDF_TRANSPARENT - ÑÐ¾Ð´ÐµÑ€Ð¶Ð¸Ñ‚ Ñ†Ð²ÐµÑ‚, ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ð¹ ÑÑ‡Ð¸Ñ‚Ð°ÐµÑ‚ÑÑ Ð¿Ñ€Ð¾Ð·Ñ€Ð°Ñ‡Ð½Ñ‹Ð¼
+								                       //       Ð”Ð»Ñ Ñ€ÐµÐ¶Ð¸Ð¼Ð¾Ð² Ñ Ð¿Ð°Ð»Ð¸Ñ‚Ñ€Ð¾Ð¹ - ÑÐ¾Ð´ÐµÑ€Ð¶Ð¸Ñ‚ Ð¸Ð½Ð´ÐµÐºÑ Ð¿Ñ€Ð¾Ð·Ñ€Ð°Ñ‡Ð½Ð¾Ð³Ð¾ Ñ†Ð²ÐµÑ‚Ð°
+		pDecodeInfo->pImage = pid->pImage;             // [OUT] ÑƒÐºÐ°Ð·Ð°Ñ‚ÐµÐ»ÑŒ Ð½Ð° Ð´Ð°Ð½Ð½Ñ‹Ðµ Ð¸Ð·Ð¾Ð±Ñ€Ð°Ð¶ÐµÐ½Ð¸Ñ Ð² Ð´Ð¾Ð¿ÑƒÑÑ‚Ð¸Ð¼Ð¾Ð¼ Ñ„Ð¾Ñ€Ð¼Ð°Ñ‚Ðµ (PVD_IDF_xxx, Ð¿Ð¾ ÑƒÐ¼Ð¾Ð»Ñ‡Ð°Ð½Ð¸ÑŽ - RGB)
+		pDecodeInfo->pPalette = pid->pPalette;         // [OUT] ÑƒÐºÐ°Ð·Ð°Ñ‚ÐµÐ»ÑŒ Ð½Ð° Ð¿Ð°Ð»Ð¸Ñ‚Ñ€Ñƒ Ð¸Ð·Ð¾Ð±Ñ€Ð°Ð¶ÐµÐ½Ð¸Ñ, Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·ÑƒÐµÑ‚ÑÑ Ð² Ñ„Ð¾Ñ€Ð¼Ð°Ñ‚Ð°Ñ… 8 Ð¸ Ð¼ÐµÐ½ÑŒÑˆÐµ Ð±Ð¸Ñ‚ Ð½Ð° Ð¿Ð¸ÐºÑÐµÐ»ÑŒ
+		pDecodeInfo->nColorsUsed = pid->nColorsUsed;   // [OUT] ÐºÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·ÑƒÐµÐ¼Ñ‹Ñ… Ñ†Ð²ÐµÑ‚Ð¾Ð² Ð² Ð¿Ð°Ð»Ð¸Ñ‚Ñ€Ðµ; ÐµÑÐ»Ð¸ 0, Ñ‚Ð¾ Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·ÑƒÑŽÑ‚ÑÑ Ð²ÑÐµ Ð²Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ñ‹Ðµ Ñ†Ð²ÐµÑ‚Ð°
+		pDecodeInfo->lParam = (LPARAM)pid;             // [OUT] Ð¡ÑƒÐ±Ð¿Ð»Ð°Ð³Ð¸Ð½ Ð¼Ð¾Ð¶ÐµÑ‚ Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÑŒ ÑÑ‚Ð¾ Ð¿Ð¾Ð»Ðµ Ð½Ð° ÑÐ²Ð¾Ðµ ÑƒÑÐ¼Ð¾Ñ‚Ñ€ÐµÐ½Ð¸Ðµ
 		pDecodeInfo->ColorModel = (pDecodeInfo->Flags & PVD_IDF_ALPHA) ? PVD_CM_BGRA : PVD_CM_BGR;
 
 	} else {

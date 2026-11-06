@@ -15,12 +15,12 @@ public:
 	~UnicodeFileName();
 	
 
-	const wchar_t* Assign(const wchar_t* asFileName); // может содержать или НЕ содержать префикс
+	const wchar_t* Assign(const wchar_t* asFileName); // РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ РёР»Рё РќР• СЃРѕРґРµСЂР¶Р°С‚СЊ РїСЂРµС„РёРєСЃ
 
 	
-	wchar_t* GetBuffer(int nLen0); // Выделить буфер. nLen0 должен включать завершающий '\0'
+	wchar_t* GetBuffer(int nLen0); // Р’С‹РґРµР»РёС‚СЊ Р±СѓС„РµСЂ. nLen0 РґРѕР»Р¶РµРЅ РІРєР»СЋС‡Р°С‚СЊ Р·Р°РІРµСЂС€Р°СЋС‰РёР№ '\0'
 	
-	bool ReleaseBuffer(); // Проверить буфер и если он содержит НЕ UNC - поправить
+	bool ReleaseBuffer(); // РџСЂРѕРІРµСЂРёС‚СЊ Р±СѓС„РµСЂ Рё РµСЃР»Рё РѕРЅ СЃРѕРґРµСЂР¶РёС‚ РќР• UNC - РїРѕРїСЂР°РІРёС‚СЊ
 	
 	bool CompareDir(const wchar_t* asDir);
 	

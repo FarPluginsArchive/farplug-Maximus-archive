@@ -96,7 +96,7 @@ void MPicViewConfig::Exchange ( HANDLE hDlg, int Old, int New )
 	FarListUpdate flu = {Old};
 	PVDDecoderConfig *p = NULL;
 	
-	// Можно ли двигать приоритеры
+	// РњРѕР¶РЅРѕ Р»Рё РґРІРёРіР°С‚СЊ РїСЂРёРѕСЂРёС‚РµСЂС‹
 	if (!CanExchange ( Old, New ))
 		return;
 	
@@ -233,7 +233,7 @@ LONG_PTR MPicViewConfig::ConfigDlgProc(HANDLE hDlg, int Msg, int Param1, LONG_PT
     if (Msg==DN_BTNCLICK && Param1>=iMain && Param1<=iLastTabBtn) {
     	int nNewPage = Param1 - iMain;
     	if (nNewPage == nActivePage)
-    		return TRUE; // Она уже активирована
+    		return TRUE; // РћРЅР° СѓР¶Рµ Р°РєС‚РёРІРёСЂРѕРІР°РЅР°
     
     	g_StartupInfo.SendDlgMessage(hDlg, DM_ENABLEREDRAW, FALSE, 0);
     	for (int j=0; j<nNextPage; j++) {
@@ -258,7 +258,7 @@ LONG_PTR MPicViewConfig::ConfigDlgProc(HANDLE hDlg, int Msg, int Param1, LONG_PT
         nActivePage = nNewPage;
         bPageActivated[nNewPage] = TRUE;
         
-        return TRUE; // Обработали
+        return TRUE; // РћР±СЂР°Р±РѕС‚Р°Р»Рё
     }
     
     if (Msg==DN_BTNCLICK && Param1==iChooseColor) {
@@ -352,7 +352,7 @@ LONG_PTR MPicViewConfig::ConfigDlgProc(HANDLE hDlg, int Msg, int Param1, LONG_PT
 		}
 		if (lbDblClick || (Msg == DN_KEY && Param2 == KEY_F4))
 		{
-			TODO("Настройка параметров декодера");
+			TODO("РќР°СЃС‚СЂРѕР№РєР° РїР°СЂР°РјРµС‚СЂРѕРІ РґРµРєРѕРґРµСЂР°");
 			int pos = (int)g_StartupInfo.SendDlgMessage(hDlg, DM_LISTGETCURPOS, iPvdDecoders, 0);
 			if (pos >= 0) {
 				if (pos >= 0 && pos < nModulesCount) {
@@ -363,9 +363,9 @@ LONG_PTR MPicViewConfig::ConfigDlgProc(HANDLE hDlg, int Msg, int Param1, LONG_PT
 						flu.Item.Text = p->pTitle;
 						g_StartupInfo.SendDlgMessage(hDlg, DM_LISTUPDATE, iPvdDecoders, (LONG_PTR)&flu);
 						
-						// Если двигали приоритеты декодеров, то при OK в настройке декодера
+						// Р•СЃР»Рё РґРІРёРіР°Р»Рё РїСЂРёРѕСЂРёС‚РµС‚С‹ РґРµРєРѕРґРµСЂРѕРІ, С‚Рѕ РїСЂРё OK РІ РЅР°СЃС‚СЂРѕР№РєРµ РґРµРєРѕРґРµСЂР°
 						if (bDecoderPriorityChanged) {
-							ApplyDecoders(); // Сразу сохранить в реестр
+							ApplyDecoders(); // РЎСЂР°Р·Сѓ СЃРѕС…СЂР°РЅРёС‚СЊ РІ СЂРµРµСЃС‚СЂ
 							bDecoderPriorityChanged = false;
 						}
 					}
@@ -387,15 +387,15 @@ LONG_PTR MPicViewConfig::ConfigDlgProc(HANDLE hDlg, int Msg, int Param1, LONG_PT
 		if (Msg == DN_KEY && ((Param2 & (KEY_CTRL|KEY_RCTRL)) 
 			&& ( ((Param2&KEY_END_SKEY) == KEY_UP) || ((Param2&KEY_END_SKEY) == KEY_DOWN))))
 		{
-			// Изменение приоритета 'на лету'
+			// РР·РјРµРЅРµРЅРёРµ РїСЂРёРѕСЂРёС‚РµС‚Р° 'РЅР° Р»РµС‚Сѓ'
 			int pos = (int)g_StartupInfo.SendDlgMessage(hDlg, DM_LISTGETCURPOS, iPvdDecoders, 0);
 			bool lbMoveUp = ((Param2&KEY_END_SKEY) == KEY_UP);
 			if (lbMoveUp && pos > 0) {
 				Exchange ( hDlg, pos, pos-1 );
-				//ApplyDecoders(); // порядок сохранять в реестр только после OK
+				//ApplyDecoders(); // РїРѕСЂСЏРґРѕРє СЃРѕС…СЂР°РЅСЏС‚СЊ РІ СЂРµРµСЃС‚СЂ С‚РѕР»СЊРєРѕ РїРѕСЃР»Рµ OK
 			} else if (!lbMoveUp && pos < (nModulesCount - 1)) {
 				Exchange ( hDlg, pos, pos+1 );
-				//ApplyDecoders(); // порядок сохранять в реестр только после OK
+				//ApplyDecoders(); // РїРѕСЂСЏРґРѕРє СЃРѕС…СЂР°РЅСЏС‚СЊ РІ СЂРµРµСЃС‚СЂ С‚РѕР»СЊРєРѕ РїРѕСЃР»Рµ OK
 			}
 			
 			UpdateModulesHotkeys(hDlg);
@@ -412,7 +412,7 @@ LONG_PTR MPicViewConfig::ConfigDlgProc(HANDLE hDlg, int Msg, int Param1, LONG_PT
 			&& ((Param2&KEY_END_SKEY)>=(DWORD)'1') && ((Param2&KEY_END_SKEY)<=(DWORD)'5')
 		   )
 		{
-			// Вывести фокус из контрола, иначе хоткеи не отрабатывают
+			// Р’С‹РІРµСЃС‚Рё С„РѕРєСѓСЃ РёР· РєРѕРЅС‚СЂРѕР»Р°, РёРЅР°С‡Рµ С…РѕС‚РєРµРё РЅРµ РѕС‚СЂР°Р±Р°С‚С‹РІР°СЋС‚
 			g_StartupInfo.SendDlgMessage(hDlg, DM_SETFOCUS, iDecoders, 0);
 		}
 	}
@@ -426,7 +426,7 @@ LONG_PTR MPicViewConfig::ConfigDlgProc(HANDLE hDlg, int Msg, int Param1, LONG_PT
 			&& ((Param2&KEY_END_SKEY)>=(DWORD)'1') && ((Param2&KEY_END_SKEY)<=(DWORD)'5')
 		   )
 		{
-			// Вывести фокус из контрола, иначе хоткеи не отрабатывают
+			// Р’С‹РІРµСЃС‚Рё С„РѕРєСѓСЃ РёР· РєРѕРЅС‚СЂРѕР»Р°, РёРЅР°С‡Рµ С…РѕС‚РєРµРё РЅРµ РѕС‚СЂР°Р±Р°С‚С‹РІР°СЋС‚
 			g_StartupInfo.SendDlgMessage(hDlg, DM_SETFOCUS, iLOG, 0);
 		}
 	}
@@ -462,7 +462,7 @@ int MPicViewConfig::InitMain() // Page1
 		DI_CHECKBOX,  6, Y+1, 0, 0, 0, g_Plugin.bHookQuickView, 0, 0, GetMsg(MIHookQuickView));
 	LPCWSTR pszView = GetMsg(MIHookView);
 	LPCWSTR pszEdit = GetMsg(MIHookEdit);
-	int nMaxLen = max(lstrlenW(pszView),lstrlenW(pszEdit))+4;
+	int nMaxLen = Max(lstrlenW(pszView),lstrlenW(pszEdit))+4;
 	iHookView = addFarDialogItem(
 		DI_CHECKBOX, 27, Y, 0, 0, 0, g_Plugin.bHookView, 0, 0, pszView);
 	iHookCtrlShiftF3 = addFarDialogItem(
@@ -634,7 +634,7 @@ int MPicViewConfig::InitAdvanced() // Page3
 	iKeepCorner = addFarDialogItem(
 		DI_COMBOBOX, 10, Y, 40, Y, 0, 0, DIF_DROPDOWNLIST|DIF_LISTNOAMPERSAND, 0, 0);
 	{
-		nCornerCount = 3; // От центра, от краев, только масштаб
+		nCornerCount = 3; // РћС‚ С†РµРЅС‚СЂР°, РѕС‚ РєСЂР°РµРІ, С‚РѕР»СЊРєРѕ РјР°СЃС€С‚Р°Р±
 		CornerList.ItemsNumber = nCornerCount;
 		CornerList.Items = (FarListItem*)calloc(nCornerCount*sizeof(FarListItem),1);
 		for (int i = 0; i < nCornerCount; i++)
@@ -716,14 +716,14 @@ int MPicViewConfig::InitOSD() // Page4
 
 	Y+=2;
 	
-	// Шаблон заголовка
+	// РЁР°Р±Р»РѕРЅ Р·Р°РіРѕР»РѕРІРєР°
 	addFarDialogItem(DI_TEXT, 5, Y++, 0, 0, 0, 0, DIF_BOXCOLOR | DIF_SEPARATOR, 0, GetMsg(MITitleTemplate));
 	iTitleTemplate = addFarDialogItem(DI_EDIT, 5, Y, DialogWidth + 5 - nBtnLen, 0, 0, 0, 0, 0, g_TitleTemplate);
 	iTitleTemplReset = addFarDialogItem(DI_BUTTON, DialogWidth - nBtnLen + 7, Y, 0, 0, 0, 0, 0, 0, pszBtn);
 	Y+=2;
 
 	addFarDialogItem(DI_TEXT, 5, Y++, 0, 0, 0, 0, DIF_BOXCOLOR | DIF_SEPARATOR, 0, GetMsg(MIQViewTemplate));
-	// Шаблоны 3-х строк информации для QView
+	// РЁР°Р±Р»РѕРЅС‹ 3-С… СЃС‚СЂРѕРє РёРЅС„РѕСЂРјР°С†РёРё РґР»СЏ QView
 	addFarDialogItem(DI_TEXT, 5, Y, 0, 0, 0, 0, 0, 0, pszText1);
 	iQTempl1 = addFarDialogItem(DI_EDIT, 5+nTextLen, Y, DialogWidth + 5 - nBtnLen, 0, 0, 0, 0, 0, g_QViewTemplate1);
 	iQTempl1Reset = addFarDialogItem(DI_BUTTON, DialogWidth - nBtnLen + 7, Y, 0, 0, 0, 0, 0, 0, pszBtn);
@@ -793,7 +793,7 @@ void MPicViewConfig::Init()
 		DI_DOUBLEBOX, 3, Y++, DialogWidth + 6, DialogHeight + 4, 0, 0, 0, 0, g_Plugin.pszPluginTitle);
 
 
-	// Главные
+	// Р“Р»Р°РІРЅС‹Рµ
 	nPageStart[nNextPage++] = NextId();
 	pgY = InitMain();
 	if (pgY > Y) Y = pgY;
@@ -820,7 +820,7 @@ void MPicViewConfig::Init()
 	
 	// g_Plugin.FlagsWord |= FW_CONFIGDECODER;
 	
-	// Подготовка страничек
+	// РџРѕРґРіРѕС‚РѕРІРєР° СЃС‚СЂР°РЅРёС‡РµРє
 	nActivePage = (g_Plugin.FlagsWork & FW_SHOW_MODULES) ? 1 : 0;
 	nPageStart[nNextPage] = NextId();
 	bPageActivated[nActivePage] = TRUE;
@@ -833,7 +833,7 @@ void MPicViewConfig::Init()
     }
 
 
-	// Общие кнопки
+	// РћР±С‰РёРµ РєРЅРѕРїРєРё
 	Y ++;
 	addFarDialogItem(
 		DI_TEXT, 5, Y, 0, 0, 0, 0, DIF_BOXCOLOR | DIF_SEPARATOR, 0);
@@ -939,7 +939,7 @@ BOOL MPicViewConfig::ApplyDecoders()
 	
 	for (int i=0; i<nModulesCount; i++) {
 		n = pModules[i]->pData->Priority();
-		// Тут расширения вообще не трогать - они сохраняются в самом диалоге настройки декодера персонально
+		// РўСѓС‚ СЂР°СЃС€РёСЂРµРЅРёСЏ РІРѕРѕР±С‰Рµ РЅРµ С‚СЂРѕРіР°С‚СЊ - РѕРЅРё СЃРѕС…СЂР°РЅСЏСЋС‚СЃСЏ РІ СЃР°РјРѕРј РґРёР°Р»РѕРіРµ РЅР°СЃС‚СЂРѕР№РєРё РґРµРєРѕРґРµСЂР° РїРµСЂСЃРѕРЅР°Р»СЊРЅРѕ
 		HKEY hkey = NULL; DWORD dwDisp = 0;
 		if (!RegCreateKeyEx(HKEY_CURRENT_USER, pModules[i]->pData->pRegPath, 0, 0, 0, KEY_ALL_ACCESS, 0, &hkey, &dwDisp)) {
 			DWORD nDataSize = 0;
@@ -1107,7 +1107,7 @@ int MPicViewConfig::Run()
 	for (;;)
 	{
 		if (!DialogInit())
-			break; // ошибка выделения памяти?
+			break; // РѕС€РёР±РєР° РІС‹РґРµР»РµРЅРёСЏ РїР°РјСЏС‚Рё?
 		
 		const int ExitCode = g_StartupInfo.DialogRun(mh_Dlg);
 		if (ExitCode == iOk)
@@ -1171,7 +1171,7 @@ int WINAPI ConfigureW(int ItemNumber)
 	g_Plugin.InitPlugin();
 	DBGOUTCFG(L"InitPlugin done...");
 
-	g_Plugin.InitCMYK(FALSE); // Дождаться его завершения, чтобы случайно не войти в клинч с другим модулем
+	g_Plugin.InitCMYK(FALSE); // Р”РѕР¶РґР°С‚СЊСЃСЏ РµРіРѕ Р·Р°РІРµСЂС€РµРЅРёСЏ, С‡С‚РѕР±С‹ СЃР»СѓС‡Р°Р№РЅРѕ РЅРµ РІРѕР№С‚Рё РІ РєР»РёРЅС‡ СЃ РґСЂСѓРіРёРј РјРѕРґСѓР»РµРј
 
 	int nRc = 0;
 	gpCurConfig = new MPicViewConfig();

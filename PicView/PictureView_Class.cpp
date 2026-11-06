@@ -81,28 +81,28 @@ uint ImageInfo::PanelItemRaw()
 
 void ImageInfo::SetPanelItemRaw(uint nRaw)
 {
-	TODO("При переходах может быть -1 и g_Plugin.FarPanelInfo.ItemsNumber. В этом случае они потом еще будут меняться");
+	TODO("РџСЂРё РїРµСЂРµС…РѕРґР°С… РјРѕР¶РµС‚ Р±С‹С‚СЊ -1 Рё g_Plugin.FarPanelInfo.ItemsNumber. Р’ СЌС‚РѕРј СЃР»СѓС‡Р°Рµ РѕРЅРё РїРѕС‚РѕРј РµС‰Рµ Р±СѓРґСѓС‚ РјРµРЅСЏС‚СЊСЃСЏ");
 	if (nPanelItemRaw != nRaw) {
 		nPanelItemRaw = nRaw;
-		nPage = 0; // сброс номера страницы
+		nPage = 0; // СЃР±СЂРѕСЃ РЅРѕРјРµСЂР° СЃС‚СЂР°РЅРёС†С‹
 	}
 }
 
-TODO("Убрать аргумент piSubDecoder");
+TODO("РЈР±СЂР°С‚СЊ Р°СЂРіСѓРјРµРЅС‚ piSubDecoder");
 bool ImageInfo::ImageOpen(const wchar_t *pFileName, const unsigned char *buf, int lBuf)
 {
 	_ASSERTE(Decoder);
 	_ASSERTE(pFileName && *pFileName);
 	
-	g_Plugin.InitCMYK(FALSE); // Дождаться его завершения
+	g_Plugin.InitCMYK(FALSE); // Р”РѕР¶РґР°С‚СЊСЃСЏ РµРіРѕ Р·Р°РІРµСЂС€РµРЅРёСЏ
 
-	// -- все равно дальше Map открывается	
-	//// Это может произойти, если открытие идет из вьювера
+	// -- РІСЃРµ СЂР°РІРЅРѕ РґР°Р»СЊС€Рµ Map РѕС‚РєСЂС‹РІР°РµС‚СЃСЏ	
+	//// Р­С‚Рѕ РјРѕР¶РµС‚ РїСЂРѕРёР·РѕР№С‚Рё, РµСЃР»Рё РѕС‚РєСЂС‹С‚РёРµ РёРґРµС‚ РёР· РІСЊСЋРІРµСЂР°
 	//unsigned char tempBuf[128];
 	////if (!buf || !lBuf)
 	//{
 	//	buf = NULL;
-	//	// Зачем это чтение? возможно для проверки, доступен ли файл?
+	//	// Р—Р°С‡РµРј СЌС‚Рѕ С‡С‚РµРЅРёРµ? РІРѕР·РјРѕР¶РЅРѕ РґР»СЏ РїСЂРѕРІРµСЂРєРё, РґРѕСЃС‚СѓРїРµРЅ Р»Рё С„Р°Р№Р»?
 	//	HANDLE hFile = CreateFileW(pFileName, GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, 0, 0);
 	//	if (hFile == INVALID_HANDLE_VALUE)
 	//		hFile = CreateFileW(pFileName, GENERIC_READ, FILE_SHARE_READ|FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
@@ -122,7 +122,7 @@ bool ImageInfo::ImageOpen(const wchar_t *pFileName, const unsigned char *buf, in
 	if (g_Plugin.MapFileName[0])
 		pFileName = g_Plugin.MapFileName;
 
-	// По идее уже проверяли, но на всякий случай
+	// РџРѕ РёРґРµРµ СѓР¶Рµ РїСЂРѕРІРµСЂСЏР»Рё, РЅРѕ РЅР° РІСЃСЏРєРёР№ СЃР»СѓС‡Р°Р№
 	if ((g_Plugin.FlagsWork & FW_FORCE_DECODE) == 0) {
 		if (g_Plugin.IsExtensionIgnored(pFileName))
 			return false;
@@ -135,8 +135,8 @@ bool ImageInfo::ImageOpen(const wchar_t *pFileName, const unsigned char *buf, in
 		{
 			buf = Map.pMapping;
 			lBuf = (int)Min<i64>(Map.lSize, ~0u);
-			//if (lBuf) -- IN_APL этого не пережил
-			//	lFileSize = 0; // все данные уже в памяти
+			//if (lBuf) -- IN_APL СЌС‚РѕРіРѕ РЅРµ РїРµСЂРµР¶РёР»
+			//	lFileSize = 0; // РІСЃРµ РґР°РЅРЅС‹Рµ СѓР¶Рµ РІ РїР°РјСЏС‚Рё
 		}
 		else
 		{
@@ -153,11 +153,11 @@ bool ImageInfo::ImageOpen(const wchar_t *pFileName, const unsigned char *buf, in
 	//PVDManager *pPVDDecoder = NULL;
 
 
-	//// Если расширение указано в "необрабатываемых"
-	//TO DO("Перенести вверх, а еще лучше вынести в вызывающую функцию");
+	//// Р•СЃР»Рё СЂР°СЃС€РёСЂРµРЅРёРµ СѓРєР°Р·Р°РЅРѕ РІ "РЅРµРѕР±СЂР°Р±Р°С‚С‹РІР°РµРјС‹С…"
+	//TO DO("РџРµСЂРµРЅРµСЃС‚Рё РІРІРµСЂС…, Р° РµС‰Рµ Р»СѓС‡С€Рµ РІС‹РЅРµСЃС‚Рё РІ РІС‹Р·С‹РІР°СЋС‰СѓСЋ С„СѓРЅРєС†РёСЋ");
 	//if (g_Plugin.sIgnoredExt[0]) {
 	//	if (!p || !*p) {
-	//		// Для пропускания файлов без расширений - задать в списке точку
+	//		// Р”Р»СЏ РїСЂРѕРїСѓСЃРєР°РЅРёСЏ С„Р°Р№Р»РѕРІ Р±РµР· СЂР°СЃС€РёСЂРµРЅРёР№ - Р·Р°РґР°С‚СЊ РІ СЃРїРёСЃРєРµ С‚РѕС‡РєСѓ
 	//		if (ExtensionMatch(g_Plugin.sIgnoredExt, L"."))
 	//			return false;
 	//	} else if (ExtensionMatch(g_Plugin.sIgnoredExt, p)) {
@@ -165,7 +165,7 @@ bool ImageInfo::ImageOpen(const wchar_t *pFileName, const unsigned char *buf, in
 	//	}
 	//}
 
-	TODO("Перенести в начало функции");
+	TODO("РџРµСЂРµРЅРµСЃС‚Рё РІ РЅР°С‡Р°Р»Рѕ С„СѓРЅРєС†РёРё");
 	this->lStartOpenTime = timeGetTime();
 
 
@@ -174,7 +174,7 @@ bool ImageInfo::ImageOpen(const wchar_t *pFileName, const unsigned char *buf, in
 	
 lReOpen2:
 	//pPVDDecoder->SetAllowedPriority(7);
-	memset(&InfoPage, 0, sizeof(InfoPage)); // !!! cbSize не заполнять
+	memset(&InfoPage, 0, sizeof(InfoPage)); // !!! cbSize РЅРµ Р·Р°РїРѕР»РЅСЏС‚СЊ
 	result = Decoder->Open(pFileName, lFileSize, buf, lBuf, InfoPage);
 
 	//*piSubDecoder = Decoder->mi_SubDecoder;
@@ -189,11 +189,11 @@ lReOpen2:
 			BOOL bChanged = FALSE;
 			SHORT CurState = GetKeyState(g_Plugin.nAutoPagingVK);
 			if (!Animation && nPages>1) {
-				// Включить ScrollLock (PgUp/PgDn листают страницы)
+				// Р’РєР»СЋС‡РёС‚СЊ ScrollLock (PgUp/PgDn Р»РёСЃС‚Р°СЋС‚ СЃС‚СЂР°РЅРёС†С‹)
 				if ((CurState & 1) == 0)
 					bChanged = TRUE;
 			} else {
-				// вЫключить ScrollLock (PgUp/PgDn листают страницы)
+				// РІР«РєР»СЋС‡РёС‚СЊ ScrollLock (PgUp/PgDn Р»РёСЃС‚Р°СЋС‚ СЃС‚СЂР°РЅРёС†С‹)
 				if ((CurState & 1) != 0)
 					bChanged = TRUE;
 			}
@@ -209,22 +209,22 @@ lReOpen2:
 	{
 		result = CreateDisplayThread();
 		if (result) {
-			TODO("А здесь в чем смысл?");
+			TODO("Рђ Р·РґРµСЃСЊ РІ С‡РµРј СЃРјС‹СЃР»?");
 			SetPanelItemRaw(PANEL_ITEM_UNAVAILABLE);
 		}
 	}
 
 	if (result) {
-		TODO("Хорошо бы разрулить ImageDecode и запуск нити Display. Собственно декодирование можно начать еще ДО создания DX и прочего");
+		TODO("РҐРѕСЂРѕС€Рѕ Р±С‹ СЂР°Р·СЂСѓР»РёС‚СЊ ImageDecode Рё Р·Р°РїСѓСЃРє РЅРёС‚Рё Display. РЎРѕР±СЃС‚РІРµРЅРЅРѕ РґРµРєРѕРґРёСЂРѕРІР°РЅРёРµ РјРѕР¶РЅРѕ РЅР°С‡Р°С‚СЊ РµС‰Рµ Р”Рћ СЃРѕР·РґР°РЅРёСЏ DX Рё РїСЂРѕС‡РµРіРѕ");
 		if (!ImageDecode()) {
-			WARNING("Если ImageDecode обламывается - то мы зацикливаемся, т.к. ImageOpen выбирает тот же декодер!");
-			WARNING("В любом случае нужно оптимизировать окрытие? Не разрушать pPVDDecoder и его локальную переменную bProcessed");
+			WARNING("Р•СЃР»Рё ImageDecode РѕР±Р»Р°РјС‹РІР°РµС‚СЃСЏ - С‚Рѕ РјС‹ Р·Р°С†РёРєР»РёРІР°РµРјСЃСЏ, С‚.Рє. ImageOpen РІС‹Р±РёСЂР°РµС‚ С‚РѕС‚ Р¶Рµ РґРµРєРѕРґРµСЂ!");
+			WARNING("Р’ Р»СЋР±РѕРј СЃР»СѓС‡Р°Рµ РЅСѓР¶РЅРѕ РѕРїС‚РёРјРёР·РёСЂРѕРІР°С‚СЊ РѕРєСЂС‹С‚РёРµ? РќРµ СЂР°Р·СЂСѓС€Р°С‚СЊ pPVDDecoder Рё РµРіРѕ Р»РѕРєР°Р»СЊРЅСѓСЋ РїРµСЂРµРјРµРЅРЅСѓСЋ bProcessed");
 			uint nDecoders = (uint)PVDManager::Decoders.size();
 			if (nDecoders <= 1)
 				return false;
 
 			if (g_Plugin.FlagsWork & FW_TERMINATE)
-				return false; // Плагин закрывается
+				return false; // РџР»Р°РіРёРЅ Р·Р°РєСЂС‹РІР°РµС‚СЃСЏ
 			//if (!g_Plugin.hWnd)
 			//	return false; 
 
@@ -246,20 +246,20 @@ bool ImageInfo::ImageDecode(void)
 	//this->iPage = 0;
 	const uint nPages = this->nPages;
 	//_ASSERTE(nPage < nPages);
-	// Допустимая ситуация. Открыли djvu через djvu.pvd
-	// Переключились на другой декодер (AltPgDn), согласился Shell.pvd, а он умеет только
-	// превьюшку - то есть только одну страницу.
+	// Р”РѕРїСѓСЃС‚РёРјР°СЏ СЃРёС‚СѓР°С†РёСЏ. РћС‚РєСЂС‹Р»Рё djvu С‡РµСЂРµР· djvu.pvd
+	// РџРµСЂРµРєР»СЋС‡РёР»РёСЃСЊ РЅР° РґСЂСѓРіРѕР№ РґРµРєРѕРґРµСЂ (AltPgDn), СЃРѕРіР»Р°СЃРёР»СЃСЏ Shell.pvd, Р° РѕРЅ СѓРјРµРµС‚ С‚РѕР»СЊРєРѕ
+	// РїСЂРµРІСЊСЋС€РєСѓ - С‚Рѕ РµСЃС‚СЊ С‚РѕР»СЊРєРѕ РѕРґРЅСѓ СЃС‚СЂР°РЅРёС†Сѓ.
 	if (nPage >= nPages) 
 		nPage = 0;
 	
-	// InfoPage - мог быть уже получен, тогда декодер не будет повторно дергать pvdPageInfo
+	// InfoPage - РјРѕРі Р±С‹С‚СЊ СѓР¶Рµ РїРѕР»СѓС‡РµРЅ, С‚РѕРіРґР° РґРµРєРѕРґРµСЂ РЅРµ Р±СѓРґРµС‚ РїРѕРІС‚РѕСЂРЅРѕ РґРµСЂРіР°С‚СЊ pvdPageInfo
 	bool result = Decoder->Decode(this, &pDraw, false, InfoPage);
-	// Количество страниц (если оно изменилось) обновляется через CheckPages(...)
-	// Этот AI убираем. Пусть PVD_IIF_ANIMATED выставляет сам PVD
+	// РљРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚СЂР°РЅРёС† (РµСЃР»Рё РѕРЅРѕ РёР·РјРµРЅРёР»РѕСЃСЊ) РѕР±РЅРѕРІР»СЏРµС‚СЃСЏ С‡РµСЂРµР· CheckPages(...)
+	// Р­С‚РѕС‚ AI СѓР±РёСЂР°РµРј. РџСѓСЃС‚СЊ PVD_IIF_ANIMATED РІС‹СЃС‚Р°РІР»СЏРµС‚ СЃР°Рј PVD
 	//if (nPages != this->nPages) // buggy GFL with animated GIF
 	//	this->Animation = 1;
-	// Пока вообще не закрываем
-	//TODO("Когда потребуется уточненное декодирование возможно придется не закрывать и с одной страницей");
+	// РџРѕРєР° РІРѕРѕР±С‰Рµ РЅРµ Р·Р°РєСЂС‹РІР°РµРј
+	//TODO("РљРѕРіРґР° РїРѕС‚СЂРµР±СѓРµС‚СЃСЏ СѓС‚РѕС‡РЅРµРЅРЅРѕРµ РґРµРєРѕРґРёСЂРѕРІР°РЅРёРµ РІРѕР·РјРѕР¶РЅРѕ РїСЂРёРґРµС‚СЃСЏ РЅРµ Р·Р°РєСЂС‹РІР°С‚СЊ Рё СЃ РѕРґРЅРѕР№ СЃС‚СЂР°РЅРёС†РµР№");
 	//if (!result || this->nPages < 2)
 	//{
 	//	this->Decoder->Close();
@@ -271,8 +271,8 @@ bool ImageInfo::ImageDecode(void)
 		Decoder->Close();
 	} else {
 		if (this == g_Plugin.Image[0]) {
-			// Иначе в GDI что-то не перерисовывается
-			TODO("Не помогло. тут (this != g_Plugin.Image[0])");
+			// РРЅР°С‡Рµ РІ GDI С‡С‚Рѕ-С‚Рѕ РЅРµ РїРµСЂРµСЂРёСЃРѕРІС‹РІР°РµС‚СЃСЏ
+			TODO("РќРµ РїРѕРјРѕРіР»Рѕ. С‚СѓС‚ (this != g_Plugin.Image[0])");
 			InvalidateRect(g_Plugin.hWnd, NULL, FALSE);
 		}
 
@@ -289,7 +289,7 @@ bool ImageInfo::ImageDecode(void)
 				this->SetPanelItemRaw(g_Plugin.FarPanelInfo.CurrentItem);
 				this->bSelected = false;
 				g_Plugin.nPanelFolders = 0;
-				//2009-09-05. Из nPanelItems нужно вычесть количество папок (в том числе и "..")
+				//2009-09-05. РР· nPanelItems РЅСѓР¶РЅРѕ РІС‹С‡РµСЃС‚СЊ РєРѕР»РёС‡РµСЃС‚РІРѕ РїР°РїРѕРє (РІ С‚РѕРј С‡РёСЃР»Рµ Рё "..")
 				if (g_Plugin.nPanelItems > 0) {
 					uint nMaxSize = 0x200;
 					PluginPanelItem* item = (PluginPanelItem*)calloc(nMaxSize,1);
@@ -309,11 +309,11 @@ bool ImageInfo::ImageDecode(void)
 							if ((item->FindData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0) {
 								g_Plugin.nPanelFolders ++;
 							} else {
-								break; // дошли до первого файла, считаем, что папки кончились!
+								break; // РґРѕС€Р»Рё РґРѕ РїРµСЂРІРѕРіРѕ С„Р°Р№Р»Р°, СЃС‡РёС‚Р°РµРј, С‡С‚Рѕ РїР°РїРєРё РєРѕРЅС‡РёР»РёСЃСЊ!
 							}
 						}
 
-						// Теперь нужно получить информацию о выделении файла 
+						// РўРµРїРµСЂСЊ РЅСѓР¶РЅРѕ РїРѕР»СѓС‡РёС‚СЊ РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ РІС‹РґРµР»РµРЅРёРё С„Р°Р№Р»Р° 
 						i = this->PanelItemRaw();
 						nSize = g_StartupInfo.Control(INVALID_HANDLE_VALUE, FCTL_GETPANELITEM, i, NULL);
 						if (nSize) {
@@ -341,7 +341,7 @@ bool ImageInfo::ImageDecode(void)
 void ImageInfo::DisplayClose()
 {
 	if (pDraw) {
-		// Сбрасываем сразу, чтобы нить отрисовки знала - ничего нет...
+		// РЎР±СЂР°СЃС‹РІР°РµРј СЃСЂР°Р·Сѓ, С‡С‚РѕР±С‹ РЅРёС‚СЊ РѕС‚СЂРёСЃРѕРІРєРё Р·РЅР°Р»Р° - РЅРёС‡РµРіРѕ РЅРµС‚...
 		LPVOID lpDraw = pDraw;
 		pDraw = NULL;
 		
@@ -355,20 +355,20 @@ SIZE ImageInfo::GetDefaultScaleSize()
 {
 	RECT ParentRect = GetDisplayRect(); //{0, 0, 1280, 960};
 	
-	//const вызывает инициализацию переменных ДО входа в функцию (по возможности). что нам не подходит - хочется видеть последовательность действий!
+	//const РІС‹Р·С‹РІР°РµС‚ РёРЅРёС†РёР°Р»РёР·Р°С†РёСЋ РїРµСЂРµРјРµРЅРЅС‹С… Р”Рћ РІС…РѕРґР° РІ С„СѓРЅРєС†РёСЋ (РїРѕ РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё). С‡С‚Рѕ РЅР°Рј РЅРµ РїРѕРґС…РѕРґРёС‚ - С…РѕС‡РµС‚СЃСЏ РІРёРґРµС‚СЊ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РґРµР№СЃС‚РІРёР№!
 	int lScreenWidth = ParentRect.right - ParentRect.left;
 	int lScreenHeight = ParentRect.bottom - ParentRect.top;
 
 	RECT ImgRect = {0,0,lScreenWidth,lScreenHeight};
 	
-	// Тут используем НЕ this->lWidth & this->lHeight
-	// а InfoPage.lWidth & InfoPage.lHeight. Т.к. именно они
-	// будут содержать актуальную информацию о декодируемой СТРАНИЦЕ многостраничного документа
+	// РўСѓС‚ РёСЃРїРѕР»СЊР·СѓРµРј РќР• this->lWidth & this->lHeight
+	// Р° InfoPage.lWidth & InfoPage.lHeight. Рў.Рє. РёРјРµРЅРЅРѕ РѕРЅРё
+	// Р±СѓРґСѓС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ Р°РєС‚СѓР°Р»СЊРЅСѓСЋ РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ РґРµРєРѕРґРёСЂСѓРµРјРѕР№ РЎРўР РђРќРР¦Р• РјРЅРѕРіРѕСЃС‚СЂР°РЅРёС‡РЅРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р°
 	
 	u32 Zoom;
 	if (g_Plugin.ZoomAuto || g_Plugin.FlagsWork & FW_QUICK_VIEW)
 	{
-		//const вызывает инициализацию переменных ДО входа в функцию (по возможности). что нам не подходит - хочется видеть последовательность действий!
+		//const РІС‹Р·С‹РІР°РµС‚ РёРЅРёС†РёР°Р»РёР·Р°С†РёСЋ РїРµСЂРµРјРµРЅРЅС‹С… Р”Рћ РІС…РѕРґР° РІ С„СѓРЅРєС†РёСЋ (РїРѕ РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё). С‡С‚Рѕ РЅР°Рј РЅРµ РїРѕРґС…РѕРґРёС‚ - С…РѕС‡РµС‚СЃСЏ РІРёРґРµС‚СЊ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РґРµР№СЃС‚РІРёР№!
 		u32 ZoomW = MulDivU32(lScreenWidth, 0x10000, InfoPage.lWidth /*dds->m_lWorkWidth*/);
 		u32 ZoomH = MulDivU32(lScreenHeight, 0x10000, InfoPage.lHeight /*dds->m_lWorkHeight*/);
 		Zoom = (g_Plugin.ZoomAuto == ZA_FIT || g_Plugin.FlagsWork & FW_QUICK_VIEW) ? Min(ZoomW, ZoomH) : Max(ZoomW, ZoomH);
@@ -385,7 +385,7 @@ SIZE ImageInfo::GetDefaultScaleSize()
 	}
 
 	
-	//const вызывает инициализацию переменных ДО входа в функцию (по возможности). что нам не подходит - хочется видеть последовательность действий!
+	//const РІС‹Р·С‹РІР°РµС‚ РёРЅРёС†РёР°Р»РёР·Р°С†РёСЋ РїРµСЂРµРјРµРЅРЅС‹С… Р”Рћ РІС…РѕРґР° РІ С„СѓРЅРєС†РёСЋ (РїРѕ РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё). С‡С‚Рѕ РЅР°Рј РЅРµ РїРѕРґС…РѕРґРёС‚ - С…РѕС‡РµС‚СЃСЏ РІРёРґРµС‚СЊ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РґРµР№СЃС‚РІРёР№!
 	int lWidth = MulDivU32R(InfoPage.lWidth, Zoom, 0x10000);
 	int lHeight = MulDivU32R(InfoPage.lHeight, Zoom, 0x10000);
 	
@@ -436,8 +436,8 @@ PluginData::PluginData()
 	FlagsDisplay = FlagsWork = 0;
 	SelectionChanged = false;
 
-	// вроде так: Image[0] - текущий, [1] и [2] буферы кеширования
-	// ImageX указатель на тот Image[jj], который сейчас декодируется
+	// РІСЂРѕРґРµ С‚Р°Рє: Image[0] - С‚РµРєСѓС‰РёР№, [1] Рё [2] Р±СѓС„РµСЂС‹ РєРµС€РёСЂРѕРІР°РЅРёСЏ
+	// ImageX СѓРєР°Р·Р°С‚РµР»СЊ РЅР° С‚РѕС‚ Image[jj], РєРѕС‚РѕСЂС‹Р№ СЃРµР№С‡Р°СЃ РґРµРєРѕРґРёСЂСѓРµС‚СЃСЏ
 	ZeroMemory(Image,sizeof(Image)); ImageX = NULL;
 
 	ZeroMemory(&FarPanelInfo, sizeof(FarPanelInfo));
@@ -547,13 +547,13 @@ bool PluginData::InitHooks()
 	g_Plugin.FarVersion = (DWORD)g_StartupInfo.AdvControl(g_StartupInfo.ModuleNumber, ACTL_GETFARVERSION, NULL);
 	g_Plugin.hDesktopWnd = GetDesktopWindow();
 
-	//2009-10-04 динамическая длина
+	//2009-10-04 РґРёРЅР°РјРёС‡РµСЃРєР°СЏ РґР»РёРЅР°
 	g_SelfPath = _wcsdup(g_StartupInfo.ModuleName);
 	wchar_t *p = wcsrchr(g_SelfPath, '\\');
 	_ASSERTE(p);
 	if (p) p[1] = 0; else g_SelfPath[0] = 0;
 
-	// Сформируем наш ключ реестра
+	// РЎС„РѕСЂРјРёСЂСѓРµРј РЅР°С€ РєР»СЋС‡ СЂРµРµСЃС‚СЂР°
 	_ASSERTE(g_StartupInfo.RootKey && *g_StartupInfo.RootKey);
 	g_RootKey = ConcatPath(g_StartupInfo.RootKey, L"PictureView2");
 		
@@ -608,10 +608,10 @@ bool PluginData::InitPlugin()
 
 	MCHKHEAP;
 	
-	// Минимальная инициализация - только тип активации плагина
+	// РњРёРЅРёРјР°Р»СЊРЅР°СЏ РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ - С‚РѕР»СЊРєРѕ С‚РёРї Р°РєС‚РёРІР°С†РёРё РїР»Р°РіРёРЅР°
 	InitHooks();
 
-	// Палитры по умолчанию (если декодер не вернул палитру для индексированного цвета)
+	// РџР°Р»РёС‚СЂС‹ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ (РµСЃР»Рё РґРµРєРѕРґРµСЂ РЅРµ РІРµСЂРЅСѓР» РїР°Р»РёС‚СЂСѓ РґР»СЏ РёРЅРґРµРєСЃРёСЂРѕРІР°РЅРЅРѕРіРѕ С†РІРµС‚Р°)
 	CreateDefaultPalettes();
 
 	g_Plugin.bCachingRP = true;
@@ -736,16 +736,16 @@ bool PluginData::InitPlugin()
 		RegCloseKey(RegKey);
 	}
 
-	UnregisterClass(g_WndClassName, g_hInstance); // если вдруг остался зарегистрированным старый класс
+	UnregisterClass(g_WndClassName, g_hInstance); // РµСЃР»Рё РІРґСЂСѓРі РѕСЃС‚Р°Р»СЃСЏ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅС‹Рј СЃС‚Р°СЂС‹Р№ РєР»Р°СЃСЃ
 	const WNDCLASSW wc = {CS_OWNDC | CS_DBLCLKS, WndProc, 0, 0, g_hInstance, NULL, LoadCursor(NULL, IDC_ARROW), NULL/*(HBRUSH)COLOR_BACKGROUND*/, NULL, g_WndClassName};
 	RegisterClassW(&wc);
 
-	// Добавить папку g_SelfPath в список, в котором ищутся загружаемые .dll
+	// Р”РѕР±Р°РІРёС‚СЊ РїР°РїРєСѓ g_SelfPath РІ СЃРїРёСЃРѕРє, РІ РєРѕС‚РѕСЂРѕРј РёС‰СѓС‚СЃСЏ Р·Р°РіСЂСѓР¶Р°РµРјС‹Рµ .dll
 	if (const HMODULE hKernel = GetModuleHandleW(L"kernel32.dll"))
 		if (void (__stdcall *SetDllDirectory)(LPCWSTR lpPathName) = (void (__stdcall*)(LPCWSTR))GetProcAddress(hKernel, "SetDllDirectoryW"))
 			SetDllDirectory(g_SelfPath);
 
-	TODO("По хорошему бы заменить все GetStdHandle(STD_INPUT_HANDLE/STD_OUTPUT_HANDLE) на явные CreateFile");
+	TODO("РџРѕ С…РѕСЂРѕС€РµРјСѓ Р±С‹ Р·Р°РјРµРЅРёС‚СЊ РІСЃРµ GetStdHandle(STD_INPUT_HANDLE/STD_OUTPUT_HANDLE) РЅР° СЏРІРЅС‹Рµ CreateFile");
 	//g_Plugin.hInput = GetStdHandle(STD_INPUT_HANDLE);
 	//g_Plugin.hOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 	g_Plugin.bFullScreen = g_Plugin.bFullScreenStartup;
@@ -777,7 +777,7 @@ bool PluginData::InitPlugin()
 
 
 	HRESULT hr = S_OK;
-	hr = OleInitialize (NULL); // как бы попробовать включать Ole только во время драга. кажется что из-за него глючит переключалка языка
+	hr = OleInitialize (NULL); // РєР°Рє Р±С‹ РїРѕРїСЂРѕР±РѕРІР°С‚СЊ РІРєР»СЋС‡Р°С‚СЊ Ole С‚РѕР»СЊРєРѕ РІРѕ РІСЂРµРјСЏ РґСЂР°РіР°. РєР°Р¶РµС‚СЃСЏ С‡С‚Рѕ РёР·-Р·Р° РЅРµРіРѕ РіР»СЋС‡РёС‚ РїРµСЂРµРєР»СЋС‡Р°Р»РєР° СЏР·С‹РєР°
 	//CoInitializeEx(NULL, COINIT_MULTITHREADED);
 
 
@@ -799,18 +799,18 @@ bool PluginData::InitPlugin()
 
 bool PluginData::InitCMYK(BOOL bForceLoad)
 {
-	// Убрал. От InitPlugin мы вроде не зависим
-	//if (!bInitialized) // на всякий случай
+	// РЈР±СЂР°Р». РћС‚ InitPlugin РјС‹ РІСЂРѕРґРµ РЅРµ Р·Р°РІРёСЃРёРј
+	//if (!bInitialized) // РЅР° РІСЃСЏРєРёР№ СЃР»СѓС‡Р°Р№
 	//	InitPlugin();
 
 	if (bCMYKinitialized) {
-		if (!pCMYKpalette) // На всякий случай - проверим
+		if (!pCMYKpalette) // РќР° РІСЃСЏРєРёР№ СЃР»СѓС‡Р°Р№ - РїСЂРѕРІРµСЂРёРј
 			uCMYK2RGB = PVD_CMYK2RGB_FAST;
 		return (pCMYKpalette!=NULL);
 	}
 
 	if (!bForceLoad) {
-		// Если насильно грузить не просили - то и не дергаться, если палитра не используется
+		// Р•СЃР»Рё РЅР°СЃРёР»СЊРЅРѕ РіСЂСѓР·РёС‚СЊ РЅРµ РїСЂРѕСЃРёР»Рё - С‚Рѕ Рё РЅРµ РґРµСЂРіР°С‚СЊСЃСЏ, РµСЃР»Рё РїР°Р»РёС‚СЂР° РЅРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ
 		if (uCMYK2RGB == PVD_CMYK2RGB_FAST)
 			return false;
 	}
@@ -832,7 +832,7 @@ bool PluginData::InitCMYK(BOOL bForceLoad)
 	//	}
 	//}
 	//if (!bReqFinished)
-	//	return true; // Требуется только запустить нить, данные пока НЕ нужны
+	//	return true; // РўСЂРµР±СѓРµС‚СЃСЏ С‚РѕР»СЊРєРѕ Р·Р°РїСѓСЃС‚РёС‚СЊ РЅРёС‚СЊ, РґР°РЅРЅС‹Рµ РїРѕРєР° РќР• РЅСѓР¶РЅС‹
 	//WaitForSingleObject(hCMYKthread, INFINITE);
 
 	bCMYKinitialized = true;
@@ -867,23 +867,23 @@ bool PluginData::InitCMYK(BOOL bForceLoad)
 		g_StartupInfo.Message(g_StartupInfo.ModuleNumber, FMSG_WARNING|FMSG_MB_OK, 
 			NULL, pszItems, nItems, 0);
 
-		// Сказать, что палитру использовать нельзя
+		// РЎРєР°Р·Р°С‚СЊ, С‡С‚Рѕ РїР°Р»РёС‚СЂСѓ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РЅРµР»СЊР·СЏ
 		uCMYK2RGB = PVD_CMYK2RGB_FAST;
 
-		// Если диалог с ошибкой был закрыт через Esc - дождаться отпускания клавиши
+		// Р•СЃР»Рё РґРёР°Р»РѕРі СЃ РѕС€РёР±РєРѕР№ Р±С‹Р» Р·Р°РєСЂС‹С‚ С‡РµСЂРµР· Esc - РґРѕР¶РґР°С‚СЊСЃСЏ РѕС‚РїСѓСЃРєР°РЅРёСЏ РєР»Р°РІРёС€Рё
 		while (GetKeyState(VK_ESCAPE) & 0x8000) Sleep(1);
-		// и очистить буфер ввода - там мог Esc остаться, что приведет к неожиданному закрытию картинки
+		// Рё РѕС‡РёСЃС‚РёС‚СЊ Р±СѓС„РµСЂ РІРІРѕРґР° - С‚Р°Рј РјРѕРі Esc РѕСЃС‚Р°С‚СЊСЃСЏ, С‡С‚Рѕ РїСЂРёРІРµРґРµС‚ Рє РЅРµРѕР¶РёРґР°РЅРЅРѕРјСѓ Р·Р°РєСЂС‹С‚РёСЋ РєР°СЂС‚РёРЅРєРё
 		FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
-		// сбросить флаг для этой функции
+		// СЃР±СЂРѕСЃРёС‚СЊ С„Р»Р°Рі РґР»СЏ СЌС‚РѕР№ С„СѓРЅРєС†РёРё
 		GetAsyncKeyState(VK_ESCAPE); 
 	}
 
 	return (pCMYKpalette!=NULL);
 
-	//bCMYKinitialized = true; // повторно не выполнять
+	//bCMYKinitialized = true; // РїРѕРІС‚РѕСЂРЅРѕ РЅРµ РІС‹РїРѕР»РЅСЏС‚СЊ
 
 	//bool lbRc = false;
-	//PVDManager decoder(NULL); // сразу, чтобы переменная со строкой статуса не разрушилась до Message
+	//PVDManager decoder(NULL); // СЃСЂР°Р·Сѓ, С‡С‚РѕР±С‹ РїРµСЂРµРјРµРЅРЅР°СЏ СЃРѕ СЃС‚СЂРѕРєРѕР№ СЃС‚Р°С‚СѓСЃР° РЅРµ СЂР°Р·СЂСѓС€РёР»Р°СЃСЊ РґРѕ Message
 	//const wchar_t* pszItems[10];
 	//int nItems = 0;
 
@@ -926,7 +926,7 @@ bool PluginData::InitCMYK(BOOL bForceLoad)
 	//					} else if (DecodeInfo.ColorModel != PVD_CM_BGR) {
 	//						pszItems[nItems++] = GetMsg(MICMYKpaletteInvalidColor);
 	//					} else {
-	//						nCMYKparts = 17; // пока фиксировано
+	//						nCMYKparts = 17; // РїРѕРєР° С„РёРєСЃРёСЂРѕРІР°РЅРѕ
 	//						nCMYKsize = DecodeInfo.lWidth*DecodeInfo.lHeight;
 	//						pCMYKpalette = (DWORD*)calloc(nCMYKsize,4);
 	//						if (!pCMYKpalette) {
@@ -971,12 +971,12 @@ bool PluginData::InitCMYK(BOOL bForceLoad)
 	//	uCMYK2RGB = PVD_CMYK2RGB_FAST;
 	//	while (GetKeyState(VK_ESCAPE) & 0x8000)
 	//		Sleep(1);
-	//	// Очистить буфер ввода - там мог Esc остаться, что приведет к неожиданному закрытию картинки
+	//	// РћС‡РёСЃС‚РёС‚СЊ Р±СѓС„РµСЂ РІРІРѕРґР° - С‚Р°Рј РјРѕРі Esc РѕСЃС‚Р°С‚СЊСЃСЏ, С‡С‚Рѕ РїСЂРёРІРµРґРµС‚ Рє РЅРµРѕР¶РёРґР°РЅРЅРѕРјСѓ Р·Р°РєСЂС‹С‚РёСЋ РєР°СЂС‚РёРЅРєРё
 	//	FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE)/*g_Plugin.hInput*/);
 	//	//INPUT_RECORD ir; u32 t = 0;
 	//	//while (PeekConsoleInput(g_Plugin.hInput, &ir, 1, &t) && t)
 	//	//	ReadConsoleInput(g_Plugin.hInput, &ir, 1, &t);
-	//	GetAsyncKeyState(VK_ESCAPE); // сбросить флаг для этой функции
+	//	GetAsyncKeyState(VK_ESCAPE); // СЃР±СЂРѕСЃРёС‚СЊ С„Р»Р°Рі РґР»СЏ СЌС‚РѕР№ С„СѓРЅРєС†РёРё
 	//}
 	//
 	//return lbRc;
@@ -1052,12 +1052,12 @@ bool PluginData::IsExtensionIgnored(const wchar_t *pFileName)
 	//else
 	//	p = NULL;
 
-	// Если расширение указано в "необрабатываемых"
+	// Р•СЃР»Рё СЂР°СЃС€РёСЂРµРЅРёРµ СѓРєР°Р·Р°РЅРѕ РІ "РЅРµРѕР±СЂР°Р±Р°С‚С‹РІР°РµРјС‹С…"
 	if (g_Plugin.sIgnoredExt[0])
 	{
 		//if (!p || !*p)
 		//{
-		//	// Для пропускания файлов без расширений - задать в списке точку
+		//	// Р”Р»СЏ РїСЂРѕРїСѓСЃРєР°РЅРёСЏ С„Р°Р№Р»РѕРІ Р±РµР· СЂР°СЃС€РёСЂРµРЅРёР№ - Р·Р°РґР°С‚СЊ РІ СЃРїРёСЃРєРµ С‚РѕС‡РєСѓ
 		//	if (ExtensionMatch(g_Plugin.sIgnoredExt, L"."))
 		//		return true;
 		//} else

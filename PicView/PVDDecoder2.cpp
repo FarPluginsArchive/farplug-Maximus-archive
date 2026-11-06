@@ -154,7 +154,7 @@ bool PVDDecoderVer2::LoadFormatsFromPvd()
 	return true;
 }
 
-// Загрузить, инициализировать, получить список форматов
+// Р—Р°РіСЂСѓР·РёС‚СЊ, РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°С‚СЊ, РїРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє С„РѕСЂРјР°С‚РѕРІ
 bool PVDDecoderVer2::InitPlugin(bool bAllowResort/*=false*/)
 {
 	if (bInitialized) return true;
@@ -223,7 +223,7 @@ bool PVDDecoderVer2::InitPlugin(bool bAllowResort/*=false*/)
 				bool bOneAtLeast = false, bSomeFlagsDropped = false;
 				
 				if (result && (nFlags & PVD_IP_DECODE)) {
-					// Интерфейс декодера
+					// РРЅС‚РµСЂС„РµР№СЃ РґРµРєРѕРґРµСЂР°
 					if (!fFileOpen2 || !fPageInfo2 || !fPageDecode2 || !fPageFree2 || !fFileClose2 || !fGetFormats2)
 					{
 						nCurrentFlags &= ~PVD_IP_DECODE; bSomeFlagsDropped = true;
@@ -246,7 +246,7 @@ bool PVDDecoderVer2::InitPlugin(bool bAllowResort/*=false*/)
 					//TODO: PVD_IP_TRANSFORM
 				}
 				if (result && (nFlags & PVD_IP_DISPLAY)) {
-					// Интерфейс дисплея
+					// РРЅС‚РµСЂС„РµР№СЃ РґРёСЃРїР»РµСЏ
 					if (!fDisplayInit2 || !fDisplayCreate2 || !fDisplayPaint2 || !fDisplayClose2 || !fDisplayExit2 || !fDisplayAttach2)
 					{
 						nCurrentFlags &= ~PVD_IP_DISPLAY; bSomeFlagsDropped = true;
@@ -325,7 +325,7 @@ bool PVDDecoderVer2::PluginInfo2()
 	}
 
 	if (lbRc) {
-		// Заглушка для in_Apl. не возвращает нужные флаги
+		// Р—Р°РіР»СѓС€РєР° РґР»СЏ in_Apl. РЅРµ РІРѕР·РІСЂР°С‰Р°РµС‚ РЅСѓР¶РЅС‹Рµ С„Р»Р°РіРё
 		if (pip.pName) {
 			if (lstrcmpi(pip.pName, L"IN_APL")==0)
 				pip.Flags |= PVD_IP_DECODE;
@@ -357,7 +357,7 @@ bool PVDDecoderVer2::PluginInfo2()
 					if (RegQueryValueEx(hkey, L"Priority", 0, 0, (LPBYTE)&pData->nPriority, &nSize)
 						|| !pData->nPriority)
 					{
-						// Если приоритет юзером ни разу не задавался - тут еще 0. Запишем "умолчательный"
+						// Р•СЃР»Рё РїСЂРёРѕСЂРёС‚РµС‚ СЋР·РµСЂРѕРј РЅРё СЂР°Р·Сѓ РЅРµ Р·Р°РґР°РІР°Р»СЃСЏ - С‚СѓС‚ РµС‰Рµ 0. Р—Р°РїРёС€РµРј "СѓРјРѕР»С‡Р°С‚РµР»СЊРЅС‹Р№"
 						pData->nPriority = pip.Priority;
 						RegSetValueEx(hkey, L"Priority", 0, REG_DWORD, (LPBYTE)&pip.Priority, sizeof(pip.Priority));
 					}
@@ -365,7 +365,7 @@ bool PVDDecoderVer2::PluginInfo2()
 				RegCloseKey(hkey); hkey = NULL;
 			}
 		}
-		nDefPriority = max(1,pip.Priority);
+		nDefPriority = Max(1u,pip.Priority);
 		
 		#ifdef _DEBUG
 		wchar_t szDbg[128]; wsprintf(szDbg, L"PluginInfo> Priority:0x%04X, Flags:0x%04X", pip.Priority, nFlags);
@@ -384,7 +384,7 @@ BOOL PVDDecoderVer2::TranslateError2(DWORD nErrNumber, wchar_t *pszErrInfo, int 
 		return FALSE;
 	}
 
-	// Некоторые нерадивые субплагины не возвращают nErrNumber но вываливаются по ошибке
+	// РќРµРєРѕС‚РѕСЂС‹Рµ РЅРµСЂР°РґРёРІС‹Рµ СЃСѓР±РїР»Р°РіРёРЅС‹ РЅРµ РІРѕР·РІСЂР°С‰Р°СЋС‚ nErrNumber РЅРѕ РІС‹РІР°Р»РёРІР°СЋС‚СЃСЏ РїРѕ РѕС€РёР±РєРµ
 	if (hPlugin && fTranslateError2 && nErrNumber) {
 		TRY {
 			pszErrInfo[0] = 0;
@@ -403,14 +403,14 @@ BOOL PVDDecoderVer2::TranslateError2(DWORD nErrNumber, wchar_t *pszErrInfo, int 
 	return PVDDecoderBase::TranslateError2(nErrNumber, pszErrInfo, nBufLen);
 }
 
-// 0-информация, 1-предупреждение, 2-ошибка
+// 0-РёРЅС„РѕСЂРјР°С†РёСЏ, 1-РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёРµ, 2-РѕС€РёР±РєР°
 void PVDDecoderVer2::apiMessageLog(void *apCallbackContext, const wchar_t* asMessage, UINT32 anSeverity)
 {
 	OutputDebugString(asMessage);
 	PVDDecoderBase* pSubPlugin = (PVDDecoderBase*)apCallbackContext;
 	if (pSubPlugin && asMessage) {
 		TRY {
-			// !!! Тут именно Plugins, т.к. pvdInit2 вызывается один раз на модуль, независимо от его типа
+			// !!! РўСѓС‚ РёРјРµРЅРЅРѕ Plugins, С‚.Рє. pvdInit2 РІС‹Р·С‹РІР°РµС‚СЃСЏ РѕРґРёРЅ СЂР°Р· РЅР° РјРѕРґСѓР»СЊ, РЅРµР·Р°РІРёСЃРёРјРѕ РѕС‚ РµРіРѕ С‚РёРїР°
 			for (UINT i=0; i<PVDManager::Plugins.size(); i++) {
 				if (pSubPlugin == PVDManager::Plugins[i]->pPlugin) {
 					pSubPlugin->SetStatus(asMessage);
@@ -424,7 +424,7 @@ void PVDDecoderVer2::apiMessageLog(void *apCallbackContext, const wchar_t* asMes
 	}
 }
 
-// asExtList может содержать '*' (тогда всегда TRUE) или '.' (TRUE если asExt пусто)
+// asExtList РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ '*' (С‚РѕРіРґР° РІСЃРµРіРґР° TRUE) РёР»Рё '.' (TRUE РµСЃР»Рё asExt РїСѓСЃС‚Рѕ)
 BOOL PVDDecoderVer2::apiExtensionMatch(wchar_t* asExtList, const wchar_t* asExt)
 {
 	if (!asExtList || !asExt) return FALSE;
@@ -512,7 +512,7 @@ int PVDDecoderVer2::apiSortExtensions(wchar_t* pszExtensions)
 	while (i!=lExts.end())
 	{
 		if (szExt[0] && !lstrcmpW(szExt, i->s)) {
-			i++; continue; // дубли пропускаем
+			i++; continue; // РґСѓР±Р»Рё РїСЂРѕРїСѓСЃРєР°РµРј
 		}
 		lstrcpy(szExt, i->s);
 		nLen = i->nLen;
@@ -563,7 +563,7 @@ BOOL PVDDecoderVer2::Init2()
 	FUNCLOGGER(L"PVDDecoderVer2::Init2()");
 	
 	if (hPlugin && fInit2) {
-		// В плагин нужно передавать ПОДветку реестра. например .../pvd.bmp/Settings, чтобы случайно имена ключен не пересеклись
+		// Р’ РїР»Р°РіРёРЅ РЅСѓР¶РЅРѕ РїРµСЂРµРґР°РІР°С‚СЊ РџРћР”РІРµС‚РєСѓ СЂРµРµСЃС‚СЂР°. РЅР°РїСЂРёРјРµСЂ .../pvd.bmp/Settings, С‡С‚РѕР±С‹ СЃР»СѓС‡Р°Р№РЅРѕ РёРјРµРЅР° РєР»СЋС‡РµРЅ РЅРµ РїРµСЂРµСЃРµРєР»РёСЃСЊ
 		pvdInitPlugin2 pip = {sizeof(pvdInitPlugin2)};
 		pip.nMaxVersion = PVD_UNICODE_INTERFACE_VERSION;
 		pip.pRegKey = pRegSettings;
@@ -642,9 +642,9 @@ BOOL PVDDecoderVer2::PageInfo2(void *pImageContext, pvdInfoPage2 *pPageInfo)
 	
 	FUNCLOGGER(L"PVDDecoderVer2::PageInfo2()");
 	
-	pPageInfo->nPages = 0; // если плагин установит новое значение, значит количество страниц было скорректировано
+	pPageInfo->nPages = 0; // РµСЃР»Рё РїР»Р°РіРёРЅ СѓСЃС‚Р°РЅРѕРІРёС‚ РЅРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ, Р·РЅР°С‡РёС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚СЂР°РЅРёС† Р±С‹Р»Рѕ СЃРєРѕСЂСЂРµРєС‚РёСЂРѕРІР°РЅРѕ
 	if (hPlugin && fPageInfo2) {
-		//pPageInfo->iPage = iPage; -- поле должно быть выставлено
+		//pPageInfo->iPage = iPage; -- РїРѕР»Рµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РІС‹СЃС‚Р°РІР»РµРЅРѕ
 		TRY {
 			result = fPageInfo2(mp_Context, pImageContext, pPageInfo);
 			if (!result)
@@ -664,7 +664,7 @@ BOOL PVDDecoderVer2::PageDecode2(void *pImageContext, pvdInfoDecode2 *pDecodeInf
 	
 	FUNCLOGGER(L"PVDDecoderVer2::PageDecode2()");
 	
-	pDecodeInfo->nPages = 0; // если плагин установит новое значение, значит количество страниц было скорректировано
+	pDecodeInfo->nPages = 0; // РµСЃР»Рё РїР»Р°РіРёРЅ СѓСЃС‚Р°РЅРѕРІРёС‚ РЅРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ, Р·РЅР°С‡РёС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚СЂР°РЅРёС† Р±С‹Р»Рѕ СЃРєРѕСЂСЂРµРєС‚РёСЂРѕРІР°РЅРѕ
 	if (hPlugin && fPageDecode2) {
 		TRY {
 			result = fPageDecode2(mp_Context, pImageContext, pDecodeInfo, DecodeCallback, pDecodeCallbackContext);
@@ -689,7 +689,7 @@ void PVDDecoderVer2::PageFree2(void *pImageContext, pvdInfoDecode2 *pDecodeInfo)
 	
 	if (hPlugin && fPageFree2) {
 		TRY {
-			//TODO("когда починит - вернуть нормальную обработку");
+			//TODO("РєРѕРіРґР° РїРѕС‡РёРЅРёС‚ - РІРµСЂРЅСѓС‚СЊ РЅРѕСЂРјР°Р»СЊРЅСѓСЋ РѕР±СЂР°Р±РѕС‚РєСѓ");
 			//if (!wcscmp(pName, L"IN_APL"))
 			//	((pvdPageFree2Old_t)fPageFree2)(mp_Context, pImageContext, pDecodeInfo->iPage, pDecodeInfo);
 			//else
@@ -714,7 +714,7 @@ void PVDDecoderVer2::FileClose2(void *pImageContext)
 }
 
 void PVDDecoderVer2::ReloadConfig2()
-{	// Если плагин еще не был загружен - то и дергаться не нужно - настройки он считает сам
+{	// Р•СЃР»Рё РїР»Р°РіРёРЅ РµС‰Рµ РЅРµ Р±С‹Р» Р·Р°РіСЂСѓР¶РµРЅ - С‚Рѕ Рё РґРµСЂРіР°С‚СЊСЃСЏ РЅРµ РЅСѓР¶РЅРѕ - РЅР°СЃС‚СЂРѕР№РєРё РѕРЅ СЃС‡РёС‚Р°РµС‚ СЃР°Рј
 	if (hPlugin && fReloadConfig2) {
 		TRY {
 			fReloadConfig2(mp_Context);

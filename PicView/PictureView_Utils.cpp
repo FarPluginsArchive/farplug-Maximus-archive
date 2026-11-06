@@ -50,9 +50,9 @@ LONG RegKeyWrite(HKEY RegKey, const wchar_t* const Name, const u32 Param)
 	return RegSetValueExW(RegKey, Name, 0, REG_DWORD, (const BYTE*) &Param, 4);
 }
 
-// Выделить память и слепить полный путь к "Dir\Name".
-// Dir не обязан содержать на конце слэш
-// Если abReverseName==true - то при наличии в Name обратных слэшей - они заменяются на прямые (для реестра)
+// Р’С‹РґРµР»РёС‚СЊ РїР°РјСЏС‚СЊ Рё СЃР»РµРїРёС‚СЊ РїРѕР»РЅС‹Р№ РїСѓС‚СЊ Рє "Dir\Name".
+// Dir РЅРµ РѕР±СЏР·Р°РЅ СЃРѕРґРµСЂР¶Р°С‚СЊ РЅР° РєРѕРЅС†Рµ СЃР»СЌС€
+// Р•СЃР»Рё abReverseName==true - С‚Рѕ РїСЂРё РЅР°Р»РёС‡РёРё РІ Name РѕР±СЂР°С‚РЅС‹С… СЃР»СЌС€РµР№ - РѕРЅРё Р·Р°РјРµРЅСЏСЋС‚СЃСЏ РЅР° РїСЂСЏРјС‹Рµ (РґР»СЏ СЂРµРµСЃС‚СЂР°)
 wchar_t* ConcatPath(const wchar_t* Dir, const wchar_t* Name, bool abReverseName/*=false*/)
 {
 	_ASSERTE(Dir && Name); _ASSERTE(*Dir && *Name);

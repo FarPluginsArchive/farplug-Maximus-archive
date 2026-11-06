@@ -40,9 +40,9 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 wchar_t g_TitleTemplate[0x200];
 wchar_t g_QViewTemplate1[0x200], g_QViewTemplate2[0x200], g_QViewTemplate3[0x200];
 //const wchar_t g_DefaultTitleTemplate[] = L"\\{S* \\}\\N  \\{t<\\D>\\}  \\W x \\H x \\Bb\\{T   \\Z%\\{I   \\I\\}\\{P   [\\P]\\}   -   PictureView by \\D\\{F : \\F\\}\\{C   [\\C]\\}\\{M   {\\M}\\}   \\Tms\\}";
-const wchar_t g_DefaultTitleTemplate[] = L"\\{S* \\}\\NL12\\{t  <\\D>\\}\\{w  \\W•\\H•\\Bb\\}\\{T [\\W0•\\H0]   \\Z%\\{I   \\I\\}\\{P   [\\P]\\}   (\\D\\{F:\\F\\}\\{C:[\\C]\\}:\\R)  \\E=\\Tms\\} - PicView2";
+const wchar_t g_DefaultTitleTemplate[] = L"\\{S* \\}\\NL12\\{t  <\\D>\\}\\{w  \\WвЂў\\HвЂў\\Bb\\}\\{T [\\W0вЂў\\H0]   \\Z%\\{I   \\I\\}\\{P   [\\P]\\}   (\\D\\{F:\\F\\}\\{C:[\\C]\\}:\\R)  \\E=\\Tms\\} - PicView2";
 const wchar_t g_DefaultQViewTemplate1[] = L"$ PicView2: \\NL24 ";
-const wchar_t g_DefaultQViewTemplate2[] = L" \\W•\\H•\\Bb  \\Z%\\{P  [\\P]\\}  (\\D\\{F:\\F\\}\\{C:[\\C]\\})";
+const wchar_t g_DefaultQViewTemplate2[] = L" \\WвЂў\\HвЂў\\Bb  \\Z%\\{P  [\\P]\\}  (\\D\\{F:\\F\\}\\{C:[\\C]\\})";
 const wchar_t g_DefaultQViewTemplate3[] = L"#\\{T\\E=\\Tms\\}";
 
 void TemplatePrint(bool bDecoding, wchar_t *pTitleText, UINT nBufLen, const wchar_t* pTemplate)
@@ -65,7 +65,7 @@ void TemplatePrint(bool bDecoding, wchar_t *pTitleText, UINT nBufLen, const wcha
 				case '{':
 				{
 					bool bSkip = true;
-					// Маленькие буквы задают отрицание условия аналогичной заглавной буквы. ~0x20 -> UpperCase
+					// РњР°Р»РµРЅСЊРєРёРµ Р±СѓРєРІС‹ Р·Р°РґР°СЋС‚ РѕС‚СЂРёС†Р°РЅРёРµ СѓСЃР»РѕРІРёСЏ Р°РЅР°Р»РѕРіРёС‡РЅРѕР№ Р·Р°РіР»Р°РІРЅРѕР№ Р±СѓРєРІС‹. ~0x20 -> UpperCase
 					switch (*ps & ~0x20)
 					{
 						case 0: bSkip = false; ps--; break;
@@ -78,7 +78,7 @@ void TemplatePrint(bool bDecoding, wchar_t *pTitleText, UINT nBufLen, const wcha
 						case 'S': bSkip = !g_Plugin.Image[0]->bSelected; break;
 						case 'W': bSkip = g_Plugin.Image[0]->lWidth > 0; break;
 					}
-					// Проверка положительного/отрицательного условия
+					// РџСЂРѕРІРµСЂРєР° РїРѕР»РѕР¶РёС‚РµР»СЊРЅРѕРіРѕ/РѕС‚СЂРёС†Р°С‚РµР»СЊРЅРѕРіРѕ СѓСЃР»РѕРІРёСЏ
 					if ((bool)(*ps++ & 0x20) ^ bSkip)
 						for (uint iLevel = 1; iLevel;)
 						{
@@ -126,10 +126,10 @@ void TemplatePrint(bool bDecoding, wchar_t *pTitleText, UINT nBufLen, const wcha
 					}
 					else
 					{
-						TODO("Заменить iPanelItemRaw на номер в фильтрованном списке");
+						TODO("Р—Р°РјРµРЅРёС‚СЊ iPanelItemRaw РЅР° РЅРѕРјРµСЂ РІ С„РёР»СЊС‚СЂРѕРІР°РЅРЅРѕРј СЃРїРёСЃРєРµ");
 						PrintNumber(g_Plugin.Image[0]->PanelItemRaw() - g_Plugin.nPanelFolders + 1);
 						*pd++ = '/';
-						TODO("Заменить количество на фильтрованный список");
+						TODO("Р—Р°РјРµРЅРёС‚СЊ РєРѕР»РёС‡РµСЃС‚РІРѕ РЅР° С„РёР»СЊС‚СЂРѕРІР°РЅРЅС‹Р№ СЃРїРёСЃРѕРє");
 						PrintNumber(g_Plugin.nPanelItems-g_Plugin.nPanelFolders);
 					}
 					break;
@@ -138,28 +138,28 @@ void TemplatePrint(bool bDecoding, wchar_t *pTitleText, UINT nBufLen, const wcha
 				{
 					const wchar_t *pszFull = (const wchar_t*)g_Plugin.Image[0]->FileName;
 					const wchar_t *p = g_FSF.PointToName(pszFull);
-					if (*ps == L'L') { // Ограничение длины имени файла
+					if (*ps == L'L') { // РћРіСЂР°РЅРёС‡РµРЅРёРµ РґР»РёРЅС‹ РёРјРµРЅРё С„Р°Р№Р»Р°
 						ps++;
 						wchar_t* pEnd = NULL;
 						long nLen = wcstol(ps, &pEnd, 10);
-						if (pEnd) ps = pEnd; // Переместить "курсор" на первый символ после числа
+						if (pEnd) ps = pEnd; // РџРµСЂРµРјРµСЃС‚РёС‚СЊ "РєСѓСЂСЃРѕСЂ" РЅР° РїРµСЂРІС‹Р№ СЃРёРјРІРѕР» РїРѕСЃР»Рµ С‡РёСЃР»Р°
 						if (nLen > 127) nLen = 127; else
 						if (nLen < 12) nLen = 12;
-						if (lstrlen(p) > nLen) { // Если текущая длина имени файла превышает - отрезаем
+						if (lstrlen(p) > nLen) { // Р•СЃР»Рё С‚РµРєСѓС‰Р°СЏ РґР»РёРЅР° РёРјРµРЅРё С„Р°Р№Р»Р° РїСЂРµРІС‹С€Р°РµС‚ - РѕС‚СЂРµР·Р°РµРј
 							const wchar_t* pszExt = wcsrchr(p, L'.');
-							if (!pszExt) { // Если расширения нет вообще - все просто
+							if (!pszExt) { // Р•СЃР»Рё СЂР°СЃС€РёСЂРµРЅРёСЏ РЅРµС‚ РІРѕРѕР±С‰Рµ - РІСЃРµ РїСЂРѕСЃС‚Рѕ
 								lstrcpyn(sTemp, p, nLen);
-								sTemp[nLen-1] = L'…'; sTemp[nLen] = 0;
-							} else { // Иначе нужно учесть длину расширения
-								pszExt ++; // точку отрежем, вместо нее идет троеточие
-								int nExtLen = lstrlen(pszExt); // с точкой
-								if (nExtLen > (nLen-2)) { // слишком длинное расширение - игнорируем
+								sTemp[nLen-1] = L'вЂ¦'; sTemp[nLen] = 0;
+							} else { // РРЅР°С‡Рµ РЅСѓР¶РЅРѕ СѓС‡РµСЃС‚СЊ РґР»РёРЅСѓ СЂР°СЃС€РёСЂРµРЅРёСЏ
+								pszExt ++; // С‚РѕС‡РєСѓ РѕС‚СЂРµР¶РµРј, РІРјРµСЃС‚Рѕ РЅРµРµ РёРґРµС‚ С‚СЂРѕРµС‚РѕС‡РёРµ
+								int nExtLen = lstrlen(pszExt); // СЃ С‚РѕС‡РєРѕР№
+								if (nExtLen > (nLen-2)) { // СЃР»РёС€РєРѕРј РґР»РёРЅРЅРѕРµ СЂР°СЃС€РёСЂРµРЅРёРµ - РёРіРЅРѕСЂРёСЂСѓРµРј
 									lstrcpyn(sTemp, p, nLen);
-									sTemp[nLen-1] = L'…'; sTemp[nLen] = 0;
+									sTemp[nLen-1] = L'вЂ¦'; sTemp[nLen] = 0;
 								} else {
 									nLen -= nExtLen;
 									lstrcpyn(sTemp, p, nLen);
-									sTemp[nLen-1] = L'…'; sTemp[nLen] = 0;
+									sTemp[nLen-1] = L'вЂ¦'; sTemp[nLen] = 0;
 									lstrcat(sTemp, pszExt);
 								}
 							}
@@ -252,42 +252,42 @@ void QViewRepaint(bool bDecoding)
 {
 	_ASSERTE(GetCurrentThreadId() == gnMainThreadId);
 
-	wchar_t pTitleText[0xF00]; // По хорошему должна быть динамической
-	//const вызывает инициализацию переменных ДО входа в функцию (по возможности). что нам не подходит - хочется видеть последовательность действий!
+	wchar_t pTitleText[0xF00]; // РџРѕ С…РѕСЂРѕС€РµРјСѓ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РґРёРЅР°РјРёС‡РµСЃРєРѕР№
+	//const РІС‹Р·С‹РІР°РµС‚ РёРЅРёС†РёР°Р»РёР·Р°С†РёСЋ РїРµСЂРµРјРµРЅРЅС‹С… Р”Рћ РІС…РѕРґР° РІ С„СѓРЅРєС†РёСЋ (РїРѕ РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё). С‡С‚Рѕ РЅР°Рј РЅРµ РїРѕРґС…РѕРґРёС‚ - С…РѕС‡РµС‚СЃСЏ РІРёРґРµС‚СЊ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РґРµР№СЃС‚РІРёР№!
 	int PanelTextColor = g_StartupInfo.AdvControl(g_StartupInfo.ModuleNumber, ACTL_GETCOLOR, (void*)COL_PANELTEXT);
 	int PanelFrameColor = g_StartupInfo.AdvControl(g_StartupInfo.ModuleNumber, ACTL_GETCOLOR, (void*)COL_PANELBOX);
 	int PanelSelectedColor = g_StartupInfo.AdvControl(g_StartupInfo.ModuleNumber, ACTL_GETCOLOR, (void*)COL_PANELSELECTEDINFO);
 	uint lPanel = Min<uint>(g_Plugin.ViewPanelT.right - g_Plugin.ViewPanelT.left - 1, sizeofarray(pTitleText) - 1);
 	uint nLen = 0;
 
-	wmemset(pTitleText, 0x2550, lPanel); // Двойная горизонтальная черта
+	wmemset(pTitleText, 0x2550, lPanel); // Р”РІРѕР№РЅР°СЏ РіРѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅР°СЏ С‡РµСЂС‚Р°
 	pTitleText[lPanel] = 0;
-	// Нижняя строка (там остается текст старой панели)
+	// РќРёР¶РЅСЏСЏ СЃС‚СЂРѕРєР° (С‚Р°Рј РѕСЃС‚Р°РµС‚СЃСЏ С‚РµРєСЃС‚ СЃС‚Р°СЂРѕР№ РїР°РЅРµР»Рё)
 	g_StartupInfo.Text(g_Plugin.ViewPanelT.left + 1, g_Plugin.ViewPanelT.bottom, PanelFrameColor, pTitleText);
-	// Верхняя строка (там остается текст старой панели)
-	if (lPanel>5) pTitleText[lPanel-5] = 0; // Часы оставить
+	// Р’РµСЂС…РЅСЏСЏ СЃС‚СЂРѕРєР° (С‚Р°Рј РѕСЃС‚Р°РµС‚СЃСЏ С‚РµРєСЃС‚ СЃС‚Р°СЂРѕР№ РїР°РЅРµР»Рё)
+	if (lPanel>5) pTitleText[lPanel-5] = 0; // Р§Р°СЃС‹ РѕСЃС‚Р°РІРёС‚СЊ
 	g_StartupInfo.Text(g_Plugin.ViewPanelT.left + 1, g_Plugin.ViewPanelT.top, PanelFrameColor, pTitleText);
 	LPCTSTR pszQTitle = GetMsg(MIQViewPanelTitle);
 	nLen = lstrlen(pszQTitle);
 	int X = (g_Plugin.ViewPanelT.right + g_Plugin.ViewPanelT.left + 1 - nLen) / 2;
 	g_StartupInfo.Text(X, g_Plugin.ViewPanelT.top, PanelTextColor, pszQTitle);
 
-	wmemset(pTitleText, 0x2500, lPanel); // горизонтальная черта - забить место, где фар пишет название формата из реестра
+	wmemset(pTitleText, 0x2500, lPanel); // РіРѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅР°СЏ С‡РµСЂС‚Р° - Р·Р°Р±РёС‚СЊ РјРµСЃС‚Рѕ, РіРґРµ С„Р°СЂ РїРёС€РµС‚ РЅР°Р·РІР°РЅРёРµ С„РѕСЂРјР°С‚Р° РёР· СЂРµРµСЃС‚СЂР°
 	pTitleText[lPanel] = 0;
 	g_StartupInfo.Text(g_Plugin.ViewPanelT.left + 1, g_Plugin.ViewPanelT.bottom - 2, PanelFrameColor, pTitleText);
 
-	wmemset(pTitleText, L' ', lPanel); // Пред-очистка информационного поля
+	wmemset(pTitleText, L' ', lPanel); // РџСЂРµРґ-РѕС‡РёСЃС‚РєР° РёРЅС„РѕСЂРјР°С†РёРѕРЅРЅРѕРіРѕ РїРѕР»СЏ
 	pTitleText[lPanel] = 0;
 	g_StartupInfo.Text(g_Plugin.ViewPanelT.left + 1, g_Plugin.ViewPanelT.bottom - 1, PanelTextColor, pTitleText);
 
-	// Могла остаться полоса прокрутки
+	// РњРѕРіР»Р° РѕСЃС‚Р°С‚СЊСЃСЏ РїРѕР»РѕСЃР° РїСЂРѕРєСЂСѓС‚РєРё
 	pTitleText[0] = 0x2551; pTitleText[1] = 0;
 	for (int y=g_Plugin.ViewPanelT.top+1; y<(g_Plugin.ViewPanelT.bottom-2); y++)
 		g_StartupInfo.Text(g_Plugin.ViewPanelT.right, y, PanelFrameColor, pTitleText);
 
 
 	nLen = 0;
-	// Поехали шаблоны
+	// РџРѕРµС…Р°Р»Рё С€Р°Р±Р»РѕРЅС‹
 	for (int i=1; i<=3; i++) {
 		pTitleText[0] = 0;
 		LPCTSTR pszTempl = (i==1) ? g_QViewTemplate1 : (i==2) ? g_QViewTemplate2 : g_QViewTemplate3;
@@ -297,16 +297,16 @@ void QViewRepaint(bool bDecoding)
 		if (nLen >= lPanel) pTitleText[lPanel] = 0;
 		if (nLen>0) {
 			X = g_Plugin.ViewPanelT.left + 1;
-			if (*pszTempl == L'$') { // Если просили выровнять по центру
+			if (*pszTempl == L'$') { // Р•СЃР»Рё РїСЂРѕСЃРёР»Рё РІС‹СЂРѕРІРЅСЏС‚СЊ РїРѕ С†РµРЅС‚СЂСѓ
 				X = (g_Plugin.ViewPanelT.right + g_Plugin.ViewPanelT.left - 2 - nLen) >> 1;
-			} else if (*pszTempl == L'#') { // Если просили выровнять по правому краю
+			} else if (*pszTempl == L'#') { // Р•СЃР»Рё РїСЂРѕСЃРёР»Рё РІС‹СЂРѕРІРЅСЏС‚СЊ РїРѕ РїСЂР°РІРѕРјСѓ РєСЂР°СЋ
 				X = g_Plugin.ViewPanelT.right - 2 - nLen;
 			}
 			g_StartupInfo.Text(X, g_Plugin.ViewPanelT.bottom - 3 + i, (i==1) ? PanelSelectedColor : PanelTextColor, pTitleText);
 		}
 	}
 
-	//////const вызывает инициализацию переменных ДО входа в функцию (по возможности). что нам не подходит - хочется видеть последовательность действий!
+	//////const РІС‹Р·С‹РІР°РµС‚ РёРЅРёС†РёР°Р»РёР·Р°С†РёСЋ РїРµСЂРµРјРµРЅРЅС‹С… Р”Рћ РІС…РѕРґР° РІ С„СѓРЅРєС†РёСЋ (РїРѕ РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё). С‡С‚Рѕ РЅР°Рј РЅРµ РїРѕРґС…РѕРґРёС‚ - С…РѕС‡РµС‚СЃСЏ РІРёРґРµС‚СЊ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РґРµР№СЃС‚РІРёР№!
 	//size_t lText = wcslen(pTitleText);
 	//if (lText < lPanel) {
 	//	wmemset(pTitleText + lText, ' ', lPanel - lText);
@@ -316,6 +316,6 @@ void QViewRepaint(bool bDecoding)
 
 	//g_StartupInfo.Text(g_Plugin.ViewPanelT.left + 1, g_Plugin.ViewPanelT.bottom - 1, PanelTextColor, pTitleText);
 
-	// Это нужно выполнять в основной нити!!! Иначе Виснет
+	// Р­С‚Рѕ РЅСѓР¶РЅРѕ РІС‹РїРѕР»РЅСЏС‚СЊ РІ РѕСЃРЅРѕРІРЅРѕР№ РЅРёС‚Рё!!! РРЅР°С‡Рµ Р’РёСЃРЅРµС‚
 	g_StartupInfo.Text(0, 0, 0, NULL);
 }

@@ -15,7 +15,7 @@ MPicViewDlg::MPicViewDlg(LPCTSTR asTitle, int anWidth, int anHeight, LPCTSTR asH
 
 MPicViewDlg::~MPicViewDlg()
 {
-	_ASSERTE(mh_Dlg==NULL); // Уже должен быть вызван DialogFree
+	_ASSERTE(mh_Dlg==NULL); // РЈР¶Рµ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІС‹Р·РІР°РЅ DialogFree
 }
 
 int MPicViewDlg::addFarDialogItem(int Type, int X1, int Y1, int X2, int Y2, int Focus,
@@ -31,10 +31,10 @@ int MPicViewDlg::addFarDialogItem(int Type, int X1, int Y1, int X2, int Y2, int 
 	FarDialogItem* pItems = DialogItems+nId;
 
 	if (nId > 0) {
-		if (max(X1,X2) > nMaxX)
-			nMaxX = max(X1,X2);
-		if (max(Y1,Y2) > nMaxY)
-			nMaxY = max(Y1,Y2);
+		if (Max(X1,X2) > nMaxX)
+			nMaxX = Max(X1,X2);
+		if (Max(Y1,Y2) > nMaxY)
+			nMaxY = Max(Y1,Y2);
 	}
 
 	pItems->Type = Type;
@@ -43,7 +43,7 @@ int MPicViewDlg::addFarDialogItem(int Type, int X1, int Y1, int X2, int Y2, int 
 	pItems->X2 = X2;
 	pItems->Y2 = Y2;
 	pItems->Focus = Focus;
-	pItems->Param.Reserved = Selected; // Тут может быть DWORD_PTR - указатель на память!
+	pItems->Param.Reserved = Selected; // РўСѓС‚ РјРѕР¶РµС‚ Р±С‹С‚СЊ DWORD_PTR - СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РїР°РјСЏС‚СЊ!
 	pItems->Flags = Flags;
 	pItems->DefaultButton = DefaultButton;
 	pItems->PtrData = PtrData;
@@ -74,7 +74,7 @@ LONG_PTR MPicViewDlg::StaticDlgProc(HANDLE hDlg, int Msg, int Param1, LONG_PTR P
 
 HANDLE MPicViewDlg::DialogInit()
 {
-	// Если он НЕ был освобожден - сначала сделает это
+	// Р•СЃР»Рё РѕРЅ РќР• Р±С‹Р» РѕСЃРІРѕР±РѕР¶РґРµРЅ - СЃРЅР°С‡Р°Р»Р° СЃРґРµР»Р°РµС‚ СЌС‚Рѕ
 	DialogFree();
 
 	DialogHeight = nMaxY + 3;

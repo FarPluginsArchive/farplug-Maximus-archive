@@ -44,7 +44,7 @@ public:
 	PVDDecoderVer1(ModuleData* apData);
 	virtual ~PVDDecoderVer1();
 	virtual bool LoadFormatsFromPvd();
-	virtual bool InitPlugin(bool bAllowResort=false); // Загрузить, инициализировать, получить список форматов
+	virtual bool InitPlugin(bool bAllowResort=false); // Р—Р°РіСЂСѓР·РёС‚СЊ, РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°С‚СЊ, РїРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє С„РѕСЂРјР°С‚РѕРІ
 public:
 	virtual BOOL FileOpen2(const wchar_t *pFileName, INT64 lFileSize, const BYTE *pBuf, UINT32 lBuf, pvdInfoImage2 *pImageInfo);
 	virtual BOOL PageInfo2(void *pImageContext, pvdInfoPage2 *pPageInfo);
@@ -71,12 +71,12 @@ protected:
 		void *pDecodeCallbackContext;
 	} DecodeCallbackArg;
 	typedef struct tag_ImageContextWrap {
-		UINT32 lWidth;             // [OUT] Ширина декодированной области (pImage)
-		UINT32 lHeight;            // [OUT] Высота декодированной области (pImage)
+		UINT32 lWidth;             // [OUT] РЁРёСЂРёРЅР° РґРµРєРѕРґРёСЂРѕРІР°РЅРЅРѕР№ РѕР±Р»Р°СЃС‚Рё (pImage)
+		UINT32 lHeight;            // [OUT] Р’С‹СЃРѕС‚Р° РґРµРєРѕРґРёСЂРѕРІР°РЅРЅРѕР№ РѕР±Р»Р°СЃС‚Рё (pImage)
 		void  *pImageContext;
-		wchar_t *pFormatName;  // [OUT] название формата файла
-		wchar_t *pCompression; // [OUT] алгоритм сжатия
-		wchar_t *pComments;    // [OUT] различные комментарии о файле
+		wchar_t *pFormatName;  // [OUT] РЅР°Р·РІР°РЅРёРµ С„РѕСЂРјР°С‚Р° С„Р°Р№Р»Р°
+		wchar_t *pCompression; // [OUT] Р°Р»РіРѕСЂРёС‚Рј СЃР¶Р°С‚РёСЏ
+		wchar_t *pComments;    // [OUT] СЂР°Р·Р»РёС‡РЅС‹Рµ РєРѕРјРјРµРЅС‚Р°СЂРёРё Рѕ С„Р°Р№Р»Рµ
 	} ImageContextWrap;
 	wchar_t* ConvertToWide(const char* psz);
 };

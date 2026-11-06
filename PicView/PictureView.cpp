@@ -46,11 +46,11 @@ DWORD gnMainThreadId = 0, gnDisplayThreadId = 0, gnDecoderThreadId = 0;
 
 PluginData g_Plugin;
 
-wchar_t *g_SelfPath = NULL; // Содержит полный путь к папке, в которой лежит 0PictureView.dll (на конце - слэш)
-wchar_t *g_RootKey = NULL;  // Содержит полный путь к ключу реестра. Обычно это "Software\\Far2\\Plugins\\PictureView"
+wchar_t *g_SelfPath = NULL; // РЎРѕРґРµСЂР¶РёС‚ РїРѕР»РЅС‹Р№ РїСѓС‚СЊ Рє РїР°РїРєРµ, РІ РєРѕС‚РѕСЂРѕР№ Р»РµР¶РёС‚ 0PictureView.dll (РЅР° РєРѕРЅС†Рµ - СЃР»СЌС€)
+wchar_t *g_RootKey = NULL;  // РЎРѕРґРµСЂР¶РёС‚ РїРѕР»РЅС‹Р№ РїСѓС‚СЊ Рє РєР»СЋС‡Сѓ СЂРµРµСЃС‚СЂР°. РћР±С‹С‡РЅРѕ СЌС‚Рѕ "Software\\Far2\\Plugins\\PictureView"
 
-// Если имя не содержит полный путь - сначала сделать FCTL_GETPANELDIR
-// и слепить из него и pFileName полный путь к файлу!
+// Р•СЃР»Рё РёРјСЏ РЅРµ СЃРѕРґРµСЂР¶РёС‚ РїРѕР»РЅС‹Р№ РїСѓС‚СЊ - СЃРЅР°С‡Р°Р»Р° СЃРґРµР»Р°С‚СЊ FCTL_GETPANELDIR
+// Рё СЃР»РµРїРёС‚СЊ РёР· РЅРµРіРѕ Рё pFileName РїРѕР»РЅС‹Р№ РїСѓС‚СЊ Рє С„Р°Р№Р»Сѓ!
 //bool PutFilePathName(wchar_t* pFullName, const wchar_t* pFileName, bool abNeedUnquote=false)
 //extern bool PutFilePathName1154(UnicodeFileName* pFullName, const wchar_t* pFileName, void* fsf);
 //extern bool PutFilePathName1017(UnicodeFileName* aFullName, const wchar_t* pFileName);
@@ -75,9 +75,9 @@ bool PutFilePathName1154(UnicodeFileName* pFullName, const wchar_t* pFileName, v
 
 bool PutFilePathName(UnicodeFileName* pFullName, const wchar_t* pFileName)
 {
-	// Ахтунг: использовать GetFullPathNameW для преобразования относительного пути в абсолютный после 1145 билда нельзя, используйте ConvertPath(CPM_FULL, ...).
+	// РђС…С‚СѓРЅРі: РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ GetFullPathNameW РґР»СЏ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕРіРѕ РїСѓС‚Рё РІ Р°Р±СЃРѕР»СЋС‚РЅС‹Р№ РїРѕСЃР»Рµ 1145 Р±РёР»РґР° РЅРµР»СЊР·СЏ, РёСЃРїРѕР»СЊР·СѓР№С‚Рµ ConvertPath(CPM_FULL, ...).
 
-	*pFullName = L""; // сразу сбросим, чтобы невалидные имена вообще не обрабатывать
+	*pFullName = L""; // СЃСЂР°Р·Сѓ СЃР±СЂРѕСЃРёРј, С‡С‚РѕР±С‹ РЅРµРІР°Р»РёРґРЅС‹Рµ РёРјРµРЅР° РІРѕРѕР±С‰Рµ РЅРµ РѕР±СЂР°Р±Р°С‚С‹РІР°С‚СЊ
 	if (!pFileName || !*pFileName) {
 		_ASSERTE(pFileName && *pFileName);
 		return false;
@@ -110,7 +110,7 @@ bool PutFilePathName(UnicodeFileName* pFullName, const wchar_t* pFileName)
 	return result;
 	
 
-	//pFullName[0] = 0; // сразу сбросим, чтобы невалидные имена вообще не обрабатывать
+	//pFullName[0] = 0; // СЃСЂР°Р·Сѓ СЃР±СЂРѕСЃРёРј, С‡С‚РѕР±С‹ РЅРµРІР°Р»РёРґРЅС‹Рµ РёРјРµРЅР° РІРѕРѕР±С‰Рµ РЅРµ РѕР±СЂР°Р±Р°С‚С‹РІР°С‚СЊ
 	//
 	//if (!pFileName || !*pFileName) {
 	//	_ASSERTE(pFileName && *pFileName);
@@ -126,13 +126,13 @@ bool PutFilePathName(UnicodeFileName* pFullName, const wchar_t* pFileName)
 	//	lbEndQ = true;
 	//}
 	//
-	//// \\?\... или \\server\...
+	//// \\?\... РёР»Рё \\server\...
 	//if (pFileName[0]==L'\\' && pFileName[1]==L'\\' /*&& pFileName[2]==L'?' && pFileName[3]==L'\\'*/) {
 	//	if (nLen >= MAX_PIC_PATH_LEN)
 	//		return false;
 	//	lstrcpynW(pFullName, pFileName, MAX_PIC_PATH_LEN);
 	//} else
-	//// X:\... (а вот если просто X:name - нужно мудрить)
+	//// X:\... (Р° РІРѕС‚ РµСЃР»Рё РїСЂРѕСЃС‚Рѕ X:name - РЅСѓР¶РЅРѕ РјСѓРґСЂРёС‚СЊ)
 	//if (pFileName[1]==L':' && pFileName[2]==L'\\') {
 	//	if (nLen >= MAX_PIC_PATH_LEN)
 	//		return false;
@@ -143,7 +143,7 @@ bool PutFilePathName(UnicodeFileName* pFullName, const wchar_t* pFileName)
 	//		if (pCurDir = (wchar_t*)malloc(len*2+2))
 	//			if (!g_StartupInfo.Control(INVALID_HANDLE_VALUE, FCTL_GETPANELDIR, len, (LONG_PTR)pCurDir))
 	//				*pCurDir = 0;
-	//			else if (pCurDir[len-1] != L'\\') { // завершающий слеш нужен
+	//			else if (pCurDir[len-1] != L'\\') { // Р·Р°РІРµСЂС€Р°СЋС‰РёР№ СЃР»РµС€ РЅСѓР¶РµРЅ
 	//				pCurDir[len-1] = L'\\';
 	//				pCurDir[len] = 0;
 	//			}
@@ -155,7 +155,7 @@ bool PutFilePathName(UnicodeFileName* pFullName, const wchar_t* pFileName)
 	//		if (pDrive) {
 	//			pDrive--;
 	//			if ((pFileName[0] & ~0x20) == (pDrive[0] & ~0x20)) {
-	//				// Буква диска (ucase) совпадает
+	//				// Р‘СѓРєРІР° РґРёСЃРєР° (ucase) СЃРѕРІРїР°РґР°РµС‚
 	//				int n = (int)(pDrive-pCurDir+2);
 	//				lstrcpynW(pFullName, pCurDir, n);
 	//				lstrcpynW(pFullName+n, pFileName+2, MAX_PIC_PATH_LEN-n);
@@ -185,7 +185,7 @@ bool PutFilePathName(UnicodeFileName* pFullName, const wchar_t* pFileName)
 	//		pFullName[nLen-1] = 0;
 	//}
 	//
-	//if (abNeedUnquote) TODO("А надо? уже вроде все сделали")
+	//if (abNeedUnquote) TODO("Рђ РЅР°РґРѕ? СѓР¶Рµ РІСЂРѕРґРµ РІСЃРµ СЃРґРµР»Р°Р»Рё")
 	//	g_FSF.Unquote(pFullName);
 	//
 	//TODO("GetFullPathName");
@@ -221,7 +221,7 @@ void TestJumpDisable(const wchar_t *pFileName)
 
 	g_Plugin.Image[0]->bSelected = ppi ? ((ppi->Flags & PPIF_SELECTED)!=0) : false;
 
-	TODO("А флаг FW_JUMP_DISABLED сбрасывать предварительно не нужно?");
+	TODO("Рђ С„Р»Р°Рі FW_JUMP_DISABLED СЃР±СЂР°СЃС‹РІР°С‚СЊ РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅРѕ РЅРµ РЅСѓР¶РЅРѕ?");
 
 	if (!*pFileName && pPanelFileName) {
 		//lstrcpy(g_Plugin.Image[0]->FileName, pPanelFileName);
@@ -246,7 +246,7 @@ void TestJumpDisable(const wchar_t *pFileName)
 			UnicodeFileName::SkipPrefix(&pszImgFileName);
 
 			if (g_FSF.LStricmp(pPanelFileName, pszImgFileName))
-			// Если имя под курсором совпадает с именем переданным в плагин ("pic:!.!" ?)
+			// Р•СЃР»Рё РёРјСЏ РїРѕРґ РєСѓСЂСЃРѕСЂРѕРј СЃРѕРІРїР°РґР°РµС‚ СЃ РёРјРµРЅРµРј РїРµСЂРµРґР°РЅРЅС‹Рј РІ РїР»Р°РіРёРЅ ("pic:!.!" ?)
 			{
 				const wchar_t *const p = g_FSF.PointToName(g_Plugin.Image[0]->FileName);
 				if (g_FSF.LStricmp(pPanelFileName, p))
@@ -289,7 +289,7 @@ const wchar_t* GetExtension(const wchar_t* pFileName)
 bool ExtensionMatch(LPTSTR asExtList, LPCTSTR asExt)
 {
 	wchar_t szExtTmp[32];
-	// 2010-10-01 - отрезать хвостовые пробелы
+	// 2010-10-01 - РѕС‚СЂРµР·Р°С‚СЊ С…РІРѕСЃС‚РѕРІС‹Рµ РїСЂРѕР±РµР»С‹
 	if (asExt && *asExt)
 	{
 		int nLen = lstrlen(asExt); if (nLen > 32) nLen = 31;
@@ -386,7 +386,7 @@ bool CreateDisplayThread()
 	if (g_Plugin.hThread) {
 		_ASSERTE(g_Plugin.hThread == NULL);
 		if (WaitForSingleObject(g_Plugin.hThread,0) != WAIT_TIMEOUT) {
-			// Нить завешилась?
+			// РќРёС‚СЊ Р·Р°РІРµС€РёР»Р°СЃСЊ?
 			_ASSERTE(nTID == gnMainThreadId);
 			CloseHandle(g_Plugin.hThread);
 			g_Plugin.hThread = NULL;
@@ -407,7 +407,7 @@ bool CreateDisplayThread()
 		SetThreadPriority(g_Plugin.hThread, THREAD_PRIORITY_ABOVE_NORMAL);
 		//Wait ForSingleObject(g_Plugin.hDisplayEvent, INFINITE);
 		
-		// Дождаться окончания создания окна отрисовки или завершения нити
+		// Р”РѕР¶РґР°С‚СЊСЃСЏ РѕРєРѕРЅС‡Р°РЅРёСЏ СЃРѕР·РґР°РЅРёСЏ РѕРєРЅР° РѕС‚СЂРёСЃРѕРІРєРё РёР»Рё Р·Р°РІРµСЂС€РµРЅРёСЏ РЅРёС‚Рё
 		WaitDisplayEvent();
 		
 		result = (g_Plugin.hWnd != NULL);
@@ -420,27 +420,27 @@ bool WaitDisplayEvent()
 {
 	DWORD dwWait = 0;
 	HANDLE hEvents[2] = {g_Plugin.hDisplayEvent, g_Plugin.hThread};
-	//Wait ForSingleObject(g_Plugin.hDisplayEvent, INFINITE); -- низя. Если нить грохнулась - мы здесь повиснем
+	//Wait ForSingleObject(g_Plugin.hDisplayEvent, INFINITE); -- РЅРёР·СЏ. Р•СЃР»Рё РЅРёС‚СЊ РіСЂРѕС…РЅСѓР»Р°СЃСЊ - РјС‹ Р·РґРµСЃСЊ РїРѕРІРёСЃРЅРµРј
 
-	WARNING("Бесконечное ожидание заменить на цикл, в котором опрашивать консоль. А из Display - убрать ReadConsoleInput");
-	// Это нужно для того, чтобы FAR не вис при переключении в другие приложения во время отрисовки диалогов и хелпа
-	// НО нужно учесть, что если работает хелп/диалог то консоль читает сам фар?
+	WARNING("Р‘РµСЃРєРѕРЅРµС‡РЅРѕРµ РѕР¶РёРґР°РЅРёРµ Р·Р°РјРµРЅРёС‚СЊ РЅР° С†РёРєР», РІ РєРѕС‚РѕСЂРѕРј РѕРїСЂР°С€РёРІР°С‚СЊ РєРѕРЅСЃРѕР»СЊ. Рђ РёР· Display - СѓР±СЂР°С‚СЊ ReadConsoleInput");
+	// Р­С‚Рѕ РЅСѓР¶РЅРѕ РґР»СЏ С‚РѕРіРѕ, С‡С‚РѕР±С‹ FAR РЅРµ РІРёСЃ РїСЂРё РїРµСЂРµРєР»СЋС‡РµРЅРёРё РІ РґСЂСѓРіРёРµ РїСЂРёР»РѕР¶РµРЅРёСЏ РІРѕ РІСЂРµРјСЏ РѕС‚СЂРёСЃРѕРІРєРё РґРёР°Р»РѕРіРѕРІ Рё С…РµР»РїР°
+	// РќРћ РЅСѓР¶РЅРѕ СѓС‡РµСЃС‚СЊ, С‡С‚Рѕ РµСЃР»Рё СЂР°Р±РѕС‚Р°РµС‚ С…РµР»Рї/РґРёР°Р»РѕРі С‚Рѕ РєРѕРЅСЃРѕР»СЊ С‡РёС‚Р°РµС‚ СЃР°Рј С„Р°СЂ?
 
 	while ((dwWait = WaitForMultipleObjects(2, hEvents, FALSE, 0)) == WAIT_TIMEOUT)
 	{
-		//// Может быть потом тут что-то типа PeekConsole... вставить, во избежание повисания conhost
+		//// РњРѕР¶РµС‚ Р±С‹С‚СЊ РїРѕС‚РѕРј С‚СѓС‚ С‡С‚Рѕ-С‚Рѕ С‚РёРїР° PeekConsole... РІСЃС‚Р°РІРёС‚СЊ, РІРѕ РёР·Р±РµР¶Р°РЅРёРµ РїРѕРІРёСЃР°РЅРёСЏ conhost
 		//if (g_Plugin.hWnd && !IsWindowVisible(g_Plugin.hWnd)) {
 		//	INPUT_RECORD ir;
 		//	u32 t;
 		//	PeekConsoleInput(GetStdHandle(STD_INPUT_HANDLE)/*g_Plugin.hInput*/, &ir, 1, &t);
 		//}
 		if (g_Plugin.FlagsWork & FW_SHOW_HELP) {
-			// Показать Help в основной нити
+			// РџРѕРєР°Р·Р°С‚СЊ Help РІ РѕСЃРЅРѕРІРЅРѕР№ РЅРёС‚Рё
 			CFunctionLogger flog(L"FW_SHOW_HELP");
 			wchar_t Title[0x40];
 			lstrcpynW(Title, g_Plugin.pszPluginTitle, sizeofarray(Title) - 6);
 			lstrcat(Title, L" - Far");
-			// Раньше выполнялось в нити Display, и часто висла
+			// Р Р°РЅСЊС€Рµ РІС‹РїРѕР»РЅСЏР»РѕСЃСЊ РІ РЅРёС‚Рё Display, Рё С‡Р°СЃС‚Рѕ РІРёСЃР»Р°
 			SetConsoleTitleW(Title);
 
 			g_StartupInfo.ShowHelp(g_StartupInfo.ModuleName, _T("Controls"), 0);
@@ -449,10 +449,10 @@ bool WaitDisplayEvent()
 			g_Plugin.FlagsWork &= ~FW_SHOW_HELP;
 			
 		} else if (g_Plugin.FlagsWork & (FW_SHOW_CONFIG | FW_SHOW_MODULES)) {
-			// Показать окно конфига в основной нити
+			// РџРѕРєР°Р·Р°С‚СЊ РѕРєРЅРѕ РєРѕРЅС„РёРіР° РІ РѕСЃРЅРѕРІРЅРѕР№ РЅРёС‚Рё
 			CFunctionLogger flog(L"FW_SHOW_CONFIG|FW_SHOW_MODULES");
 			
-			//TRUE, если настройки были изменены
+			//TRUE, РµСЃР»Рё РЅР°СЃС‚СЂРѕР№РєРё Р±С‹Р»Рё РёР·РјРµРЅРµРЅС‹
 			const bool reconfig = ConfigureW(0);
 			
 			if (reconfig)
@@ -461,8 +461,8 @@ bool WaitDisplayEvent()
 			g_Plugin.FlagsWork &= ~(FW_SHOW_CONFIG|FW_SHOW_MODULES);
 
 			//{
-			//	//TODO("А в [0]-m DisplayClose не нужен?");
-			//	//// Закрыть все хэндлы вывода кроме текущего
+			//	//TODO("Рђ РІ [0]-m DisplayClose РЅРµ РЅСѓР¶РµРЅ?");
+			//	//// Р—Р°РєСЂС‹С‚СЊ РІСЃРµ С…СЌРЅРґР»С‹ РІС‹РІРѕРґР° РєСЂРѕРјРµ С‚РµРєСѓС‰РµРіРѕ
 			//	//g_Plugin.Image[1]->DisplayClose();
 			//	//g_Plugin.Image[2]->DisplayClose();
 			//	//for (uint i = 3; --i;)
@@ -484,7 +484,7 @@ bool WaitDisplayEvent()
 			CFunctionLogger flog(L"FW_MARK_FILE | FW_UNMARK_FILE");
 
 			g_Plugin.Image[0]->bSelected = (g_Plugin.FlagsWork & FW_MARK_FILE) == FW_MARK_FILE;
-			g_Plugin.SelectionChanged = true; // чтобы при выходе из плагина можно было обновить панель, показав выделенные вверху
+			g_Plugin.SelectionChanged = true; // С‡С‚РѕР±С‹ РїСЂРё РІС‹С…РѕРґРµ РёР· РїР»Р°РіРёРЅР° РјРѕР¶РЅРѕ Р±С‹Р»Рѕ РѕР±РЅРѕРІРёС‚СЊ РїР°РЅРµР»СЊ, РїРѕРєР°Р·Р°РІ РІС‹РґРµР»РµРЅРЅС‹Рµ РІРІРµСЂС…Сѓ
 			g_StartupInfo.Control(INVALID_HANDLE_VALUE, FCTL_SETSELECTION, g_Plugin.Image[0]->PanelItemRaw(), g_Plugin.Image[0]->bSelected);
 			g_StartupInfo.Control(INVALID_HANDLE_VALUE, FCTL_REDRAWPANEL, 0, 0);
 			TitleRepaint();
@@ -567,8 +567,8 @@ void WorkWait(void)
 
 	for (;;)
 	{
-		// В некоторых случаях FAR пытается восстановить консольный курсор.
-		// Если он видим - гасим и Invalidate
+		// Р’ РЅРµРєРѕС‚РѕСЂС‹С… СЃР»СѓС‡Р°СЏС… FAR РїС‹С‚Р°РµС‚СЃСЏ РІРѕСЃСЃС‚Р°РЅРѕРІРёС‚СЊ РєРѕРЅСЃРѕР»СЊРЅС‹Р№ РєСѓСЂСЃРѕСЂ.
+		// Р•СЃР»Рё РѕРЅ РІРёРґРёРј - РіР°СЃРёРј Рё Invalidate
 		AutoHideConsoleCursor();
 
 		//Wait ForSingleObject(g_Plugin.hDisplayEvent, INFINITE);
@@ -580,10 +580,10 @@ void WorkWait(void)
 
 		if (g_Plugin.FlagsWork & FW_SHOW_CONFIG)
 		{
-			_ASSERT(FALSE); // Сюда мы больше попадать не должны?
+			_ASSERT(FALSE); // РЎСЋРґР° РјС‹ Р±РѕР»СЊС€Рµ РїРѕРїР°РґР°С‚СЊ РЅРµ РґРѕР»Р¶РЅС‹?
 			_ASSERTE(g_Plugin.FlagsWork & FW_SHOW_CONFIG);
 			
-			//TRUE, если настройки были изменены
+			//TRUE, РµСЃР»Рё РЅР°СЃС‚СЂРѕР№РєРё Р±С‹Р»Рё РёР·РјРµРЅРµРЅС‹
 			const bool reconfig = ConfigureW(0);
 			
 			SetEvent(g_Plugin.hWorkEvent);
@@ -594,7 +594,7 @@ void WorkWait(void)
 			if (!reconfig)
 				continue;
 
-			TODO("А в [0]-m DisplayClose не нужен?");
+			TODO("Рђ РІ [0]-m DisplayClose РЅРµ РЅСѓР¶РµРЅ?");
 			g_Plugin.Image[1]->DisplayClose();
 			g_Plugin.Image[2]->DisplayClose();
 			for (uint i = 3; --i;)
@@ -625,7 +625,7 @@ void WorkWait(void)
 					g_Plugin.Image[2]->Decoder->Close();
 					//deletex(g_Plugin.Image[2]->Decoder);
 				}
-				// Ниже по коду (OpenImagePlugin) индекс будет (++) так что тут будет 0
+				// РќРёР¶Рµ РїРѕ РєРѕРґСѓ (OpenImagePlugin) РёРЅРґРµРєСЃ Р±СѓРґРµС‚ (++) С‚Р°Рє С‡С‚Рѕ С‚СѓС‚ Р±СѓРґРµС‚ 0
 				g_Plugin.Image[2]->SetPanelItemRaw(-1);
 				g_Plugin.ImageX = g_Plugin.Image[2];
 				//g_Plugin.ddsx = g_Plugin.Image[2]->dds;
@@ -638,7 +638,7 @@ void WorkWait(void)
 					g_Plugin.Image[1]->Decoder->Close();
 					//deletex(g_Plugin.Image[1]->Decoder);
 				}
-				// Ниже по коду (OpenImagePlugin) индекс будет (--) так что тут будет (ItemsNumber-1)
+				// РќРёР¶Рµ РїРѕ РєРѕРґСѓ (OpenImagePlugin) РёРЅРґРµРєСЃ Р±СѓРґРµС‚ (--) С‚Р°Рє С‡С‚Рѕ С‚СѓС‚ Р±СѓРґРµС‚ (ItemsNumber-1)
 				g_Plugin.Image[1]->SetPanelItemRaw(g_Plugin.FarPanelInfo.ItemsNumber);
 				g_Plugin.ImageX = g_Plugin.Image[1];
 				//g_Plugin.ddsx = g_Plugin.Image[1]->dds;
@@ -711,15 +711,15 @@ HANDLE WINAPI OpenFilePluginW(const wchar_t *pFileName, const unsigned char *buf
 		
 	g_Plugin.InitHooks();
 
-	// ACTL_CONSOLEMODE фаром более не предоставляется, самому проверять не хочется
+	// ACTL_CONSOLEMODE С„Р°СЂРѕРј Р±РѕР»РµРµ РЅРµ РїСЂРµРґРѕСЃС‚Р°РІР»СЏРµС‚СЃСЏ, СЃР°РјРѕРјСѓ РїСЂРѕРІРµСЂСЏС‚СЊ РЅРµ С…РѕС‡РµС‚СЃСЏ
 
-	TODO("pFileName всегда должно быть или нет?");
+	TODO("pFileName РІСЃРµРіРґР° РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РёР»Рё РЅРµС‚?");
 	if (!pFileName || !*pFileName
 	    //|| g_StartupInfo.AdvControl(g_StartupInfo.ModuleNumber, ACTL_CONSOLEMODE, (void*)FAR_CONSOLE_GET_MODE) == FAR_CONSOLE_FULLSCREEN 
 	    || (!g_Plugin.bHookArc && !g_Plugin.hThread && !(g_Plugin.FlagsWork & (FW_VE_HOOK | FW_PLUGIN_CALL))))
 		return INVALID_HANDLE_VALUE;
 
-	// Раз мы в FAR2 - вполне можно опредлить откуда пытается быть вызван вход в файл
+	// Р Р°Р· РјС‹ РІ FAR2 - РІРїРѕР»РЅРµ РјРѕР¶РЅРѕ РѕРїСЂРµРґР»РёС‚СЊ РѕС‚РєСѓРґР° РїС‹С‚Р°РµС‚СЃСЏ Р±С‹С‚СЊ РІС‹Р·РІР°РЅ РІС…РѕРґ РІ С„Р°Р№Р»
 	if ((OpMode & (OPM_SILENT|OPM_FIND)) != 0)
 		return INVALID_HANDLE_VALUE;
 
@@ -730,13 +730,13 @@ HANDLE WINAPI OpenFilePluginW(const wchar_t *pFileName, const unsigned char *buf
 	
 	FUNCLOGGERS(L"OpenFilePluginW(%s)", pFileName);
 
-	// Если это первый вызов серии
+	// Р•СЃР»Рё СЌС‚Рѕ РїРµСЂРІС‹Р№ РІС‹Р·РѕРІ СЃРµСЂРёРё
 	if (!(g_Plugin.FlagsWork & FW_PLUGIN_CALL)) {
-		g_Plugin.FlagsWork |= FW_FIRST_CALL; // ставим флаг (влияет на включение кнопки-модификатора)
-		g_Plugin.SelectionChanged = false; // Чтобы знать, что менялось выделение
+		g_Plugin.FlagsWork |= FW_FIRST_CALL; // СЃС‚Р°РІРёРј С„Р»Р°Рі (РІР»РёСЏРµС‚ РЅР° РІРєР»СЋС‡РµРЅРёРµ РєРЅРѕРїРєРё-РјРѕРґРёС„РёРєР°С‚РѕСЂР°)
+		g_Plugin.SelectionChanged = false; // Р§С‚РѕР±С‹ Р·РЅР°С‚СЊ, С‡С‚Рѕ РјРµРЅСЏР»РѕСЃСЊ РІС‹РґРµР»РµРЅРёРµ
 	}
 
-	// Сброс точно ненужных
+	// РЎР±СЂРѕСЃ С‚РѕС‡РЅРѕ РЅРµРЅСѓР¶РЅС‹С…
 	g_Plugin.FlagsWork &= ~(FW_TERMINATE|FW_QUICK_VIEW);
 
 	g_Plugin.SaveTitle();
@@ -750,13 +750,13 @@ HANDLE WINAPI OpenFilePluginW(const wchar_t *pFileName, const unsigned char *buf
 		rc = OpenImagePlugin(g_Plugin.MapFileName);
 		CFunctionLogger::FunctionLogger(L"OpenFilePluginW.OpenImagePlugin done");
 		if ((g_Plugin.FlagsWork & FW_PLUGIN_CALL) && g_Plugin.hWnd && IsWindow(g_Plugin.hWnd)) {
-			TODO("Прыгать по плагиновым панелям получается плохо - при ошибках нить не завершается");
+			TODO("РџСЂС‹РіР°С‚СЊ РїРѕ РїР»Р°РіРёРЅРѕРІС‹Рј РїР°РЅРµР»СЏРј РїРѕР»СѓС‡Р°РµС‚СЃСЏ РїР»РѕС…Рѕ - РїСЂРё РѕС€РёР±РєР°С… РЅРёС‚СЊ РЅРµ Р·Р°РІРµСЂС€Р°РµС‚СЃСЏ");
 			if (rc == FE_UNKNOWN_EXTENSION) {
 				g_Plugin.FlagsWork |= FW_TERMINATE;
 				PostMessage(g_Plugin.hWnd, DMSG_KEYBOARD, VK_ESCAPE, 0);
 				SetEvent(g_Plugin.hWorkEvent);
 				SetEvent(g_Plugin.hSynchroDone);
-				WARNING("!!! от INFINITE нужно избавляться !!!"); // Если нить не завершается - она может висеть и ее нужно насильно прибить
+				WARNING("!!! РѕС‚ INFINITE РЅСѓР¶РЅРѕ РёР·Р±Р°РІР»СЏС‚СЊСЃСЏ !!!"); // Р•СЃР»Рё РЅРёС‚СЊ РЅРµ Р·Р°РІРµСЂС€Р°РµС‚СЃСЏ - РѕРЅР° РјРѕР¶РµС‚ РІРёСЃРµС‚СЊ Рё РµРµ РЅСѓР¶РЅРѕ РЅР°СЃРёР»СЊРЅРѕ РїСЂРёР±РёС‚СЊ
 				CFunctionLogger::FunctionLogger(L"OpenFilePluginW.WaitForSingleObject(g_Plugin.hThread, INFINITE)");
 				WaitForSingleObject(g_Plugin.hThread, INFINITE);
 				CFunctionLogger::FunctionLogger(L"OpenFilePluginW.WaitForSingleObject(g_Plugin.hThread, INFINITE) done");
@@ -768,15 +768,15 @@ HANDLE WINAPI OpenFilePluginW(const wchar_t *pFileName, const unsigned char *buf
 		}
 		switch (rc) {
 			case FE_PROCEEDED:
-				// Если (g_Plugin.FlagsWork & FW_PLUGIN_CALL) то в FAR мог быть послан Ctrl-PgDn
+				// Р•СЃР»Рё (g_Plugin.FlagsWork & FW_PLUGIN_CALL) С‚Рѕ РІ FAR РјРѕРі Р±С‹С‚СЊ РїРѕСЃР»Р°РЅ Ctrl-PgDn
 				CFunctionLogger::FunctionLogger(L"OpenFilePluginW.FE_PROCEEDED");
-				hPlugin = (HANDLE)-2; // Чтобы FAR не пытался открыть файл другим плагином
+				hPlugin = (HANDLE)-2; // Р§С‚РѕР±С‹ FAR РЅРµ РїС‹С‚Р°Р»СЃСЏ РѕС‚РєСЂС‹С‚СЊ С„Р°Р№Р» РґСЂСѓРіРёРј РїР»Р°РіРёРЅРѕРј
 				break;
 			case FE_SKIP_ERROR:
 				CFunctionLogger::FunctionLogger(L"OpenFilePluginW.FE_SKIP_ERROR");
-				break; // Не открыли, но ошибку показывать не нужно
+				break; // РќРµ РѕС‚РєСЂС‹Р»Рё, РЅРѕ РѕС€РёР±РєСѓ РїРѕРєР°Р·С‹РІР°С‚СЊ РЅРµ РЅСѓР¶РЅРѕ
 			case FE_UNKNOWN_EXTENSION:
-				// Неизвестное расширение
+				// РќРµРёР·РІРµСЃС‚РЅРѕРµ СЂР°СЃС€РёСЂРµРЅРёРµ
 				//if (g_Plugin.FlagsWork & FW_FIRST_CALL) {
 				//	g_StartupInfo.Message(g_StartupInfo.ModuleNumber, FMSG_ALLINONE|FMSG_MB_OK,
 				//		NULL, (const wchar_t * const *)GetMsg(MIOpenUnknownExtension), 0, 0);
@@ -784,7 +784,7 @@ HANDLE WINAPI OpenFilePluginW(const wchar_t *pFileName, const unsigned char *buf
 				CFunctionLogger::FunctionLogger(L"OpenFilePluginW.FE_UNKNOWN_EXTENSION");
 				break;
 			case FE_OPEN_FAILED:
-				// Ошибка открытия файла
+				// РћС€РёР±РєР° РѕС‚РєСЂС‹С‚РёСЏ С„Р°Р№Р»Р°
 				CFunctionLogger::FunctionLogger(L"OpenFilePluginW.FE_OPEN_FAILED");
 				if (g_Plugin.FlagsWork & FW_FIRST_CALL) {
 					g_StartupInfo.Message(g_StartupInfo.ModuleNumber, FMSG_ALLINONE|FMSG_MB_OK,
@@ -792,13 +792,13 @@ HANDLE WINAPI OpenFilePluginW(const wchar_t *pFileName, const unsigned char *buf
 				}
 				break;
 			case FE_NO_PANEL_ITEM:
-				// Больше нет элементов на панели?
+				// Р‘РѕР»СЊС€Рµ РЅРµС‚ СЌР»РµРјРµРЅС‚РѕРІ РЅР° РїР°РЅРµР»Рё?
 				CFunctionLogger::FunctionLogger(L"OpenFilePluginW.FE_NO_PANEL_ITEM");
 				break;
 		}
 
 		if ((g_Plugin.FlagsDisplay & FD_JUMP) && !(g_Plugin.FlagsWork & FW_TERMINATE)) {
-			hPlugin = (HANDLE)-2; // Чтобы FAR не пытался открыть файл другим плагином
+			hPlugin = (HANDLE)-2; // Р§С‚РѕР±С‹ FAR РЅРµ РїС‹С‚Р°Р»СЃСЏ РѕС‚РєСЂС‹С‚СЊ С„Р°Р№Р» РґСЂСѓРіРёРј РїР»Р°РіРёРЅРѕРј
 		}
 
 	} CATCH {
@@ -819,10 +819,10 @@ HANDLE WINAPI OpenFilePluginW(const wchar_t *pFileName, const unsigned char *buf
 	{
 		g_Plugin.RestoreTitle();
 
-		// GFL портит консоль при просмотре WMF
+		// GFL РїРѕСЂС‚РёС‚ РєРѕРЅСЃРѕР»СЊ РїСЂРё РїСЂРѕСЃРјРѕС‚СЂРµ WMF
 		g_StartupInfo.AdvControl(g_StartupInfo.ModuleNumber, ACTL_REDRAWALL, NULL);
 
-		TODO("Имеет смысл, только если выбрана настройка 'Показывать выделенные файлы вверху'");
+		TODO("РРјРµРµС‚ СЃРјС‹СЃР», С‚РѕР»СЊРєРѕ РµСЃР»Рё РІС‹Р±СЂР°РЅР° РЅР°СЃС‚СЂРѕР№РєР° 'РџРѕРєР°Р·С‹РІР°С‚СЊ РІС‹РґРµР»РµРЅРЅС‹Рµ С„Р°Р№Р»С‹ РІРІРµСЂС…Сѓ'");
 		if (g_Plugin.SelectionChanged) {
 			ActlKeyMacro km = {MCMD_POSTMACROSTRING};
 			km.Param.PlainText.SequenceText = L"CtrlR";
@@ -841,7 +841,7 @@ bool EscapePressed()
 	if (g_Plugin.FlagsWork & FW_TERMINATE)
 		return true;
 
-	// был GetAsyncKeyState
+	// Р±С‹Р» GetAsyncKeyState
 	SHORT stat = GetKeyState(VK_ESCAPE);
 	if (stat & 0x8000) {
 		g_Plugin.FlagsWork |= FW_TERMINATE;
@@ -883,7 +883,7 @@ BOOL CheckConEmu()
 		//g_Plugin.hConEmuWnd = NULL;
 		hNewFarWnd = (HWND)g_StartupInfo.AdvControl(g_StartupInfo.ModuleNumber, ACTL_GETFARHWND, NULL);
 		//const HWND hAncestor = GetAncestor(g_Plugin.hFarWnd, GA_PARENT);
-		//if (hAncestor != g_Plugin.hDesktopWnd) -- пережитки старых conemu. убито
+		//if (hAncestor != g_Plugin.hDesktopWnd) -- РїРµСЂРµР¶РёС‚РєРё СЃС‚Р°СЂС‹С… conemu. СѓР±РёС‚Рѕ
 		//	g_Plugin.hFarWnd = hAncestor;
 	}
 //}
@@ -898,21 +898,21 @@ EFlagsResult OpenImagePlugin(const wchar_t *pFileName)
 {
 	g_Plugin.InitHooks();
 
-	// Уже должно быть выполнено! Да и при вызове через префикс этого лучше не делать
+	// РЈР¶Рµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РІС‹РїРѕР»РЅРµРЅРѕ! Р”Р° Рё РїСЂРё РІС‹Р·РѕРІРµ С‡РµСЂРµР· РїСЂРµС„РёРєСЃ СЌС‚РѕРіРѕ Р»СѓС‡С€Рµ РЅРµ РґРµР»Р°С‚СЊ
 	//if (g_Plugin.IsExtensionIgnored(pFileName))
 	//	return (HANDLE)-1;
 
 	g_Plugin.InitPlugin();
 
-	// Для первой картинки серии - установить флаг FW_FIRST_CALL, но не FW_FORCE_DECODE,
-	// т.к. сюда мы можем попасть и при перехвате вьювера/редактора, а там FW_FORCE_DECODE не нужен
-	// Первую картинку серии определяем по осутствию окна g_Plugin.hWnd и НЕ QView.
+	// Р”Р»СЏ РїРµСЂРІРѕР№ РєР°СЂС‚РёРЅРєРё СЃРµСЂРёРё - СѓСЃС‚Р°РЅРѕРІРёС‚СЊ С„Р»Р°Рі FW_FIRST_CALL, РЅРѕ РЅРµ FW_FORCE_DECODE,
+	// С‚.Рє. СЃСЋРґР° РјС‹ РјРѕР¶РµРј РїРѕРїР°СЃС‚СЊ Рё РїСЂРё РїРµСЂРµС…РІР°С‚Рµ РІСЊСЋРІРµСЂР°/СЂРµРґР°РєС‚РѕСЂР°, Р° С‚Р°Рј FW_FORCE_DECODE РЅРµ РЅСѓР¶РµРЅ
+	// РџРµСЂРІСѓСЋ РєР°СЂС‚РёРЅРєСѓ СЃРµСЂРёРё РѕРїСЂРµРґРµР»СЏРµРј РїРѕ РѕСЃСѓС‚СЃС‚РІРёСЋ РѕРєРЅР° g_Plugin.hWnd Рё РќР• QView.
 	if (g_Plugin.hWnd == NULL && !(g_Plugin.FlagsWork & FW_QUICK_VIEW)) {
 		g_Plugin.FlagsWork |= FW_FIRST_CALL;
 	}
 
-	// Дополнительная инициализация при вызове для первой картинки серии
-	// (т.к. InitPlugin вызывается только один раз за сеанс FAR-а)
+	// Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅР°СЏ РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РїСЂРё РІС‹Р·РѕРІРµ РґР»СЏ РїРµСЂРІРѕР№ РєР°СЂС‚РёРЅРєРё СЃРµСЂРёРё
+	// (С‚.Рє. InitPlugin РІС‹Р·С‹РІР°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ РѕРґРёРЅ СЂР°Р· Р·Р° СЃРµР°РЅСЃ FAR-Р°)
 	if (g_Plugin.FlagsWork & FW_FIRST_CALL) {
 		CheckAllClosed();
 		g_Plugin.ImageX = g_Plugin.Image[0];
@@ -950,12 +950,12 @@ EFlagsResult OpenImagePlugin(const wchar_t *pFileName)
 	//		g_Plugin.hConEmuWnd = NULL;
 	//		g_Plugin.hFarWnd = (HWND)g_StartupInfo.AdvControl(g_StartupInfo.ModuleNumber, ACTL_GETFARHWND, NULL);
 	//		//const HWND hAncestor = GetAncestor(g_Plugin.hFarWnd, GA_PARENT);
-	//		//if (hAncestor != g_Plugin.hDesktopWnd) -- пережитки старых conemu. убито
+	//		//if (hAncestor != g_Plugin.hDesktopWnd) -- РїРµСЂРµР¶РёС‚РєРё СЃС‚Р°СЂС‹С… conemu. СѓР±РёС‚Рѕ
 	//		//	g_Plugin.hFarWnd = hAncestor;
 	//	}
 	//}
 
-	TODO("Окно отрисовки в conemu может стать невидимым");
+	TODO("РћРєРЅРѕ РѕС‚СЂРёСЃРѕРІРєРё РІ conemu РјРѕР¶РµС‚ СЃС‚Р°С‚СЊ РЅРµРІРёРґРёРјС‹Рј");
 	bool lbVisible = false;
 	if (!g_Plugin.hConEmuWnd && (!IsWindow(g_Plugin.hFarWnd) || !IsWindowVisible(g_Plugin.hFarWnd))) {
 		g_StartupInfo.Message(g_StartupInfo.ModuleNumber, FMSG_ALLINONE|FMSG_MB_OK,
@@ -965,7 +965,7 @@ EFlagsResult OpenImagePlugin(const wchar_t *pFileName)
 		return FE_SKIP_ERROR;
 	}
 
-	g_Plugin.InitCMYK(FALSE); // Дождаться его завершения
+	g_Plugin.InitCMYK(FALSE); // Р”РѕР¶РґР°С‚СЊСЃСЏ РµРіРѕ Р·Р°РІРµСЂС€РµРЅРёСЏ
 
 	MCHKHEAP;
 	//g_Plugin.FlagsWork |= FW_FIRSTIMAGE;
@@ -994,7 +994,7 @@ EFlagsResult OpenImagePlugin(const wchar_t *pFileName)
 		}
 	} else if (!g_Plugin.bKeepZoomAndPosBetweenFiles) {
 		g_Plugin.ZoomAuto = g_Plugin.bAutoZoom ? ZA_FIT : ZA_NONE;
-		WARNING("Почему-то ветки различаются?  if (!g_Plugin.ZoomAuto) {...");
+		WARNING("РџРѕС‡РµРјСѓ-С‚Рѕ РІРµС‚РєРё СЂР°Р·Р»РёС‡Р°СЋС‚СЃСЏ?  if (!g_Plugin.ZoomAuto) {...");
 		g_Plugin.Zoom = g_Plugin.AbsoluteZoom = 0x10000; // initial 100%
 	}
 
@@ -1009,21 +1009,21 @@ lReOpen:
 	}
 	_ASSERTE(g_Plugin.ImageX!=NULL);
 	MCHKHEAP;
-	//заменил Image[0] на ImageX - иначе вроде PgDn/PgUp не работает
+	//Р·Р°РјРµРЅРёР» Image[0] РЅР° ImageX - РёРЅР°С‡Рµ РІСЂРѕРґРµ PgDn/PgUp РЅРµ СЂР°Р±РѕС‚Р°РµС‚
 	CFunctionLogger::FunctionLogger(L"OpenImagePlugin.ImageX->ImageOpen(%s)",pFileName);
 	bool result = g_Plugin.ImageX->ImageOpen(pFileName, NULL, 0);
 	CFunctionLogger::FunctionLogger(L"ImageOpen done");
 
-	// Сброс флага перехвата CtrlPgDn, и первого файла серии
-	// После AltPgDn/Up и отработки в ImageOpen - сбросим флаги (FW_PREVDECODER|FW_NEXTDECODER)
+	// РЎР±СЂРѕСЃ С„Р»Р°РіР° РїРµСЂРµС…РІР°С‚Р° CtrlPgDn, Рё РїРµСЂРІРѕРіРѕ С„Р°Р№Р»Р° СЃРµСЂРёРё
+	// РџРѕСЃР»Рµ AltPgDn/Up Рё РѕС‚СЂР°Р±РѕС‚РєРё РІ ImageOpen - СЃР±СЂРѕСЃРёРј С„Р»Р°РіРё (FW_PREVDECODER|FW_NEXTDECODER)
 	g_Plugin.FlagsWork &= ~(FW_PREVDECODER|FW_NEXTDECODER);
 	if (result)
 		g_Plugin.FlagsWork &= ~(FW_PLUGIN_CALL|FW_FIRST_CALL|FW_FORCE_DECODE);
 	else if (g_Plugin.FlagsWork & FW_FIRST_CALL) {
 		g_Plugin.FlagsWork |= (FW_TERMINATE);
-		// при обломе стартовой загрузки изображения нить дисплея ждет
+		// РїСЂРё РѕР±Р»РѕРјРµ СЃС‚Р°СЂС‚РѕРІРѕР№ Р·Р°РіСЂСѓР·РєРё РёР·РѕР±СЂР°Р¶РµРЅРёСЏ РЅРёС‚СЊ РґРёСЃРїР»РµСЏ Р¶РґРµС‚
 		// WaitForSingleObject(g_Plugin.hWorkEvent, INFINITE);
-		//SetEvent(g_Plugin.hWorkEvent); -- и пусть ждет. еще может дисплеи закрывать нужно, а окна уже нет
+		//SetEvent(g_Plugin.hWorkEvent); -- Рё РїСѓСЃС‚СЊ Р¶РґРµС‚. РµС‰Рµ РјРѕР¶РµС‚ РґРёСЃРїР»РµРё Р·Р°РєСЂС‹РІР°С‚СЊ РЅСѓР¶РЅРѕ, Р° РѕРєРЅР° СѓР¶Рµ РЅРµС‚
 	}
 
 	if (g_Plugin.FlagsWork & FW_QUICK_VIEW) {
@@ -1037,7 +1037,7 @@ lReOpen:
 
 lCachingDone:
 
-	WARNING("GetAsyncKeyState нужно заменять на статус. иначе это потенциальный баг - она может вернуть не то, что ожидается");
+	WARNING("GetAsyncKeyState РЅСѓР¶РЅРѕ Р·Р°РјРµРЅСЏС‚СЊ РЅР° СЃС‚Р°С‚СѓСЃ. РёРЅР°С‡Рµ СЌС‚Рѕ РїРѕС‚РµРЅС†РёР°Р»СЊРЅС‹Р№ Р±Р°Рі - РѕРЅР° РјРѕР¶РµС‚ РІРµСЂРЅСѓС‚СЊ РЅРµ С‚Рѕ, С‡С‚Рѕ РѕР¶РёРґР°РµС‚СЃСЏ");
 	const bool bESC = EscapePressed();
 		//GetAsyncKeyState(VK_ESCAPE) < 0;
 	if (!g_Plugin.hWnd || bESC) // Display thread ended
@@ -1117,15 +1117,15 @@ lCachingDone:
 
 	if ((g_Plugin.FlagsWork & FW_TERMINATE) || (g_Plugin.ImageX == g_Plugin.Image[0] && !(g_Plugin.FlagsDisplay & FD_REFRESH))) // no main image
 	{
-		// Сюда мы по идее должны попадать только при закрытии плагина - окно уже должно быть разрушено
-		// Если это только не первый вызов - тогда оно могло еще не успеть разрушиться
+		// РЎСЋРґР° РјС‹ РїРѕ РёРґРµРµ РґРѕР»Р¶РЅС‹ РїРѕРїР°РґР°С‚СЊ С‚РѕР»СЊРєРѕ РїСЂРё Р·Р°РєСЂС‹С‚РёРё РїР»Р°РіРёРЅР° - РѕРєРЅРѕ СѓР¶Рµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ СЂР°Р·СЂСѓС€РµРЅРѕ
+		// Р•СЃР»Рё СЌС‚Рѕ С‚РѕР»СЊРєРѕ РЅРµ РїРµСЂРІС‹Р№ РІС‹Р·РѕРІ - С‚РѕРіРґР° РѕРЅРѕ РјРѕРіР»Рѕ РµС‰Рµ РЅРµ СѓСЃРїРµС‚СЊ СЂР°Р·СЂСѓС€РёС‚СЊСЃСЏ
 		//#ifdef _DEBUG
 		//if (!(g_Plugin.FlagsWork & FW_FIRST_CALL)) {
-		//	_ASSERTE(g_Plugin.hWnd == NULL); -- низя.
+		//	_ASSERTE(g_Plugin.hWnd == NULL); -- РЅРёР·СЏ.
 		//}
 		//#endif
 
-		TODO("А если какая-то картинка обломается - result не сбросится случайно? Viewer может тогда остаться");
+		TODO("Рђ РµСЃР»Рё РєР°РєР°СЏ-С‚Рѕ РєР°СЂС‚РёРЅРєР° РѕР±Р»РѕРјР°РµС‚СЃСЏ - result РЅРµ СЃР±СЂРѕСЃРёС‚СЃСЏ СЃР»СѓС‡Р°Р№РЅРѕ? Viewer РјРѕР¶РµС‚ С‚РѕРіРґР° РѕСЃС‚Р°С‚СЊСЃСЏ");
 		if (result)
 			ExitViewerEditor();
 		EFlagsResult ExitCode = FE_SKIP_ERROR;
@@ -1155,8 +1155,8 @@ lCachingDone:
 		g_Plugin.Image[2]->SetPanelItemRaw(0);
 		g_Plugin.FarPanelInfo.ItemsNumber = -1;
 
-		// Очистить все флаги КРОМЕ ..., иначе мы не узнаем закрываемся мы или нет
-		WARNING("Если мы в архиве уже что-то открыли - то при обломе на втором файле перейти к следующему");
+		// РћС‡РёСЃС‚РёС‚СЊ РІСЃРµ С„Р»Р°РіРё РљР РћРњР• ..., РёРЅР°С‡Рµ РјС‹ РЅРµ СѓР·РЅР°РµРј Р·Р°РєСЂС‹РІР°РµРјСЃСЏ РјС‹ РёР»Рё РЅРµС‚
+		WARNING("Р•СЃР»Рё РјС‹ РІ Р°СЂС…РёРІРµ СѓР¶Рµ С‡С‚Рѕ-С‚Рѕ РѕС‚РєСЂС‹Р»Рё - С‚Рѕ РїСЂРё РѕР±Р»РѕРјРµ РЅР° РІС‚РѕСЂРѕРј С„Р°Р№Р»Рµ РїРµСЂРµР№С‚Рё Рє СЃР»РµРґСѓСЋС‰РµРјСѓ");
 		g_Plugin.FlagsWork &= (FW_TERMINATE);
 
 		MCHKHEAP;
@@ -1185,14 +1185,14 @@ lCachingDone:
 	// caching in progress
 	if (g_Plugin.FlagsDisplay & FD_REFRESH)
 	{
-		// Ниже по коду это условие. для чего оно?
+		// РќРёР¶Рµ РїРѕ РєРѕРґСѓ СЌС‚Рѕ СѓСЃР»РѕРІРёРµ. РґР»СЏ С‡РµРіРѕ РѕРЅРѕ?
 		//_ASSERTE(g_Plugin.ImageX != g_Plugin.Image[0]);
 
 		CFunctionLogger::FunctionLogger(L"OpenImagePlugin.6");
 
-		// Тут как-то коряво, но это нужно, чтобы сработал refresh после применения настроек диалога на лету
+		// РўСѓС‚ РєР°Рє-С‚Рѕ РєРѕСЂСЏРІРѕ, РЅРѕ СЌС‚Рѕ РЅСѓР¶РЅРѕ, С‡С‚РѕР±С‹ СЃСЂР°Р±РѕС‚Р°Р» refresh РїРѕСЃР»Рµ РїСЂРёРјРµРЅРµРЅРёСЏ РЅР°СЃС‚СЂРѕРµРє РґРёР°Р»РѕРіР° РЅР° Р»РµС‚Сѓ
 		////////////////////////////////////////////////
-		// !!! g_Plugin.Image[0] тут не обрабатывается
+		// !!! g_Plugin.Image[0] С‚СѓС‚ РЅРµ РѕР±СЂР°Р±Р°С‚С‹РІР°РµС‚СЃСЏ
 		for (uint i = 3; --i;)
 			if (g_Plugin.Image[i]->Decoder)
 			{
@@ -1205,7 +1205,7 @@ lCachingDone:
 			g_Plugin.Image[2]->SetPanelItemRaw(g_Plugin.Image[0]->PanelItemRaw());
 			g_Plugin.ImageX = g_Plugin.Image[0];
 		g_Plugin.Image[0]->Decoder->ResetProcessed();
-		g_Plugin.FlagsWork |= FW_FORCE_DECODE; // Чтобы пошел "усиленный" подбор декодера
+		g_Plugin.FlagsWork |= FW_FORCE_DECODE; // Р§С‚РѕР±С‹ РїРѕС€РµР» "СѓСЃРёР»РµРЅРЅС‹Р№" РїРѕРґР±РѕСЂ РґРµРєРѕРґРµСЂР°
 		////////////////////////////////////////////////
 		MCHKHEAP;
 
@@ -1216,8 +1216,8 @@ lCachingDone:
 		}
 		DWORD nNextDecoder = (g_Plugin.FlagsWork & (FW_PREVDECODER|FW_NEXTDECODER));
 		if (nNextDecoder)
-			g_Plugin.FlagsWork |= FW_FORCE_DECODE; // Чтобы пошел "усиленный" подбор декодера
-		g_Plugin.FlagsDisplay &= ~FD_REFRESH; //FW_PREVDECODER|FW_NEXTDECODER - это оставим
+			g_Plugin.FlagsWork |= FW_FORCE_DECODE; // Р§С‚РѕР±С‹ РїРѕС€РµР» "СѓСЃРёР»РµРЅРЅС‹Р№" РїРѕРґР±РѕСЂ РґРµРєРѕРґРµСЂР°
+		g_Plugin.FlagsDisplay &= ~FD_REFRESH; //FW_PREVDECODER|FW_NEXTDECODER - СЌС‚Рѕ РѕСЃС‚Р°РІРёРј
 		g_Plugin.FlagsWork |= FW_PLUGIN_CALL;
 		//g_Plugin.Image[0]->dds->DeleteWorkSurface();
 		//g_Plugin.Image[1]->dds->DeleteWorkSurface();
@@ -1251,7 +1251,7 @@ lCachingDone:
 		CFunctionLogger::FunctionLogger(L"OpenImagePlugin.7");
 
 		do {
-			// крутим индекс открываемого элемента на панели
+			// РєСЂСѓС‚РёРј РёРЅРґРµРєСЃ РѕС‚РєСЂС‹РІР°РµРјРѕРіРѕ СЌР»РµРјРµРЅС‚Р° РЅР° РїР°РЅРµР»Рё
 			_ASSERTE(g_Plugin.ImageX!=NULL);
 			g_Plugin.ImageX->SetPanelItemRaw( g_Plugin.ImageX->PanelItemRaw() + ((g_Plugin.ImageX == g_Plugin.Image[2]) ? 1 : -1));
 			g_Plugin.ImageX->Decoder->ResetProcessed();
@@ -1316,13 +1316,13 @@ lCachingDone:
 
 	CFunctionLogger::FunctionLogger(L"OpenImagePlugin.10");
 
-	// макро не срабатывает - файлы не открываются, долистывается до конца
+	// РјР°РєСЂРѕ РЅРµ СЃСЂР°Р±Р°С‚С‹РІР°РµС‚ - С„Р°Р№Р»С‹ РЅРµ РѕС‚РєСЂС‹РІР°СЋС‚СЃСЏ, РґРѕР»РёСЃС‚С‹РІР°РµС‚СЃСЏ РґРѕ РєРѕРЅС†Р°
 	//ActlKeyMacro km = {MCMD_POSTMACROSTRING};
 	//km.Param.PlainText.SequenceText = L"$Text \"pic:!.!\" Enter";
 	//if (!g_StartupInfo.AdvControl(g_StartupInfo.ModuleNumber, ACTL_KEYMACRO, &km))
 	DWORD Command = KEY_CTRL | KEY_PGDN;
 	KeySequence ks = {KSFLAGS_DISABLEOUTPUT, 1, &Command};
-	g_Plugin.FlagsWork |= FW_PLUGIN_CALL; // Добавил на всякий случай, а то сброситься могло
+	g_Plugin.FlagsWork |= FW_PLUGIN_CALL; // Р”РѕР±Р°РІРёР» РЅР° РІСЃСЏРєРёР№ СЃР»СѓС‡Р°Р№, Р° С‚Рѕ СЃР±СЂРѕСЃРёС‚СЊСЃСЏ РјРѕРіР»Рѕ
 	if (!g_StartupInfo.AdvControl(g_StartupInfo.ModuleNumber, ACTL_POSTKEYSEQUENCE, &ks))
 	{
 		g_Plugin.ImageX->SetPanelItemRaw(PANEL_ITEM_UNAVAILABLE);
@@ -1360,15 +1360,15 @@ bool ProcessPrefix(const wchar_t* Item)
 		
 	UnicodeFileName szFileName;
 	PutFilePathName(&szFileName, Item);
-	Item = (const wchar_t*)szFileName;  // это будет полный путь 
-	UnicodeFileName::SkipPrefix(&Item); // а это уже без UNC префиксов
+	Item = (const wchar_t*)szFileName;  // СЌС‚Рѕ Р±СѓРґРµС‚ РїРѕР»РЅС‹Р№ РїСѓС‚СЊ 
+	UnicodeFileName::SkipPrefix(&Item); // Р° СЌС‚Рѕ СѓР¶Рµ Р±РµР· UNC РїСЂРµС„РёРєСЃРѕРІ
 	const wchar_t* szLines[10];
 	MCHKHEAP;
 	
 	ModuleData* plug = PVDManager::FindPlugin(Item, true/*abShowErrors*/);
 	if (lbUnload) {
 		if (plug != NULL) {
-			// Сам объект ModuleData не разрушается. Только выгружается pvd-шка
+			// РЎР°Рј РѕР±СЉРµРєС‚ ModuleData РЅРµ СЂР°Р·СЂСѓС€Р°РµС‚СЃСЏ. РўРѕР»СЊРєРѕ РІС‹РіСЂСѓР¶Р°РµС‚СЃСЏ pvd-С€РєР°
 			plug->Unload();
 		}
 	}
@@ -1376,7 +1376,7 @@ bool ProcessPrefix(const wchar_t* Item)
 
 	if (lbLoad) {
 		if (!plug) {
-			// нужно подгрузить
+			// РЅСѓР¶РЅРѕ РїРѕРґРіСЂСѓР·РёС‚СЊ
 			WIN32_FIND_DATAW fnd;
 			HANDLE hFind = FindFirstFile(Item, &fnd);
 			if (hFind == INVALID_HANDLE_VALUE
@@ -1391,7 +1391,7 @@ bool ProcessPrefix(const wchar_t* Item)
 			else
 			{
 				FindClose(hFind);
-				// плуг новый - будет создан новый ModuleData*
+				// РїР»СѓРі РЅРѕРІС‹Р№ - Р±СѓРґРµС‚ СЃРѕР·РґР°РЅ РЅРѕРІС‹Р№ ModuleData*
 				wchar_t* psz = _wcsdup(Item);
 				wchar_t* pszSlash = wcsrchr(psz, L'\\');
 				if (pszSlash) *pszSlash = 0;
@@ -1416,8 +1416,8 @@ bool ProcessPrefix(const wchar_t* Item)
 		}
 	}
 
-	// и сразу сортирнуть, т.к. выгружаем/загружаем только один плуг
-	PVDManager::SortPlugins2(); // Там же плагины по типам распределяются
+	// Рё СЃСЂР°Р·Сѓ СЃРѕСЂС‚РёСЂРЅСѓС‚СЊ, С‚.Рє. РІС‹РіСЂСѓР¶Р°РµРј/Р·Р°РіСЂСѓР¶Р°РµРј С‚РѕР»СЊРєРѕ РѕРґРёРЅ РїР»СѓРі
+	PVDManager::SortPlugins2(); // РўР°Рј Р¶Рµ РїР»Р°РіРёРЅС‹ РїРѕ С‚РёРїР°Рј СЂР°СЃРїСЂРµРґРµР»СЏСЋС‚СЃСЏ
 	MCHKHEAP;
 
 	return true;
@@ -1433,13 +1433,13 @@ HANDLE WINAPI OpenPluginW(int OpenFrom, INT_PTR Item)
 
 	MCHKHEAP;
 
-	// Это явный вызов плагина. Выполняем полную инициализацию
+	// Р­С‚Рѕ СЏРІРЅС‹Р№ РІС‹Р·РѕРІ РїР»Р°РіРёРЅР°. Р’С‹РїРѕР»РЅСЏРµРј РїРѕР»РЅСѓСЋ РёРЅРёС†РёР°Р»РёР·Р°С†РёСЋ
 	g_Plugin.InitPlugin();
 
-	// Явный вызов - ставим флаг (влияет на подбор декодеров, включение кнопки-модификатора)
+	// РЇРІРЅС‹Р№ РІС‹Р·РѕРІ - СЃС‚Р°РІРёРј С„Р»Р°Рі (РІР»РёСЏРµС‚ РЅР° РїРѕРґР±РѕСЂ РґРµРєРѕРґРµСЂРѕРІ, РІРєР»СЋС‡РµРЅРёРµ РєРЅРѕРїРєРё-РјРѕРґРёС„РёРєР°С‚РѕСЂР°)
 	g_Plugin.FlagsWork |= FW_FIRST_CALL|FW_FORCE_DECODE;
 	g_Plugin.FlagsWork &= ~(FW_TERMINATE|FW_QUICK_VIEW);
-	g_Plugin.SelectionChanged = false; // Чтобы знать, что менялось выделение
+	g_Plugin.SelectionChanged = false; // Р§С‚РѕР±С‹ Р·РЅР°С‚СЊ, С‡С‚Рѕ РјРµРЅСЏР»РѕСЃСЊ РІС‹РґРµР»РµРЅРёРµ
 	
 	
 	FUNCLOGGERI(L"OpenPluginW(%i)", OpenFrom);
@@ -1451,11 +1451,11 @@ HANDLE WINAPI OpenPluginW(int OpenFrom, INT_PTR Item)
 		case OPEN_EDITOR:
 			{
 				struct WindowInfo wi = {-1};
-				wchar_t szName[0x1000]; TODO("Сделать динамическим?");
+				wchar_t szName[0x1000]; TODO("РЎРґРµР»Р°С‚СЊ РґРёРЅР°РјРёС‡РµСЃРєРёРј?");
 				wi.Name = szName; wi.NameSize =	sizeof(szName)/sizeof(szName[0]);
 				if (g_StartupInfo.AdvControl(g_StartupInfo.ModuleNumber, ACTL_GETWINDOWINFO, &wi))
 				{
-					// -- явный вызов. Расширения игнорируем
+					// -- СЏРІРЅС‹Р№ РІС‹Р·РѕРІ. Р Р°СЃС€РёСЂРµРЅРёСЏ РёРіРЅРѕСЂРёСЂСѓРµРј
 					//if (g_Plugin.IsExtensionIgnored(wi.Name))
 					//	return INVALID_HANDLE_VALUE;
 					//if (!wcsncmp(wi.Name,L"\\\\?\\",4)) wi.Name+=4;
@@ -1473,7 +1473,7 @@ HANDLE WINAPI OpenPluginW(int OpenFrom, INT_PTR Item)
 				g_Plugin.FlagsWork &= ~(FW_FIRST_CALL|FW_FORCE_DECODE);
 				return INVALID_HANDLE_VALUE;
 			}
-			// только вызовом через префикс можно обойти (наверное) IsExtensionIgnored
+			// С‚РѕР»СЊРєРѕ РІС‹Р·РѕРІРѕРј С‡РµСЂРµР· РїСЂРµС„РёРєСЃ РјРѕР¶РЅРѕ РѕР±РѕР№С‚Рё (РЅР°РІРµСЂРЅРѕРµ) IsExtensionIgnored
 			TestJumpDisable((const wchar_t*)Item);
 			break;
 		case OPEN_PLUGINSMENU:
@@ -1499,9 +1499,9 @@ HANDLE WINAPI OpenPluginW(int OpenFrom, INT_PTR Item)
 				break;
 			case FE_SKIP_ERROR:
 				CFunctionLogger::FunctionLogger(L"OpenPluginW.FE_SKIP_ERROR");
-				break; // Не открыли, но ошибку показывать не нужно
+				break; // РќРµ РѕС‚РєСЂС‹Р»Рё, РЅРѕ РѕС€РёР±РєСѓ РїРѕРєР°Р·С‹РІР°С‚СЊ РЅРµ РЅСѓР¶РЅРѕ
 			case FE_UNKNOWN_EXTENSION:
-				// Неизвестное расширение
+				// РќРµРёР·РІРµСЃС‚РЅРѕРµ СЂР°СЃС€РёСЂРµРЅРёРµ
 				CFunctionLogger::FunctionLogger(L"OpenPluginW.FE_UNKNOWN_EXTENSION");
 				if (g_Plugin.FlagsWork & FW_FIRST_CALL) {
 					g_StartupInfo.Message(g_StartupInfo.ModuleNumber, FMSG_ALLINONE|FMSG_MB_OK,
@@ -1509,7 +1509,7 @@ HANDLE WINAPI OpenPluginW(int OpenFrom, INT_PTR Item)
 				}
 				break;
 			case FE_OPEN_FAILED:
-				// Ошибка открытия файла
+				// РћС€РёР±РєР° РѕС‚РєСЂС‹С‚РёСЏ С„Р°Р№Р»Р°
 				CFunctionLogger::FunctionLogger(L"OpenPluginW.FE_OPEN_FAILED");
 				if (g_Plugin.FlagsWork & FW_FIRST_CALL) {
 					g_StartupInfo.Message(g_StartupInfo.ModuleNumber, FMSG_ALLINONE|FMSG_MB_OK,
@@ -1517,7 +1517,7 @@ HANDLE WINAPI OpenPluginW(int OpenFrom, INT_PTR Item)
 				}
 				break;
 			case FE_NO_PANEL_ITEM:
-				// Больше нет элементов на панели?
+				// Р‘РѕР»СЊС€Рµ РЅРµС‚ СЌР»РµРјРµРЅС‚РѕРІ РЅР° РїР°РЅРµР»Рё?
 				CFunctionLogger::FunctionLogger(L"OpenPluginW.FE_NO_PANEL_ITEM");
 				break;
 		}
@@ -1537,12 +1537,12 @@ HANDLE WINAPI OpenPluginW(int OpenFrom, INT_PTR Item)
 	
 	if (g_Plugin.FlagsWork & FW_TERMINATE)
 	{
-		//if (rc == (HANDLE)-2) -- теперь всегда, на всякий
+		//if (rc == (HANDLE)-2) -- С‚РµРїРµСЂСЊ РІСЃРµРіРґР°, РЅР° РІСЃСЏРєРёР№
 		g_Plugin.RestoreTitle();
-		// GFL портит консоль при просмотре WMF
+		// GFL РїРѕСЂС‚РёС‚ РєРѕРЅСЃРѕР»СЊ РїСЂРё РїСЂРѕСЃРјРѕС‚СЂРµ WMF
 		g_StartupInfo.AdvControl(g_StartupInfo.ModuleNumber, ACTL_REDRAWALL, NULL);
 
-		TODO("Имеет смысл, только если выбрана настройка 'Показывать выделенные файлы вверху'");
+		TODO("РРјРµРµС‚ СЃРјС‹СЃР», С‚РѕР»СЊРєРѕ РµСЃР»Рё РІС‹Р±СЂР°РЅР° РЅР°СЃС‚СЂРѕР№РєР° 'РџРѕРєР°Р·С‹РІР°С‚СЊ РІС‹РґРµР»РµРЅРЅС‹Рµ С„Р°Р№Р»С‹ РІРІРµСЂС…Сѓ'");
 		if (g_Plugin.SelectionChanged) {
 			ActlKeyMacro km = {MCMD_POSTMACROSTRING};
 			km.Param.PlainText.SequenceText = L"CtrlR";
@@ -1562,7 +1562,7 @@ bool IsKeyPressed(WORD vk)
 	if ((st & 0x8000))
 		return true;
 
-	// что-то в ConEmu GetKeyState иногда ничего не дает? возвращается 0
+	// С‡С‚Рѕ-С‚Рѕ РІ ConEmu GetKeyState РёРЅРѕРіРґР° РЅРёС‡РµРіРѕ РЅРµ РґР°РµС‚? РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ 0
 	if (g_Plugin.hConEmuWnd && g_Plugin.hConEmuCtrlPressed && g_Plugin.hConEmuShiftPressed) {
 		DWORD dwWait = WAIT_TIMEOUT;
 		if (vk == VK_CONTROL)
@@ -1581,7 +1581,7 @@ int WINAPI ProcessEditorEventW(int Event, void *Param)
 
 	if (Event == EE_READ && g_Plugin.bHookEdit)
 	{
-		// Не перехватывать CtrlShiftF4
+		// РќРµ РїРµСЂРµС…РІР°С‚С‹РІР°С‚СЊ CtrlShiftF4
 		if (!g_Plugin.bHookCtrlShiftF4) {
 			if (IsKeyPressed(VK_SHIFT) && IsKeyPressed(VK_CONTROL) /*&& (GetKeyState(VK_F4) & 0x8000)*/) {
 				return 0;
@@ -1610,7 +1610,7 @@ int WINAPI ProcessEditorEventW(int Event, void *Param)
 					//lstrcpy(g_Plugin.MapFileNameData, g_Plugin.Image[0]->FileNameData);
 					g_Plugin.MapFileName = (const wchar_t*)g_Plugin.Image[0]->FileName;
 
-					TODO("Флаги TERMINATED, FIRSTCALL, переменная g_Plugin.SelectionChanged");
+					TODO("Р¤Р»Р°РіРё TERMINATED, FIRSTCALL, РїРµСЂРµРјРµРЅРЅР°СЏ g_Plugin.SelectionChanged");
 					
 					//OpenImagePlugin(g_Plugin.MapFileName);
 					int rc = 0;
@@ -1645,7 +1645,7 @@ int WINAPI ProcessViewerEventW(int Event, void *Param)
 
 	if (Event == VE_READ && (g_Plugin.bHookQuickView || g_Plugin.bHookView))
 	{
-		// Не перехватывать CtrlShiftF3
+		// РќРµ РїРµСЂРµС…РІР°С‚С‹РІР°С‚СЊ CtrlShiftF3
 		BOOL lbCtrlShiftPressed = (IsKeyPressed(VK_SHIFT) && IsKeyPressed(VK_CONTROL));
 		//if ( /*&& (GetKeyState(VK_F3) & 0x8000)*/) {
 		//	return 0;
@@ -1654,7 +1654,7 @@ int WINAPI ProcessViewerEventW(int Event, void *Param)
 		if (GetEnvironmentVariable(_T("FarPicViewMode"), szValue, 128)) {
 			szValue[9] = 0;
 			if (lstrcmp(szValue, PICVIEW_ENVVAL) != 0) {
-				// значит просмотр уже начат другим плагином
+				// Р·РЅР°С‡РёС‚ РїСЂРѕСЃРјРѕС‚СЂ СѓР¶Рµ РЅР°С‡Р°С‚ РґСЂСѓРіРёРј РїР»Р°РіРёРЅРѕРј
 				return 0;
 			}
 		}
@@ -1664,7 +1664,7 @@ int WINAPI ProcessViewerEventW(int Event, void *Param)
 		if (g_StartupInfo.ViewerControl(VCTL_GETINFO, &vi))
 		{
 			g_Plugin.FlagsWork |= FW_VE_HOOK;
-			// Сначала - сбросим QView! Иначе он может ошибочно остаться от предыдущего QView при отрытии обычного View
+			// РЎРЅР°С‡Р°Р»Р° - СЃР±СЂРѕСЃРёРј QView! РРЅР°С‡Рµ РѕРЅ РјРѕР¶РµС‚ РѕС€РёР±РѕС‡РЅРѕ РѕСЃС‚Р°С‚СЊСЃСЏ РѕС‚ РїСЂРµРґС‹РґСѓС‰РµРіРѕ QView РїСЂРё РѕС‚СЂС‹С‚РёРё РѕР±С‹С‡РЅРѕРіРѕ View
 			g_Plugin.FlagsWork &= ~(FW_TERMINATE|FW_QUICK_VIEW);
 
 			PanelInfo ppi[2];
@@ -1682,7 +1682,7 @@ int WINAPI ProcessViewerEventW(int Event, void *Param)
 						//if (!hWnd) {
 						//	const HWND hFarWnd = (HWND)g_StartupInfo.AdvControl(g_StartupInfo.ModuleNumber, ACTL_GETFARHWND, NULL);
 						//	hWnd = GetAncestor(hFarWnd, GA_PARENT);
-						//	WARNING("Эта проверка сомнительна в условиях многодисплейной конфигурации");
+						//	WARNING("Р­С‚Р° РїСЂРѕРІРµСЂРєР° СЃРѕРјРЅРёС‚РµР»СЊРЅР° РІ СѓСЃР»РѕРІРёСЏС… РјРЅРѕРіРѕРґРёСЃРїР»РµР№РЅРѕР№ РєРѕРЅС„РёРіСѓСЂР°С†РёРё");
 						//	if (hWnd == g_Plugin.hDesktopWnd)
 						//		hWnd = hFarWnd;
 						//} else {
@@ -1697,22 +1697,22 @@ int WINAPI ProcessViewerEventW(int Event, void *Param)
 							break;
 						}
 
-						// Поддержка "Far /w"
+						// РџРѕРґРґРµСЂР¶РєР° "Far /w"
 						csbi.srWindow.Left -= FarWorkRect.Left; csbi.srWindow.Right -= FarWorkRect.Left;
 						csbi.srWindow.Top -= FarWorkRect.Top; csbi.srWindow.Bottom -= FarWorkRect.Top;
 
 						if (ppi[i].PanelRect.left >= csbi.srWindow.Right || ppi[i].PanelRect.right <= csbi.srWindow.Left || ppi[i].PanelRect.top >= csbi.srWindow.Bottom || ppi[i].PanelRect.bottom - 2 <= csbi.srWindow.Top) {g_Plugin.FlagsWork &= ~FW_VE_HOOK; break;}
-						uint wdx = 0, wdy = 0; // Видимо это задел SEt'а на обработку черной окантовки вокруг консоли, если окно развернуто
+						uint wdx = 0, wdy = 0; // Р’РёРґРёРјРѕ СЌС‚Рѕ Р·Р°РґРµР» SEt'Р° РЅР° РѕР±СЂР°Р±РѕС‚РєСѓ С‡РµСЂРЅРѕР№ РѕРєР°РЅС‚РѕРІРєРё РІРѕРєСЂСѓРі РєРѕРЅСЃРѕР»Рё, РµСЃР»Рё РѕРєРЅРѕ СЂР°Р·РІРµСЂРЅСѓС‚Рѕ
 						//uint dx1 = (FarRect.right - FarRect.left + (csbi.srWindow.Right - csbi.srWindow.Left)) / (csbi.srWindow.Right - csbi.srWindow.Left + 1);
 						uint dx0 = (csbi.srWindow.Right - csbi.srWindow.Left + 1);
-						// Когда FAR Maximized - в консоли часть символов может не влезать
+						// РљРѕРіРґР° FAR Maximized - РІ РєРѕРЅСЃРѕР»Рё С‡Р°СЃС‚СЊ СЃРёРјРІРѕР»РѕРІ РјРѕР¶РµС‚ РЅРµ РІР»РµР·Р°С‚СЊ
 						uint dx = (FarRect.right - FarRect.left + dx0/2) / dx0;
 						//uint dy1 = (FarRect.bottom - FarRect.top + (csbi.srWindow.Bottom - csbi.srWindow.Top)) / (csbi.srWindow.Bottom - csbi.srWindow.Top + 1);
 						uint dy0 = (csbi.srWindow.Bottom - csbi.srWindow.Top + 1);
 						uint dy = (FarRect.bottom - FarRect.top + dy0/2) / dy0;
-						// Для реальной консоли - попробуем получить ширину и высоту через WinAPI
+						// Р”Р»СЏ СЂРµР°Р»СЊРЅРѕР№ РєРѕРЅСЃРѕР»Рё - РїРѕРїСЂРѕР±СѓРµРј РїРѕР»СѓС‡РёС‚СЊ С€РёСЂРёРЅСѓ Рё РІС‹СЃРѕС‚Сѓ С‡РµСЂРµР· WinAPI
 						if (!g_Plugin.hConEmuWnd) {
-							// Эти функции есть в XP и выше
+							// Р­С‚Рё С„СѓРЅРєС†РёРё РµСЃС‚СЊ РІ XP Рё РІС‹С€Рµ
 							GetCurrentConsoleFont_t fGetCurrentConsoleFont = (GetCurrentConsoleFont_t)GetProcAddress(GetModuleHandle(_T("kernel32.dll")),"GetCurrentConsoleFont");
 							GetConsoleFontSize_t fGetConsoleFontSize = (GetConsoleFontSize_t)GetProcAddress(GetModuleHandle(_T("kernel32.dll")),"GetConsoleFontSize");
 							if (fGetCurrentConsoleFont) {
@@ -1729,7 +1729,7 @@ int WINAPI ProcessViewerEventW(int Event, void *Param)
 								}
 							}
 						}
-						//BUGBUG. Тут потенциально можно нарваться. Если панель будет вообще не видна из-за прокрутки
+						//BUGBUG. РўСѓС‚ РїРѕС‚РµРЅС†РёР°Р»СЊРЅРѕ РјРѕР¶РЅРѕ РЅР°СЂРІР°С‚СЊСЃСЏ. Р•СЃР»Рё РїР°РЅРµР»СЊ Р±СѓРґРµС‚ РІРѕРѕР±С‰Рµ РЅРµ РІРёРґРЅР° РёР·-Р·Р° РїСЂРѕРєСЂСѓС‚РєРё
 						g_Plugin.ViewPanelT = ppi[i].PanelRect;
 						g_Plugin.ViewPanelG.left   = wdx + (ppi[i].PanelRect.left + 1 - csbi.srWindow.Left) * dx;
 						g_Plugin.ViewPanelG.right  = wdx + (ppi[i].PanelRect.right - csbi.srWindow.Left) * dx;
@@ -1742,7 +1742,7 @@ int WINAPI ProcessViewerEventW(int Event, void *Param)
 					}
 			}
 
-			// в режиме PanelViews нужно избежать излишних активаций при скроллировании!
+			// РІ СЂРµР¶РёРјРµ PanelViews РЅСѓР¶РЅРѕ РёР·Р±РµР¶Р°С‚СЊ РёР·Р»РёС€РЅРёС… Р°РєС‚РёРІР°С†РёР№ РїСЂРё СЃРєСЂРѕР»Р»РёСЂРѕРІР°РЅРёРё!
 			bool bSkipCauseTH = false;
 			if (g_Plugin.hConEmuWnd && (g_Plugin.FlagsWork & FW_QUICK_VIEW))
 			{
@@ -1779,7 +1779,7 @@ int WINAPI ProcessViewerEventW(int Event, void *Param)
 					//g_Plugin.MapFileName = g_Plugin.Image[0]->FileName;
 					//lstrcpy(g_Plugin.MapFileNameData, g_Plugin.Image[0]->FileNameData);
 					g_Plugin.MapFileName = (const wchar_t*)g_Plugin.Image[0]->FileName;
-					TODO("Флаги TERMINATED, FIRSTCALL, переменная g_Plugin.SelectionChanged");
+					TODO("Р¤Р»Р°РіРё TERMINATED, FIRSTCALL, РїРµСЂРµРјРµРЅРЅР°СЏ g_Plugin.SelectionChanged");
 				}
 				
 				//OpenImagePlugin(g_Plugin.MapFileName);
@@ -1845,8 +1845,8 @@ void WINAPI SetStartupInfoW(const struct PluginStartupInfo *xInfo)
 		return;
 	}
 
-	// Если имя файла плагина НЕ начинается с '0' - листание может перехватить другой
-	// плагин, что вызовет кучу проблем.
+	// Р•СЃР»Рё РёРјСЏ С„Р°Р№Р»Р° РїР»Р°РіРёРЅР° РќР• РЅР°С‡РёРЅР°РµС‚СЃСЏ СЃ '0' - Р»РёСЃС‚Р°РЅРёРµ РјРѕР¶РµС‚ РїРµСЂРµС…РІР°С‚РёС‚СЊ РґСЂСѓРіРѕР№
+	// РїР»Р°РіРёРЅ, С‡С‚Рѕ РІС‹Р·РѕРІРµС‚ РєСѓС‡Сѓ РїСЂРѕР±Р»РµРј.
 	const wchar_t *pszFileName = wcsrchr(xInfo->ModuleName, L'\\');
 	if (pszFileName) pszFileName++; else pszFileName = xInfo->ModuleName;
 	if (*pszFileName != L'0') {

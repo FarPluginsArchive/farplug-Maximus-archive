@@ -148,7 +148,7 @@ DWORD WINAPI CMYK_ThreadProc(void*)
 
 
 
-	g_Plugin.nCMYKparts = 17; // пока фиксировано
+	g_Plugin.nCMYKparts = 17; // РїРѕРєР° С„РёРєСЃРёСЂРѕРІР°РЅРѕ
 	g_Plugin.nCMYKsize = lWidth * lHeight;
 	g_Plugin.pCMYKpalette = (DWORD*)calloc(g_Plugin.nCMYKsize,4);
 

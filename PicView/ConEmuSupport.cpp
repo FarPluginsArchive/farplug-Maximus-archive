@@ -14,6 +14,8 @@ HWND GetConEmuHwnd()
 			ghConEmuDll = GetModuleHandle(_T("conemu.dll"));
 		if (!ghConEmuDll)
 			ghConEmuDll = GetModuleHandle(_T("conemu.x64.dll"));
+		if (!ghConEmuDll)
+			ghConEmuDll = GetModuleHandle(_T("conemu.arm64.dll"));
 
 		if (ghConEmuDll)
 			ConEmuGetFarHWND2 = (FGetFarHWND2)GetProcAddress(ghConEmuDll,"GetFarHWND2");

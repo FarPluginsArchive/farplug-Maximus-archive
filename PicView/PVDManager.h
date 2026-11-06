@@ -43,9 +43,9 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 class ImageInfo;
 
-// Общий класс, через который идут обращения к СУБдекодерам
-// Экземпляр класса создается в каждом ImageInfo, поэтому все контексты и параметры храним здесь
-// В static переменных - данные относящиеся к модулям в общем
+// РћР±С‰РёР№ РєР»Р°СЃСЃ, С‡РµСЂРµР· РєРѕС‚РѕСЂС‹Р№ РёРґСѓС‚ РѕР±СЂР°С‰РµРЅРёСЏ Рє РЎРЈР‘РґРµРєРѕРґРµСЂР°Рј
+// Р­РєР·РµРјРїР»СЏСЂ РєР»Р°СЃСЃР° СЃРѕР·РґР°РµС‚СЃСЏ РІ РєР°Р¶РґРѕРј ImageInfo, РїРѕСЌС‚РѕРјСѓ РІСЃРµ РєРѕРЅС‚РµРєСЃС‚С‹ Рё РїР°СЂР°РјРµС‚СЂС‹ С…СЂР°РЅРёРј Р·РґРµСЃСЊ
+// Р’ static РїРµСЂРµРјРµРЅРЅС‹С… - РґР°РЅРЅС‹Рµ РѕС‚РЅРѕСЃСЏС‰РёРµСЃСЏ Рє РјРѕРґСѓР»СЏРј РІ РѕР±С‰РµРј
 class PVDManager
 {
 public:
@@ -56,8 +56,8 @@ public:
 	static std::vector<ModuleData*> Plugins, Decoders, Displays;
 	static bool PVDManager::PluginCompare(ModuleData* p1, ModuleData* p2);
 	static uint GetNextDecoder(uint iDecoder, bool abForward);
-	static ModuleData *pDefaultDisplay; // Что выбрано в настройке плагина - поле "Display module"
-	static ModuleData *pActiveDisplay;  // А это то, через что идет вывод СЕЙЧАС (может быть NULL)
+	static ModuleData *pDefaultDisplay; // Р§С‚Рѕ РІС‹Р±СЂР°РЅРѕ РІ РЅР°СЃС‚СЂРѕР№РєРµ РїР»Р°РіРёРЅР° - РїРѕР»Рµ "Display module"
+	static ModuleData *pActiveDisplay;  // Рђ СЌС‚Рѕ С‚Рѕ, С‡РµСЂРµР· С‡С‚Рѕ РёРґРµС‚ РІС‹РІРѕРґ РЎР•Р™Р§РђРЎ (РјРѕР¶РµС‚ Р±С‹С‚СЊ NULL)
 	static std::vector<wchar_t*> sWholeLog;
 	static bool bWholeLogChanged;
 	static void AddLogString(const wchar_t* asModule, const wchar_t* asMessage);
@@ -89,7 +89,7 @@ public:
 	ImageInfo* mp_Image;
 	uint mi_SubDecoder;
 	bool mb_ImageOpened;
-	bool* mb_Processed; int mn_ProcessedSize; // Какими декодерами уже пытались открыть файл
+	bool* mb_Processed; int mn_ProcessedSize; // РљР°РєРёРјРё РґРµРєРѕРґРµСЂР°РјРё СѓР¶Рµ РїС‹С‚Р°Р»РёСЃСЊ РѕС‚РєСЂС‹С‚СЊ С„Р°Р№Р»
 	wchar_t* mps_FileName;
 	void *mp_ImageContext;
 	//PVDDecoderBase *pSubPlugin; // Subplugin instance

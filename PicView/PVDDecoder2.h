@@ -41,19 +41,19 @@ typedef void (__stdcall *pvdPageFree2_t)(void *pContext, void *pImageContext, pv
 typedef void (__stdcall *pvdPageFree2Old_t)(void *pContext, void *pImageContext, UINT32 iPage, pvdInfoDecode2 *pDecodeInfo);
 typedef void (__stdcall *pvdFileClose2_t)(void *pContext, void *pImageContext);
 typedef void (__stdcall *pvdReloadConfig2_t)(void *pContext);
-typedef void (__stdcall *pvdCancel2_t)(void *pContext); // отмена всех операций переданного контекста
+typedef void (__stdcall *pvdCancel2_t)(void *pContext); // РѕС‚РјРµРЅР° РІСЃРµС… РѕРїРµСЂР°С†РёР№ РїРµСЂРµРґР°РЅРЅРѕРіРѕ РєРѕРЅС‚РµРєСЃС‚Р°
 //
-// Инициализация контекста дисплея. Используется тот pContext, который был получен в pvdInit2
+// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РєРѕРЅС‚РµРєСЃС‚Р° РґРёСЃРїР»РµСЏ. РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С‚РѕС‚ pContext, РєРѕС‚РѕСЂС‹Р№ Р±С‹Р» РїРѕР»СѓС‡РµРЅ РІ pvdInit2
 typedef BOOL (__stdcall *pvdDisplayInit2_t)(void *pContext, pvdInfoDisplayInit2* pDisplayInit);
 //
 typedef BOOL (__stdcall *pvdDisplayAttach2_t)(void *pContext, pvdInfoDisplayAttach2* pDisplayAttach);
-// Создать контекст для отображения картинки в pContext (перенос декодированных данных в видеопамять)
+// РЎРѕР·РґР°С‚СЊ РєРѕРЅС‚РµРєСЃС‚ РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РєР°СЂС‚РёРЅРєРё РІ pContext (РїРµСЂРµРЅРѕСЃ РґРµРєРѕРґРёСЂРѕРІР°РЅРЅС‹С… РґР°РЅРЅС‹С… РІ РІРёРґРµРѕРїР°РјСЏС‚СЊ)
 typedef BOOL (__stdcall *pvdDisplayCreate2_t)(void *pContext, pvdInfoDisplayCreate2* pDisplayCreate);
-// Собственно отрисовка. Функция должна при необходимости выполнять "Stretch"
+// РЎРѕР±СЃС‚РІРµРЅРЅРѕ РѕС‚СЂРёСЃРѕРІРєР°. Р¤СѓРЅРєС†РёСЏ РґРѕР»Р¶РЅР° РїСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё РІС‹РїРѕР»РЅСЏС‚СЊ "Stretch"
 typedef BOOL (__stdcall *pvdDisplayPaint2_t)(void *pContext, void* pDisplayContext, pvdInfoDisplayPaint2* pDisplayPaint);
-// Закрыть контекст для отображения картинки (освободить видеопамять)
+// Р—Р°РєСЂС‹С‚СЊ РєРѕРЅС‚РµРєСЃС‚ РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РєР°СЂС‚РёРЅРєРё (РѕСЃРІРѕР±РѕРґРёС‚СЊ РІРёРґРµРѕРїР°РјСЏС‚СЊ)
 typedef void (__stdcall *pvdDisplayClose2_t)(void *pContext, void* pDisplayContext);
-// Закрыть модуль вывода (освобождение интерфейсов DX, отцепиться от окна)
+// Р—Р°РєСЂС‹С‚СЊ РјРѕРґСѓР»СЊ РІС‹РІРѕРґР° (РѕСЃРІРѕР±РѕР¶РґРµРЅРёРµ РёРЅС‚РµСЂС„РµР№СЃРѕРІ DX, РѕС‚С†РµРїРёС‚СЊСЃСЏ РѕС‚ РѕРєРЅР°)
 typedef void (__stdcall *pvdDisplayExit2_t)(void *pContext);
 
 class PVDDecoderVer2 : public PVDDecoderBase {
@@ -61,7 +61,7 @@ public:
 	PVDDecoderVer2(ModuleData* apData);
 	virtual ~PVDDecoderVer2();
 	virtual bool LoadFormatsFromPvd();
-	virtual bool InitPlugin(bool bAllowResort=false); // Загрузить, инициализировать, получить список форматов
+	virtual bool InitPlugin(bool bAllowResort=false); // Р—Р°РіСЂСѓР·РёС‚СЊ, РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°С‚СЊ, РїРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє С„РѕСЂРјР°С‚РѕРІ
 public:
 	virtual BOOL TranslateError2(DWORD nErrNumber, wchar_t *pszErrInfo, int nBufLen);
 	virtual BOOL FileOpen2(const wchar_t *pFileName, INT64 lFileSize, const BYTE *pBuf, UINT32 lBuf, pvdInfoImage2 *pImageInfo);
@@ -108,11 +108,11 @@ protected:
 	
 	//pvdInfoPlugin2 m_PluginInfo;
 public: // API Helper functions
-	// 0-информация, 1-предупреждение, 2-ошибка
+	// 0-РёРЅС„РѕСЂРјР°С†РёСЏ, 1-РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёРµ, 2-РѕС€РёР±РєР°
 	static void __stdcall apiMessageLog(void *apCallbackContext, const wchar_t* asMessage, UINT32 anSeverity);
-	// asExtList может содержать '*' (тогда всегда TRUE) или '.' (TRUE если asExt пусто)
+	// asExtList РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ '*' (С‚РѕРіРґР° РІСЃРµРіРґР° TRUE) РёР»Рё '.' (TRUE РµСЃР»Рё asExt РїСѓСЃС‚Рѕ)
 	static BOOL __stdcall apiExtensionMatch(wchar_t* asExtList, const wchar_t* asExt);
-	// Просто вызвать 
+	// РџСЂРѕСЃС‚Рѕ РІС‹Р·РІР°С‚СЊ 
 	static BOOL __stdcall apiCallSehed(pvdCallSehedProc2 CalledProc, LONG_PTR Param1, LONG_PTR Param2, LONG_PTR* Result);
 	static int __stdcall apiSortExtensions(wchar_t* pszExtensions);
 	static int __stdcall apiMulDivI32(int a, int b, int c);  // a * (__int64)b / c;

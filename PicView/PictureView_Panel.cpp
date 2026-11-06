@@ -92,7 +92,7 @@ bool PicViewPanel::LoadPanelInfo()
 		}
 	}
 	
-	// смотреть на (pi.Flags & PFLAGS_REALNAMES)
+	// СЃРјРѕС‚СЂРµС‚СЊ РЅР° (pi.Flags & PFLAGS_REALNAMES)
 	if (size_t len = g_StartupInfo.Control(INVALID_HANDLE_VALUE, FCTL_GETPANELDIR, 0, 0))
 	{
 		if (wchar_t* pCurDir = (wchar_t*)malloc(len*2))
@@ -122,7 +122,7 @@ bool PicViewPanel::InitListWithFile(UnicodeFileName* asFile)
 	return false;
 }
 
-// Когда панели нет
+// РљРѕРіРґР° РїР°РЅРµР»Рё РЅРµС‚
 bool PicViewPanel::RetrieveAllDirFiles()
 {
 	return false;
@@ -138,8 +138,8 @@ bool PicViewPanel::MarkUnmarkFile(int aiRawIndex, enum PicViewPanel::MarkAction 
 		else if (action == ema_Switch)
 			g_Plugin.Image[0]->bSelected = !g_Plugin.Image[0]->bSelected;
 
-		// чтобы при выходе из плагина можно было обновить панель, показав выделенные вверху
-		g_Plugin.SelectionChanged = true; TODO("Переделать в флаг");
+		// С‡С‚РѕР±С‹ РїСЂРё РІС‹С…РѕРґРµ РёР· РїР»Р°РіРёРЅР° РјРѕР¶РЅРѕ Р±С‹Р»Рѕ РѕР±РЅРѕРІРёС‚СЊ РїР°РЅРµР»СЊ, РїРѕРєР°Р·Р°РІ РІС‹РґРµР»РµРЅРЅС‹Рµ РІРІРµСЂС…Сѓ
+		g_Plugin.SelectionChanged = true; TODO("РџРµСЂРµРґРµР»Р°С‚СЊ РІ С„Р»Р°Рі");
 
 		g_StartupInfo.Control(INVALID_HANDLE_VALUE, FCTL_SETSELECTION,
 			g_Plugin.Image[0]->PanelItemRaw(), g_Plugin.Image[0]->bSelected);
@@ -158,13 +158,13 @@ bool PicViewPanel::MarkUnmarkFile(int aiRawIndex, enum PicViewPanel::MarkAction 
 	return false;
 }
 
-// Когда панели не было
+// РљРѕРіРґР° РїР°РЅРµР»Рё РЅРµ Р±С‹Р»Рѕ
 bool PicViewPanel::UpdatePanelDir()
 {
 	return false;
 }
 
-// Когда панели нет
+// РљРѕРіРґР° РїР°РЅРµР»Рё РЅРµС‚
 void PicViewPanel::SortFolderFiles()
 {
 }
@@ -177,7 +177,7 @@ const wchar_t* PicViewPanel::GetCurrentItemName()
 
 int PicViewPanel::GetCurrentItemRawIdx()
 {
-	// индекс в mp_Items
+	// РёРЅРґРµРєСЃ РІ mp_Items
 	return m_Panel.CurrentItem;
 }
 
