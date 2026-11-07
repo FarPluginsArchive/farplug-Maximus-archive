@@ -478,7 +478,6 @@ PluginData::~PluginData()
 	if (hGDIPlus) {
 		FreeLibrary(hGDIPlus);
 		hGDIPlus = NULL;
-		CoUninitialize();
 	}
 	if (hConEmuCtrlPressed) { CloseHandle(hConEmuCtrlPressed); hConEmuCtrlPressed = NULL; }
 	if (hConEmuShiftPressed) { CloseHandle(hConEmuShiftPressed); hConEmuShiftPressed = NULL; }
