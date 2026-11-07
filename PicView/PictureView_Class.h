@@ -105,7 +105,7 @@ public:
 	UINT nCMYK_ErrorNumber, nCMYK_LastError;
 	DWORD nCMYKparts, *pCMYKpalette, nCMYKsize;
 
-	// Палитры "по умолчанию"
+	// РџР°Р»РёС‚СЂС‹ "РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ"
 	RGBQUAD pal1[2], pal1G[2], pal2[4], pal2G[4], pal4[16], pal4G[16], pal8[256], pal8G[256];
 	void CreateDefaultPalettes();
 	void CreateDefaultPalette8bpp(RGBQUAD* table);
@@ -114,10 +114,10 @@ public:
 
 
 	//DirectDrawSurface *dds, *dds1, *dds2, *ddsx;
-	HWND hWnd, // окно отрисовки
-		 hParentWnd, // текущее родительское окно для hWnd (это FAR, ConEmu, или Desktop)
-		 hFarWnd, // консольное окно, или окно отрисовки в ConEmu
-		 hConEmuWnd, // Главное окно conemu, или NULL в чистом FAR
+	HWND hWnd, // РѕРєРЅРѕ РѕС‚СЂРёСЃРѕРІРєРё
+		 hParentWnd, // С‚РµРєСѓС‰РµРµ СЂРѕРґРёС‚РµР»СЊСЃРєРѕРµ РѕРєРЅРѕ РґР»СЏ hWnd (СЌС‚Рѕ FAR, ConEmu, РёР»Рё Desktop)
+		 hFarWnd, // РєРѕРЅСЃРѕР»СЊРЅРѕРµ РѕРєРЅРѕ, РёР»Рё РѕРєРЅРѕ РѕС‚СЂРёСЃРѕРІРєРё РІ ConEmu
+		 hConEmuWnd, // Р“Р»Р°РІРЅРѕРµ РѕРєРЅРѕ conemu, РёР»Рё NULL РІ С‡РёСЃС‚РѕРј FAR
 		 hDesktopWnd; // no comment
 	HANDLE hConEmuCtrlPressed, hConEmuShiftPressed;
 	CONSOLE_CURSOR_INFO cci;
@@ -132,11 +132,11 @@ public:
 	uint FarVersion;
 	const wchar_t* pszPluginTitle; // = GetMsg(MIPluginName)
 
-	// Сдвиг от центра изображения.
-	// Это ЭКРАННЫЕ координаты. Сдвиг негативен. То есть отображение
-	// правого нижнего угла соответсвует 
-	// {-548,-462} для изображения 510x399 и Zoom = 371%
-	// при размере области отображения 560x800
+	// РЎРґРІРёРі РѕС‚ С†РµРЅС‚СЂР° РёР·РѕР±СЂР°Р¶РµРЅРёСЏ.
+	// Р­С‚Рѕ Р­РљР РђРќРќР«Р• РєРѕРѕСЂРґРёРЅР°С‚С‹. РЎРґРІРёРі РЅРµРіР°С‚РёРІРµРЅ. РўРѕ РµСЃС‚СЊ РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ
+	// РїСЂР°РІРѕРіРѕ РЅРёР¶РЅРµРіРѕ СѓРіР»Р° СЃРѕРѕС‚РІРµС‚СЃРІСѓРµС‚ 
+	// {-548,-462} РґР»СЏ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ 510x399 Рё Zoom = 371%
+	// РїСЂРё СЂР°Р·РјРµСЂРµ РѕР±Р»Р°СЃС‚Рё РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ 560x800
 	POINT ViewCenter;
 
 	POINT DragBase;
@@ -158,8 +158,8 @@ public:
 	uint FlagsWork;
 	bool SelectionChanged;
 
-	// вроде так: Image[0] - текущий, [1] и [2] буферы кеширования
-	// ImageX указатель на тот Image[jj], который сейчас декодируется
+	// РІСЂРѕРґРµ С‚Р°Рє: Image[0] - С‚РµРєСѓС‰РёР№, [1] Рё [2] Р±СѓС„РµСЂС‹ РєРµС€РёСЂРѕРІР°РЅРёСЏ
+	// ImageX СѓРєР°Р·Р°С‚РµР»СЊ РЅР° С‚РѕС‚ Image[jj], РєРѕС‚РѕСЂС‹Р№ СЃРµР№С‡Р°СЃ РґРµРєРѕРґРёСЂСѓРµС‚СЃСЏ
 	PImageInfo Image[3];
 	PImageInfo ImageX;
 
@@ -181,7 +181,7 @@ public:
 	u32 MouseZoomMode; // 0 - as keyboard; 1 - to screen center; 2 - hold position
 
 	HANDLE hDisplayEvent, hWorkEvent;
-	HANDLE hSynchroDone; // Выставляется в основной нити после выполнения запроса (help, config, ...)
+	HANDLE hSynchroDone; // Р’С‹СЃС‚Р°РІР»СЏРµС‚СЃСЏ РІ РѕСЃРЅРѕРІРЅРѕР№ РЅРёС‚Рё РїРѕСЃР»Рµ РІС‹РїРѕР»РЅРµРЅРёСЏ Р·Р°РїСЂРѕСЃР° (help, config, ...)
 	bool bUncachedJump;
 
 	bool bTitleSaved;

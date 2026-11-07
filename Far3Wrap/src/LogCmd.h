@@ -19,7 +19,7 @@
 			wsprintf(szFull, asFmt, szFile, nTID, st.wHour, st.wMinute, st.wSecond, szLevel, pszInfo);
 			OutputDebugString(szFull);
 		};
-		LogCmd(LPCWSTR asFunc, LPWSTR asFile)
+		LogCmd(LPCWSTR asFunc, LPCWSTR asFile)
 		{
 			pszInfo = asFunc;
 			lstrcpyn(szFile, asFile, ARRAYSIZE(szFile));

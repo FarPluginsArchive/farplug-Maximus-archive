@@ -284,7 +284,7 @@ HkModuleInfo* IsHookedModule(HMODULE hModule, LPWSTR pszName = NULL, size_t cchN
 	if (!gpHookedModules)
 	{
 		_ASSERTE(gpHookedModules!=NULL);
-		return false;
+		return nullptr;
 	}
 
 	//bool lbHooked = false;
@@ -1799,7 +1799,7 @@ bool UnsetHookInt(HMODULE Module)
 {
 	bool bUnhooked = false, res = false;
 	IMAGE_IMPORT_DESCRIPTOR* Import = 0;
-	size_t Size = 0;
+	size_t Size = 0, nCount = 0;
 	_ASSERTE(Module!=NULL);
 	IMAGE_DOS_HEADER* dos_header = (IMAGE_DOS_HEADER*)Module;
 
@@ -1829,7 +1829,7 @@ bool UnsetHookInt(HMODULE Module)
 			goto wrap;
 		
 		size_t i, s;
-		size_t nCount = Size / sizeof(IMAGE_IMPORT_DESCRIPTOR);
+		nCount = Size / sizeof(IMAGE_IMPORT_DESCRIPTOR);
 		
 		//_ASSERTE(Size == (nCount * sizeof(IMAGE_IMPORT_DESCRIPTOR))); -- ровно быть не обязано
 		for (s = 0; s <= 1; s++)

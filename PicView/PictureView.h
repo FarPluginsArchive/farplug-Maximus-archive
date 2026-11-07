@@ -109,7 +109,7 @@ typedef __int64 i64;
 typedef unsigned __int8 u8;
 typedef unsigned __int16 u16;
 
-enum MsgIds;
+
 class ImageInfo;
 class PluginData;
 
@@ -129,38 +129,38 @@ enum EFlagsDisplay
 enum EFlagsWork
 {
 	FW_JUMP_DISABLED = 1, // disable jumping and selection change
-	FW_PLUGIN_CALL   = 2, // Плагин должен поймать (Ctrl-PgDn) - извлечение файла с плагиновой панели
+	FW_PLUGIN_CALL   = 2, // РџР»Р°РіРёРЅ РґРѕР»Р¶РµРЅ РїРѕР№РјР°С‚СЊ (Ctrl-PgDn) - РёР·РІР»РµС‡РµРЅРёРµ С„Р°Р№Р»Р° СЃ РїР»Р°РіРёРЅРѕРІРѕР№ РїР°РЅРµР»Рё
 	FW_VE_HOOK       = 4, // exit from opened viewer/editor on success open
 	FW_QUICK_VIEW    = 8, // quick view mode
-	FW_TERMINATE     = 0x10,   // Завершение декодирования, закрытие плагина
-	//FW_FIRSTIMAGE    = 0x20,   // Первый файл серии
-	FW_SHOW_HELP     = 0x40,   // Показать Help в основной нити
-	FW_SHOW_CONFIG   = 0x80,   // Показать окно конфига в основной нити
-	FW_SHOW_MODULES  = 0x100,  // Показать вкладку модулей в основной нити
+	FW_TERMINATE     = 0x10,   // Р—Р°РІРµСЂС€РµРЅРёРµ РґРµРєРѕРґРёСЂРѕРІР°РЅРёСЏ, Р·Р°РєСЂС‹С‚РёРµ РїР»Р°РіРёРЅР°
+	//FW_FIRSTIMAGE    = 0x20,   // РџРµСЂРІС‹Р№ С„Р°Р№Р» СЃРµСЂРёРё
+	FW_SHOW_HELP     = 0x40,   // РџРѕРєР°Р·Р°С‚СЊ Help РІ РѕСЃРЅРѕРІРЅРѕР№ РЅРёС‚Рё
+	FW_SHOW_CONFIG   = 0x80,   // РџРѕРєР°Р·Р°С‚СЊ РѕРєРЅРѕ РєРѕРЅС„РёРіР° РІ РѕСЃРЅРѕРІРЅРѕР№ РЅРёС‚Рё
+	FW_SHOW_MODULES  = 0x100,  // РџРѕРєР°Р·Р°С‚СЊ РІРєР»Р°РґРєСѓ РјРѕРґСѓР»РµР№ РІ РѕСЃРЅРѕРІРЅРѕР№ РЅРёС‚Рё
 	FW_PREVDECODER   = 0x200,
 	FW_NEXTDECODER   = 0x400,
-	FW_FORCE_DECODE  = 0x800,  // Усиленный подбор декодера (явный вызов на первом файле серии, если это НЕ перехват первого входа в архив)
+	FW_FORCE_DECODE  = 0x800,  // РЈСЃРёР»РµРЅРЅС‹Р№ РїРѕРґР±РѕСЂ РґРµРєРѕРґРµСЂР° (СЏРІРЅС‹Р№ РІС‹Р·РѕРІ РЅР° РїРµСЂРІРѕРј С„Р°Р№Р»Рµ СЃРµСЂРёРё, РµСЃР»Рё СЌС‚Рѕ РќР• РїРµСЂРµС…РІР°С‚ РїРµСЂРІРѕРіРѕ РІС…РѕРґР° РІ Р°СЂС…РёРІ)
 	FW_MARK_FILE     = 0x1000,
 	FW_UNMARK_FILE   = 0x2000,
 	FW_TITLEREPAINT  = 0x4000,
 	FW_TITLEREPAINTD = 0x8000,
 	FW_QVIEWREPAINT  = 0x10000,
-	FW_FIRST_CALL    = 0x20000,  // Явный вызов на первом файле серии
+	FW_FIRST_CALL    = 0x20000,  // РЇРІРЅС‹Р№ РІС‹Р·РѕРІ РЅР° РїРµСЂРІРѕРј С„Р°Р№Р»Рµ СЃРµСЂРёРё
 };
 enum EFlagsResult
 {
-	FE_PROCEEDED         =  0, // Успешно обработан. При необходимости вернуть в FAR (HANDLE)-2
-	FE_SKIP_ERROR        =  1, // Не открыли, но ошибку показывать не нужно
-	FE_EXCEPTION         =  2, // Исключение. Ошибка уже показана
-	FE_UNKNOWN_EXTENSION =  3, // Неподдерживаемое расширение
-	FE_OPEN_FAILED       =  4, // Ошибка открытия
+	FE_PROCEEDED         =  0, // РЈСЃРїРµС€РЅРѕ РѕР±СЂР°Р±РѕС‚Р°РЅ. РџСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё РІРµСЂРЅСѓС‚СЊ РІ FAR (HANDLE)-2
+	FE_SKIP_ERROR        =  1, // РќРµ РѕС‚РєСЂС‹Р»Рё, РЅРѕ РѕС€РёР±РєСѓ РїРѕРєР°Р·С‹РІР°С‚СЊ РЅРµ РЅСѓР¶РЅРѕ
+	FE_EXCEPTION         =  2, // РСЃРєР»СЋС‡РµРЅРёРµ. РћС€РёР±РєР° СѓР¶Рµ РїРѕРєР°Р·Р°РЅР°
+	FE_UNKNOWN_EXTENSION =  3, // РќРµРїРѕРґРґРµСЂР¶РёРІР°РµРјРѕРµ СЂР°СЃС€РёСЂРµРЅРёРµ
+	FE_OPEN_FAILED       =  4, // РћС€РёР±РєР° РѕС‚РєСЂС‹С‚РёСЏ
 	FE_NO_PANEL_ITEM     =  5, // 
 };
 enum EZoomAutoFlags
 {
-	ZA_NONE = 0,  // Не подгонять размер
-	ZA_FIT  = 1,  // Поместить картинку в окне
-	ZA_FILL = 2,  // Заполнить окно картинкой (картинка обрезается)
+	ZA_NONE = 0,  // РќРµ РїРѕРґРіРѕРЅСЏС‚СЊ СЂР°Р·РјРµСЂ
+	ZA_FIT  = 1,  // РџРѕРјРµСЃС‚РёС‚СЊ РєР°СЂС‚РёРЅРєСѓ РІ РѕРєРЅРµ
+	ZA_FILL = 2,  // Р—Р°РїРѕР»РЅРёС‚СЊ РѕРєРЅРѕ РєР°СЂС‚РёРЅРєРѕР№ (РєР°СЂС‚РёРЅРєР° РѕР±СЂРµР·Р°РµС‚СЃСЏ)
 };
 
 #include "PictureView_Class.h"
@@ -172,8 +172,8 @@ template <class T> void Swap(T &a, T &b) {const T t = a; a = b; b = t;}
 extern const wchar_t g_WndClassName[];
 extern const wchar_t g_DefaultTitleTemplate[];
 extern const wchar_t g_DefaultQViewTemplate1[], g_DefaultQViewTemplate2[], g_DefaultQViewTemplate3[];
-extern wchar_t *g_SelfPath; // Содержит полный путь к папке, в которой лежит 0PictureView.dll (на конце - слэш)
-extern wchar_t *g_RootKey; // Содержит полный путь к ключу реестра. Обычно это "Software\\Far2\\Plugins\\PictureView"
+extern wchar_t *g_SelfPath; // РЎРѕРґРµСЂР¶РёС‚ РїРѕР»РЅС‹Р№ РїСѓС‚СЊ Рє РїР°РїРєРµ, РІ РєРѕС‚РѕСЂРѕР№ Р»РµР¶РёС‚ 0PictureView.dll (РЅР° РєРѕРЅС†Рµ - СЃР»СЌС€)
+extern wchar_t *g_RootKey; // РЎРѕРґРµСЂР¶РёС‚ РїРѕР»РЅС‹Р№ РїСѓС‚СЊ Рє РєР»СЋС‡Сѓ СЂРµРµСЃС‚СЂР°. РћР±С‹С‡РЅРѕ СЌС‚Рѕ "Software\\Far2\\Plugins\\PictureView"
 
 extern PluginStartupInfo g_StartupInfo;
 extern FarStandardFunctions g_FSF;
@@ -202,7 +202,7 @@ void HideConsoleCursor(void);
 void AutoHideConsoleCursor(void);
 u32 CheckAbsoluteZoom();
 u32 CheckRelativeZoom();
-UINT ProcessConsoleInputs(); // Возвращает количество событий, оставшихся в буфере консоли
+UINT ProcessConsoleInputs(); // Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ СЃРѕР±С‹С‚РёР№, РѕСЃС‚Р°РІС€РёС…СЃСЏ РІ Р±СѓС„РµСЂРµ РєРѕРЅСЃРѕР»Рё
 
 wchar_t* ConcatPath(const wchar_t* Dir, const wchar_t* Name, bool abReverseName=false);
 bool ExtensionMatch(LPTSTR asExtList, LPCTSTR asExt);

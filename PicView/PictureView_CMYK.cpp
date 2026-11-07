@@ -73,7 +73,9 @@ DWORD WINAPI CMYK_ThreadProc(void*)
 	//g_Plugin.nCMYK_ErrorNumber = g_Plugin.nCMYK_LastError = 0;
 
 	HRESULT hr = CoInitialize(NULL);
-	if (!(bCoInitialized = SUCCEEDED(hr))) {
+	bCoInitialized = SUCCEEDED(hr);
+	// The host may already have initialized this thread in another apartment.
+	if (FAILED(hr) && hr != RPC_E_CHANGED_MODE) {
 		//wsprintf(gs_CMYK_ErrorInfo, L"CoInitialize failed. Code=0x%08X", (DWORD)hr);
 		g_Plugin.nCMYK_ErrorNumber = MICMYKCoInitializeFailed;
 		g_Plugin.nCMYK_LastError = (DWORD)hr;
@@ -148,7 +150,7 @@ DWORD WINAPI CMYK_ThreadProc(void*)
 
 
 
-	g_Plugin.nCMYKparts = 17; // пока фиксировано
+	g_Plugin.nCMYKparts = 17; // РїРѕРєР° С„РёРєСЃРёСЂРѕРІР°РЅРѕ
 	g_Plugin.nCMYKsize = lWidth * lHeight;
 	g_Plugin.pCMYKpalette = (DWORD*)calloc(g_Plugin.nCMYKsize,4);
 
@@ -196,8 +198,8 @@ wrap:
 	//	FreeLibrary(hGDIPlus);
 	//	hGDIPlus = NULL;
 	//}
-	//if (bCoInitialized)
-	//	CoUninitialize();
+	if (bCoInitialized)
+		CoUninitialize();
 
 	return 0;
 }

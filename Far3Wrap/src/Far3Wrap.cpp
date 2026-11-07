@@ -228,7 +228,7 @@ struct Far2Dialog
 	WRAP_FAR_CHAR_INFO& GetVBufPtr3(UINT DlgItem);
     
     void FreeDlg();
-	static INT_PTR WINAPI Far3DlgProc(HANDLE hDlg, int Msg, int Param1, void* Param2);
+	static INT_PTR WINAPI Far3DlgProc(HANDLE hDlg, intptr_t Msg, intptr_t Param1, void* Param2);
     int RunDlg();
 	HANDLE InitDlg();
     
@@ -472,8 +472,8 @@ struct WrapPluginInfo
 	       
 /* ******************************** */
 
-	static void   WINAPI SetStartupInfoWrap(struct WrapPluginInfo* wpi, PluginStartupInfo *Info);
-	       void          SetStartupInfoW3  (PluginStartupInfo *Info);
+	static void   WINAPI SetStartupInfoWrap(struct WrapPluginInfo* wpi, const PluginStartupInfo *Info);
+	       void          SetStartupInfoW3  (const PluginStartupInfo *Info);
 	static void   WINAPI GetGlobalInfoWrap(struct WrapPluginInfo* wpi, GlobalInfo *Info);
 	       void          GetGlobalInfoW3  (GlobalInfo *Info);
 	static void   WINAPI GetPluginInfoWrap(struct WrapPluginInfo* wpi, PluginInfo *Info);
@@ -3019,7 +3019,7 @@ void WrapPluginInfo::FarDialogItem_2_3(const Far2::FarDialogItem *p2, FarDialogI
 		{
 			int nItems = p2->Param.ListItems->ItemsNumber;
 			pList3->ItemsNumber = nItems;
-			if (p2->Param.ListItems > 0)
+			if (p2->Param.ListItems != nullptr)
 			{
 				const Far2::FarListItem* pi2 = p2->Param.ListItems->Items;
 				if (pi2 != NULL)
@@ -3117,7 +3117,7 @@ void WrapPluginInfo::FarDialogItem_3_2(const FarDialogItem *p3, /*size_t nAlloca
 		{
 			int nItems = p3->ListItems->ItemsNumber;
 			pList2->ItemsNumber = nItems;
-			if (p3->ListItems > 0)
+			if (p3->ListItems != nullptr)
 			{
 				const FarListItem* pi3 = p3->ListItems->Items;
 				if (pi3 != NULL)
@@ -3179,8 +3179,10 @@ void WrapPluginInfo::FarDialogItem_3_2(const FarDialogItem *p3, /*size_t nAlloca
 
 // VP 2013.01.20: Many structs differ only by a StructSize field at the beginning.
 // This macro copies an otherwise-identical structure.
+#define FAR_WRAP_WIDEN_LITERAL(s) L##s
+#define FAR_WRAP_WIDEN(s) FAR_WRAP_WIDEN_LITERAL(s)
 #define ADD_STRUCTSIZE(Struct, Temporary, Pointer)	\
-	if (sizeof(size_t)+sizeof(Far2::Struct)!=sizeof(Struct)) AssertStructSize(sizeof(Struct), sizeof(size_t)+sizeof(Far2::Struct), L#Struct, __FILE__, __LINE__); \
+	if (sizeof(size_t)+sizeof(Far2::Struct)!=sizeof(Struct)) AssertStructSize(sizeof(Struct), sizeof(size_t)+sizeof(Far2::Struct), FAR_WRAP_WIDEN(#Struct), __FILE__, __LINE__); \
 	Temporary.StructSize = sizeof(Temporary); \
 	memcpy(((size_t*)(&Temporary)) + 1, (void*)Pointer, sizeof(Far2::Struct)); \
 	*(Struct**)&Pointer = &Temporary;
@@ -3810,7 +3812,7 @@ LONG_PTR WrapPluginInfo::CallDlgProc_2_3(FARAPIDEFDLGPROC DlgProc3, HANDLE hDlg2
 				_ASSERTE(ARRAYSIZE(colors)>=p2->ColorCount);
 				//fdic3.Flags = 0/*p2->Flags*/; // Флаги. Поле должно быть равно 0.
 				//fdic3.Reserved = 0/*p2->Reserved*/;
-				fdic3.ColorsCount = min(p2->ColorCount,ARRAYSIZE(colors));
+				fdic3.ColorsCount = std::min<size_t>(p2->ColorCount,ARRAYSIZE(colors));
 				//TODO: конвертация индексов цветов в массиве?
 				for (UINT i = 0; i < fdic3.ColorsCount; i++)
 					FarColor_2_3(p2->Colors[i], colors[i]);
@@ -4094,7 +4096,7 @@ LONG_PTR WrapPluginInfo::CallDlgProc_2_3(FARAPIDEFDLGPROC DlgProc3, HANDLE hDlg2
 // VP 2013.01.20: Many structs differ only by a StructSize field at the beginning.
 // This macro moves the pointer towards an otherwise-identical structure.
 #define STRIP_STRUCTSIZE(Struct, Pointer)	\
-	if (sizeof(size_t)+sizeof(Far2::Struct)!=sizeof(Struct)) AssertStructSize(sizeof(Struct), sizeof(size_t)+sizeof(Far2::Struct), L#Struct, __FILE__, __LINE__); \
+	if (sizeof(size_t)+sizeof(Far2::Struct)!=sizeof(Struct)) AssertStructSize(sizeof(Struct), sizeof(size_t)+sizeof(Far2::Struct), FAR_WRAP_WIDEN(#Struct), __FILE__, __LINE__); \
 	(*(size_t**)&Pointer)++;
 
 Far2::FarMessagesProc WrapPluginInfo::FarMessage_3_2(const int Msg3, const int Param1, void*& Param2, Far2Dialog* pDlg)
@@ -4590,7 +4592,7 @@ Far2::FarMessagesProc WrapPluginInfo::FarMessage_3_2(const int Msg3, const int P
 				static Far2::FarListColors p2;
 				p2.Flags = /*p3->Flags*/ 0; // Флаги. Поле должно быть равно 0.
 				p2.Reserved = 0/*p3->Reserved*/;
-				p2.ColorCount = min(p3->ColorsCount,ARRAYSIZE(m_BufColors));
+				p2.ColorCount = std::min<size_t>(p3->ColorsCount,ARRAYSIZE(m_BufColors));
 				for (int i = 0; i < p2.ColorCount; i++)
 					m_BufColors[i] = FarColor_3_2(p3->Colors[i]);
 				p2.Colors = m_BufColors;
@@ -4811,7 +4813,7 @@ void WrapPluginInfo::FarMessageParam_2_3(const int Msg2, const int Param1, const
 			if (p3 && p2 && lRc)
 			{
 				_ASSERTE(p3->StructSize==sizeof(*p3));
-				int nMax = min(p2->ColorCount,(int)p3->ColorsCount);
+				int nMax = std::min(p2->ColorCount,(int)p3->ColorsCount);
 				for (int i = 0; i < nMax; i++)
 				{
 					FarColor_2_3(p2->Colors[i], p3->Colors[i]);
@@ -5110,8 +5112,10 @@ int WrapPluginInfo::FarApiMenu(INT_PTR PluginNumber, int X, int Y, int MaxHeight
 			| ((Flags & Far2::FMENU_REVERSEAUTOHIGHLIGHT) ? FMENU_REVERSEAUTOHIGHLIGHT : 0)
 			| ((Flags & Far2::FMENU_CHANGECONSOLETITLE) ? FMENU_CHANGECONSOLETITLE : 0);
 		
+		intptr_t breakCode3 = 0;
 		iRc = psi3.Menu(WrapGuids(mguid_ApiMenu), X, Y, MaxHeight, Flags3,
-				Title, Bottom, HelpTopic, pBreak3, BreakCode, pItems3, ItemsNumber);
+				Title, Bottom, HelpTopic, pBreak3, BreakCode ? &breakCode3 : nullptr, pItems3, ItemsNumber);
+		if (BreakCode) *BreakCode = static_cast<int>(breakCode3);
 	}
 	
 	if (pItems3)
@@ -5213,16 +5217,14 @@ int WrapPluginInfo::FarApiControl(HANDLE hPlugin, int Command, int Param1, LONG_
 		iRc = psi3.PanelControl(hPlugin, FCTL_UPDATEPANEL, Param1, (void*)Param2); break;
 	case Far2::FCTL_REDRAWPANEL:
 		{
-		#if MVV_3>2800
-		PanelRedrawInfo ri;
+		PanelRedrawInfo redraw = {sizeof(PanelRedrawInfo)};
 		if (Param2)
 		{
-			ADD_STRUCTSIZE(PanelRedrawInfo, ri, Param2);
+			const auto* redraw2 = reinterpret_cast<const Far2::PanelRedrawInfo*>(Param2);
+			redraw.CurrentItem = static_cast<size_t>(redraw2->CurrentItem);
+			redraw.TopPanelItem = static_cast<size_t>(redraw2->TopPanelItem);
 		}
-		#else
-		ASSERTSTRUCT(PanelRedrawInfo);
-		#endif
-		iRc = psi3.PanelControl(hPlugin, FCTL_REDRAWPANEL, Param1, (void*)Param2);
+		iRc = psi3.PanelControl(hPlugin, FCTL_REDRAWPANEL, Param1, Param2 ? &redraw : nullptr);
 		}
 		break;
 	case Far2::FCTL_GETCMDLINE:
@@ -5277,7 +5279,7 @@ int WrapPluginInfo::FarApiControl(HANDLE hPlugin, int Command, int Param1, LONG_
 				wchar_t* psz = (wchar_t*)calloc(nCmdLen+1,sizeof(*psz));
 				nCmdLen = psi3.PanelControl(hPlugin, FCTL_GETCMDLINE, nCmdLen, psz);
 				lstrcpyn((wchar_t*)Param2, psz+((sel.SelEnd > sel.SelStart) ? sel.SelStart : sel.SelEnd),
-					min((nLen+1),Param1));
+					std::min<intptr_t>(nLen+1,Param1));
 				iRc = TRUE;
 			}
 		}
@@ -7187,7 +7189,9 @@ void* WrapPluginInfo::FarStdBSearch(const void *key, const void *base, size_t ne
 
 
 
-void WrapPluginInfo::SetStartupInfoW3(PluginStartupInfo *Info)
+static FarStandardFunctions Far3CompatFunctions;
+
+void WrapPluginInfo::SetStartupInfoW3(const PluginStartupInfo *Info)
 {
 #ifdef _DEBUG
 	if (Info->StructSize != sizeof(*Info)
@@ -7202,6 +7206,7 @@ void WrapPluginInfo::SetStartupInfoW3(PluginStartupInfo *Info)
 
 	memmove(&psi3, Info, sizeof(psi3));
 	memmove(&FSF3, Info->FSF, sizeof(FSF3));
+	Far3CompatFunctions = FSF3;
 	psi3.FSF = &FSF3;
 	lbPsi3 = TRUE;
 
@@ -7285,18 +7290,18 @@ void WrapPluginInfo::SetStartupInfoW3(PluginStartupInfo *Info)
 	FSF2.LIsAlphanum = FSF3.LIsAlphanum;
 	FSF2.LUpper = FSF3.LUpper;
 	FSF2.LLower = FSF3.LLower;
-	FSF2.LUpperBuf = FSF3.LUpperBuf;
-	FSF2.LLowerBuf = FSF3.LLowerBuf;
+	FSF2.LUpperBuf = [](wchar_t* buf, int len) { return Far3CompatFunctions.LUpperBuf(buf, len); };
+	FSF2.LLowerBuf = [](wchar_t* buf, int len) { return Far3CompatFunctions.LLowerBuf(buf, len); };
 	FSF2.LStrupr = FSF3.LStrupr;
 	FSF2.LStrlwr = FSF3.LStrlwr;
 	FSF2.LStricmp = FSF3.LStricmp;
-	FSF2.LStrnicmp = FSF3.LStrnicmp;
+	FSF2.LStrnicmp = [](const wchar_t* a, const wchar_t* b, int len) { return Far3CompatFunctions.LStrnicmp(a, b, len); };
 	FSF2.Unquote = FSF3.Unquote;
 	FSF2.LTrim = FSF3.LTrim;
 	FSF2.RTrim = FSF3.RTrim;
 	FSF2.Trim = FSF3.Trim;
-	FSF2.TruncStr = FSF3.TruncStr;
-	FSF2.TruncPathStr = FSF3.TruncPathStr;
+	FSF2.TruncStr = [](wchar_t* buf, int len) { return Far3CompatFunctions.TruncStr(buf, len); };
+	FSF2.TruncPathStr = [](wchar_t* buf, int len) { return Far3CompatFunctions.TruncPathStr(buf, len); };
 	FSF2.QuoteSpaceOnly = FSF3.QuoteSpaceOnly;
 	FSF2.PointToName = FSF3.PointToName;
 	FSF2.GetPathRoot = WrapPluginInfo::FarStdGetPathRootExp;
@@ -7603,6 +7608,10 @@ HANDLE WrapPluginInfo::OpenW3(const OpenInfo *Info)
 
 	HANDLE h = INVALID_HANDLE_VALUE;
 
+	int nPluginItemNumber = 0;
+	GUID* pGuids = NULL;
+	int nGuids = 0;
+	
 	if (
 		#if MVV_3>=2458
 		(Info->OpenFrom == OPEN_FROMMACRO)
@@ -7642,9 +7651,6 @@ HANDLE WrapPluginInfo::OpenW3(const OpenInfo *Info)
 		goto trap2;
 	}
 	
-	int nPluginItemNumber = 0;
-	GUID* pGuids = NULL;
-	int nGuids = 0;
 	//if ((Info->OpenFrom & OPEN_FROM_MASK) == OPEN_PLUGINSMENU)
 	//{
 	//	pGuids = mguids_PluginMenu; nGuids = mn_PluginMenu;
@@ -8484,7 +8490,7 @@ FARPROC WrapPluginInfo::GetOldProcAddressW3(HMODULE hModule, LPCSTR lpProcName)
 	return GetProcAddress(mh_Dll, lpProcName);
 }
 /* *** */
-void WrapPluginInfo::SetStartupInfoWrap(struct WrapPluginInfo* wpi, PluginStartupInfo *Info)
+void WrapPluginInfo::SetStartupInfoWrap(struct WrapPluginInfo* wpi, const PluginStartupInfo *Info)
 {
 	wpi->SetStartupInfoW3(Info);
 }
@@ -8958,7 +8964,7 @@ void Far2Dialog::FreeDlg()
 	}
 }
 
-INT_PTR Far2Dialog::Far3DlgProc(HANDLE hDlg, int Msg, int Param1, void* Param2)
+INT_PTR Far2Dialog::Far3DlgProc(HANDLE hDlg, intptr_t Msg, intptr_t Param1, void* Param2)
 {
 #ifdef _DEBUG
 	FARMESSAGE Msg3 = (FARMESSAGE)Msg;
@@ -9595,7 +9601,7 @@ BOOL APIENTRY DllMain( HANDLE hModule,
     return TRUE;
 }
 
-int WINAPI InitPlugin(struct Far3WrapFunctions *pInfo2)
+extern "C" int WINAPI InitPlugin(struct Far3WrapFunctions *pInfo2)
 {
 #ifdef _DEBUG
 	_InitPlugin fDbg = InitPlugin; // Для проверки аргументов на этапе компиляции

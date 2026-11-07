@@ -38,16 +38,16 @@ public:
 	bool LoadPanelInfo();
 	bool InitListFromPanel();
 	bool InitListWithFile(UnicodeFileName* asFile);
-	bool RetrieveAllDirFiles(); // Когда панели нет
+	bool RetrieveAllDirFiles(); // РљРѕРіРґР° РїР°РЅРµР»Рё РЅРµС‚
 	bool MarkUnmarkFile(int aiRawIndex, enum MarkAction action);
 	bool UpdatePanelDir();
 	const struct PluginPanelItem* GetPanelItem(int aiRawIndex);
 	const wchar_t* GetCurrentItemName(); // ppi->FindData.lpwszFileName
 	const wchar_t* GetCurrentDir();
-	int GetCurrentItemRawIdx(); // индекс в mp_Items
+	int GetCurrentItemRawIdx(); // РёРЅРґРµРєСЃ РІ mp_Items
 	
 	void ShowError(const wchar_t* pszMsg);
 	
 protected:
-	void SortFolderFiles(); // Когда панели нет
+	void SortFolderFiles(); // РљРѕРіРґР° РїР°РЅРµР»Рё РЅРµС‚
 };

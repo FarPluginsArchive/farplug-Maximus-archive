@@ -22,7 +22,7 @@ bool UnicodeFileName::IsEmpty()
 	return false;
 }
 
-const wchar_t* UnicodeFileName::Assign(const wchar_t* asFileName) // может содержать или НЕ содержать префикс
+const wchar_t* UnicodeFileName::Assign(const wchar_t* asFileName) // РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ РёР»Рё РќР• СЃРѕРґРµСЂР¶Р°С‚СЊ РїСЂРµС„РёРєСЃ
 {
 	bool lbIsFull = false, lbIsNetwork = false;
 	size_t nLen = 0;
@@ -36,7 +36,7 @@ const wchar_t* UnicodeFileName::Assign(const wchar_t* asFileName) // может содер
 			}
 		}
 	}
-	// Присвоение своего же буфера
+	// РџСЂРёСЃРІРѕРµРЅРёРµ СЃРІРѕРµРіРѕ Р¶Рµ Р±СѓС„РµСЂР°
 	if (lbIsFull && asFileName == ms_Buffer) {
 		return ms_Buffer;
 	}
@@ -62,24 +62,24 @@ const wchar_t* UnicodeFileName::Assign(const wchar_t* asFileName) // может содер
 			}
 		}
 	} else if (ms_Buffer) {
-		ms_Buffer[0] = 0; // иначе - сброс!
+		ms_Buffer[0] = 0; // РёРЅР°С‡Рµ - СЃР±СЂРѕСЃ!
 	}
 	return ms_Buffer;
 }
 
 
-wchar_t* UnicodeFileName::GetBuffer(int nLen0) // Выделить буфер. nLen0 должен включать завершающий '\0'
+wchar_t* UnicodeFileName::GetBuffer(int nLen0) // Р’С‹РґРµР»РёС‚СЊ Р±СѓС„РµСЂ. nLen0 РґРѕР»Р¶РµРЅ РІРєР»СЋС‡Р°С‚СЊ Р·Р°РІРµСЂС€Р°СЋС‰РёР№ '\0'
 {
 	if (!ms_Buffer || (nLen0 > (int)mn_BufferSize)) {
 		mn_BufferSize = nLen0;
 		ms_Buffer = (wchar_t*)malloc(nLen0*sizeof(wchar_t));
 		_ASSERTE(ms_Buffer);
-		ms_Buffer[0] = 0; // очистить
+		ms_Buffer[0] = 0; // РѕС‡РёСЃС‚РёС‚СЊ
 	}
 	return ms_Buffer;
 }
 
-bool UnicodeFileName::ReleaseBuffer() // Проверить буфер и если он содержит НЕ UNC - поправить
+bool UnicodeFileName::ReleaseBuffer() // РџСЂРѕРІРµСЂРёС‚СЊ Р±СѓС„РµСЂ Рё РµСЃР»Рё РѕРЅ СЃРѕРґРµСЂР¶РёС‚ РќР• UNC - РїРѕРїСЂР°РІРёС‚СЊ
 {
 	if (!ms_Buffer || !*ms_Buffer)
 		return false;
@@ -94,7 +94,7 @@ bool UnicodeFileName::ReleaseBuffer() // Проверить буфер и если он содержит НЕ U
 		}
 	}
 	
-	// Если он не UNC - сконвертируем через Assign
+	// Р•СЃР»Рё РѕРЅ РЅРµ UNC - СЃРєРѕРЅРІРµСЂС‚РёСЂСѓРµРј С‡РµСЂРµР· Assign
 	if (!lbIsFull) {
 		wchar_t* psz = ms_Buffer; ms_Buffer = NULL; mn_BufferSize = 0;
 		Assign ( psz );
@@ -108,11 +108,11 @@ bool UnicodeFileName::CompareDir(const wchar_t* asDir)
 {
 	if (!asDir || !*asDir) return false;
 	if (!ms_Buffer || !*ms_Buffer) return false;
-	// откинуть префиксы
+	// РѕС‚РєРёРЅСѓС‚СЊ РїСЂРµС„РёРєСЃС‹
 	SkipPrefix(&asDir);
 	const wchar_t* psz = ms_Buffer;
 	SkipPrefix(&psz);
-	// после откидывания префиксов строка могла обнулиться
+	// РїРѕСЃР»Рµ РѕС‚РєРёРґС‹РІР°РЅРёСЏ РїСЂРµС„РёРєСЃРѕРІ СЃС‚СЂРѕРєР° РјРѕРіР»Р° РѕР±РЅСѓР»РёС‚СЊСЃСЏ
 	if (!asDir || !*asDir) return false;
 	if (!psz || !*psz) return false;
 	//
@@ -120,7 +120,7 @@ bool UnicodeFileName::CompareDir(const wchar_t* asDir)
 	TODO("Check CompareDir");
 	if (_wcsnicmp(asDir, psz, nLen))
 		return false;
-	// Если нет слеша - слеш должен быть в файле
+	// Р•СЃР»Рё РЅРµС‚ СЃР»РµС€Р° - СЃР»РµС€ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІ С„Р°Р№Р»Рµ
 	if (asDir[nLen-1] != L'\\' && psz[nLen] != L'\\')
 		return false;
 	return true;
@@ -150,7 +150,7 @@ void UnicodeFileName::SkipPrefix(const wchar_t** rsPath)
 				psz += 3;
 			}
 		} else {
-			psz ++; // а от сетевой шары отрезать первый слеш
+			psz ++; // Р° РѕС‚ СЃРµС‚РµРІРѕР№ С€Р°СЂС‹ РѕС‚СЂРµР·Р°С‚СЊ РїРµСЂРІС‹Р№ СЃР»РµС€
 		}
 	}
 	

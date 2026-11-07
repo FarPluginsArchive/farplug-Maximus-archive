@@ -51,16 +51,16 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ModuleData::ModuleData()
 {
-	bPrepared = FALSE; // Выставляется в TRUE после проверки версии и пр.
-	memset(&ftModified,0,sizeof(ftModified)); // Дата последнего изменения файла
+	bPrepared = FALSE; // Р’С‹СЃС‚Р°РІР»СЏРµС‚СЃСЏ РІ TRUE РїРѕСЃР»Рµ РїСЂРѕРІРµСЂРєРё РІРµСЂСЃРёРё Рё РїСЂ.
+	memset(&ftModified,0,sizeof(ftModified)); // Р”Р°С‚Р° РїРѕСЃР»РµРґРЅРµРіРѕ РёР·РјРµРЅРµРЅРёСЏ С„Р°Р№Р»Р°
 	nVersion = 0;
-	pModulePath = 0;  // Полный путь к субплагину (pvd файл)
+	pModulePath = 0;  // РџРѕР»РЅС‹Р№ РїСѓС‚СЊ Рє СЃСѓР±РїР»Р°РіРёРЅСѓ (pvd С„Р°Р№Р»)
 	pModuleFileName = 0;
-	pRegPath = 0;     // Полный путь к ключу субплагина в реестре (настройки, расширения, приоритет, и т.п.)
+	pRegPath = 0;     // РџРѕР»РЅС‹Р№ РїСѓС‚СЊ Рє РєР»СЋС‡Сѓ СЃСѓР±РїР»Р°РіРёРЅР° РІ СЂРµРµСЃС‚СЂРµ (РЅР°СЃС‚СЂРѕР№РєРё, СЂР°СЃС€РёСЂРµРЅРёСЏ, РїСЂРёРѕСЂРёС‚РµС‚, Рё С‚.Рї.)
 	hPlugin = 0;       // May be NULL
 	nPriority = 0;
 	pActive = pInactive = pForbidden = NULL;
-	// Собственно интерфейс плагина
+	// РЎРѕР±СЃС‚РІРµРЅРЅРѕ РёРЅС‚РµСЂС„РµР№СЃ РїР»Р°РіРёРЅР°
 	pPlugin = 0;
 	szStatus[0] = 0;
 	nCurrentFlags = nFlags = nActiveFlags = 0;
@@ -85,7 +85,7 @@ ModuleData::~ModuleData()
 	if (pForbidden) {
 		free(pForbidden); pForbidden = NULL;
 	}
-	if (hPlugin) { // В большинстве случаев FreeLibrary выполняет pPlugin. А здесь уже NULL.
+	if (hPlugin) { // Р’ Р±РѕР»СЊС€РёРЅСЃС‚РІРµ СЃР»СѓС‡Р°РµРІ FreeLibrary РІС‹РїРѕР»РЅСЏРµС‚ pPlugin. Рђ Р·РґРµСЃСЊ СѓР¶Рµ NULL.
 		FreeLibrary(hPlugin); hPlugin = NULL;
 	}
 }
@@ -128,7 +128,7 @@ bool ModuleData::Load(bool abPluginChanged)
 				PVDManager::CreateVersion1(this, abPluginChanged);
 			} else {
 				SetStatus(L"Unknown subplugin version (pvdInit or pvdInit2 not found)", TRUE);
-				//Close(); -- Все равно покажем в настройке
+				//Close(); -- Р’СЃРµ СЂР°РІРЅРѕ РїРѕРєР°Р¶РµРј РІ РЅР°СЃС‚СЂРѕР№РєРµ
 				//continue;
 			}
 
@@ -176,7 +176,7 @@ void ModuleData::SetStatus(LPCWSTR asStatus, BOOL abSaveInReg)
 DWORD ModuleData::Priority()
 {
 	//if (pPlugin) {
-	//	iPriority = pPlugin->iPriority; // "правильным" должен являться хранящийся в pPlugin
+	//	iPriority = pPlugin->iPriority; // "РїСЂР°РІРёР»СЊРЅС‹Рј" РґРѕР»Р¶РµРЅ СЏРІР»СЏС‚СЊСЃСЏ С…СЂР°РЅСЏС‰РёР№СЃСЏ РІ pPlugin
 	//	return pPlugin->iPriority;
 	//}
 	return nPriority;
@@ -220,9 +220,9 @@ PVDDecoderBase::PVDDecoderBase(ModuleData* apData)
 	bDisplayInitialized = bInitialized = bPrepared = false;
 }
 
-// Загрузить приоритет, список форматов и пр.
-// Если abForceWriteReg = true - значит файл изменился
-// ТРЕБУЕТСЯ загрузить плуг и инициализировать его. Но потом можно загрузить настройки из реестра
+// Р—Р°РіСЂСѓР·РёС‚СЊ РїСЂРёРѕСЂРёС‚РµС‚, СЃРїРёСЃРѕРє С„РѕСЂРјР°С‚РѕРІ Рё РїСЂ.
+// Р•СЃР»Рё abForceWriteReg = true - Р·РЅР°С‡РёС‚ С„Р°Р№Р» РёР·РјРµРЅРёР»СЃСЏ
+// РўР Р•Р‘РЈР•РўРЎРЇ Р·Р°РіСЂСѓР·РёС‚СЊ РїР»СѓРі Рё РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°С‚СЊ РµРіРѕ. РќРѕ РїРѕС‚РѕРј РјРѕР¶РЅРѕ Р·Р°РіСЂСѓР·РёС‚СЊ РЅР°СЃС‚СЂРѕР№РєРё РёР· СЂРµРµСЃС‚СЂР°
 bool PVDDecoderBase::InitPrepare(FILETIME ftRegModified, BOOL abPluginChanged)
 {
 	MCHKHEAP;
@@ -232,9 +232,9 @@ bool PVDDecoderBase::InitPrepare(FILETIME ftRegModified, BOOL abPluginChanged)
 			return false;
 	}
 
-	// Т.к. пользователь может перекывать умолчания по расширениям и приоритетам
-	// то всегда сначала пытаемся загрузить из реестра - и только в случае
-	// неудачи - загружаем pvd файл и обращаемся к его функциям
+	// Рў.Рє. РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РјРѕР¶РµС‚ РїРµСЂРµРєС‹РІР°С‚СЊ СѓРјРѕР»С‡Р°РЅРёСЏ РїРѕ СЂР°СЃС€РёСЂРµРЅРёСЏРј Рё РїСЂРёРѕСЂРёС‚РµС‚Р°Рј
+	// С‚Рѕ РІСЃРµРіРґР° СЃРЅР°С‡Р°Р»Р° РїС‹С‚Р°РµРјСЃСЏ Р·Р°РіСЂСѓР·РёС‚СЊ РёР· СЂРµРµСЃС‚СЂР° - Рё С‚РѕР»СЊРєРѕ РІ СЃР»СѓС‡Р°Рµ
+	// РЅРµСѓРґР°С‡Рё - Р·Р°РіСЂСѓР¶Р°РµРј pvd С„Р°Р№Р» Рё РѕР±СЂР°С‰Р°РµРјСЃСЏ Рє РµРіРѕ С„СѓРЅРєС†РёСЏРј
 	if (LoadFormatsFromReg(ftRegModified, abPluginChanged)) {
 		bPrepared = true;
 		return true;
@@ -260,9 +260,9 @@ void PVDDecoderBase::SaveFormatsToReg(FILETIME *pftRegModified)
 	HKEY hkey = NULL; DWORD dwDisp = 0;
 	if (!RegCreateKeyEx(HKEY_CURRENT_USER, pRegPath, 0, 0, 0, KEY_ALL_ACCESS, 0, &hkey, &dwDisp)) {
 		DWORD nDataSize = 0;
-		// Приоритет сохраняем только явно со страницы модулей диалога настроек
+		// РџСЂРёРѕСЂРёС‚РµС‚ СЃРѕС…СЂР°РЅСЏРµРј С‚РѕР»СЊРєРѕ СЏРІРЅРѕ СЃРѕ СЃС‚СЂР°РЅРёС†С‹ РјРѕРґСѓР»РµР№ РґРёР°Р»РѕРіР° РЅР°СЃС‚СЂРѕРµРє
 		//RegSetValueEx(hkey, L"Priority", 0, REG_DWORD, (LPBYTE)&iPriority, sizeof(iPriority));
-		// Если мы дошли сюда - значит LoadFormatsFromReg обломался, и расширения нужно записать в реестр
+		// Р•СЃР»Рё РјС‹ РґРѕС€Р»Рё СЃСЋРґР° - Р·РЅР°С‡РёС‚ LoadFormatsFromReg РѕР±Р»РѕРјР°Р»СЃСЏ, Рё СЂР°СЃС€РёСЂРµРЅРёСЏ РЅСѓР¶РЅРѕ Р·Р°РїРёСЃР°С‚СЊ РІ СЂРµРµСЃС‚СЂ
 		if (nCurrentFlags & PVD_IP_DECODE) {
 			if (pDefActive && !pData->pActive)
 				RegSetValueEx(hkey, L"ExtensionActive", 0, REG_SZ, (LPBYTE)pDefActive, (wcslen(pDefActive)+1)*2);
@@ -381,12 +381,12 @@ wchar_t* PVDDecoderBase::LoadRegValue(HKEY hkey, LPCWSTR asName) const
 
 bool PVDDecoderBase::IsAllowed(const wchar_t* asExt, bool abAllowAsterisk, bool abAllowInactive, bool abAssumeActive/*=false*/)
 {
-	// плагин может быть вообще отключен
+	// РїР»Р°РіРёРЅ РјРѕР¶РµС‚ Р±С‹С‚СЊ РІРѕРѕР±С‰Рµ РѕС‚РєР»СЋС‡РµРЅ
 	_ASSERTE(pData && pData->pActive && pData->pInactive);
 	if (wcschr(pData->pForbidden,L'*'))
 		return false;
 
-	// теперь остальные проверки
+	// С‚РµРїРµСЂСЊ РѕСЃС‚Р°Р»СЊРЅС‹Рµ РїСЂРѕРІРµСЂРєРё
 	if (!asExt || !*asExt) asExt = L".";
 
 	bool lbActiveMatch = ExtensionMatch(pData->pActive, asExt);
@@ -437,10 +437,10 @@ void PVDDecoderBase::SetException(LPCWSTR asFunction)
 	lstrcpyn(szMsg+5, asFunction, 100);
 	lstrcat(szMsg, L" raised exception");
 	
-	// Пометить в реестре последнюю ошибку
+	// РџРѕРјРµС‚РёС‚СЊ РІ СЂРµРµСЃС‚СЂРµ РїРѕСЃР»РµРґРЅСЋСЋ РѕС€РёР±РєСѓ
 	SetStatus(szMsg+1,TRUE);
 	
-	// И выкинуть в DebugOutput
+	// Р РІС‹РєРёРЅСѓС‚СЊ РІ DebugOutput
 	lstrcat(szMsg, L"\n");
 	OutputDebugString(szMsg);
 }
@@ -459,7 +459,7 @@ BOOL PVDDecoderBase::LoadExtensionsFromReg(HKEY hkey, LPCWSTR asName, wchar_t** 
 	return result;
 }
 
-// abForceWriteReg - обновить в реестре дату изменения и версию интерфейса
+// abForceWriteReg - РѕР±РЅРѕРІРёС‚СЊ РІ СЂРµРµСЃС‚СЂРµ РґР°С‚Сѓ РёР·РјРµРЅРµРЅРёСЏ Рё РІРµСЂСЃРёСЋ РёРЅС‚РµСЂС„РµР№СЃР°
 bool PVDDecoderBase::LoadFormatsFromReg(FILETIME ftRegModified, BOOL abForceWriteReg)
 {
 	bool result = false;
@@ -468,7 +468,7 @@ bool PVDDecoderBase::LoadFormatsFromReg(FILETIME ftRegModified, BOOL abForceWrit
 		DWORD nDataSize = 0;
 		bool bFlagsChanged = false, bActiveFlagsChanged = false;
 		
-		result = true; // Всё необходимое загрузили из реестра, LoadLibrary не требуется
+		result = true; // Р’СЃС‘ РЅРµРѕР±С…РѕРґРёРјРѕРµ Р·Р°РіСЂСѓР·РёР»Рё РёР· СЂРµРµСЃС‚СЂР°, LoadLibrary РЅРµ С‚СЂРµР±СѓРµС‚СЃСЏ
 		
 		if (!nFlags) {
 			if (RegQueryValueEx(hkey, L"PluginFlags", 0, 0, (LPBYTE)&nFlags, &(nDataSize=sizeof(nFlags))))
@@ -484,7 +484,7 @@ bool PVDDecoderBase::LoadFormatsFromReg(FILETIME ftRegModified, BOOL abForceWrit
 		if (!pData->nActiveFlags) {
 			if (RegQueryValueEx(hkey, L"PluginActiveFlags", 0, 0, (LPBYTE)&(pData->nActiveFlags), &(nDataSize=sizeof(pData->nActiveFlags))))
 				pData->nActiveFlags = 0;
-				//result = false; -- result не трогаем, т.к. эти флаги получаются НЕ из плагина, а настраиваеются пользователем
+				//result = false; -- result РЅРµ С‚СЂРѕРіР°РµРј, С‚.Рє. СЌС‚Рё С„Р»Р°РіРё РїРѕР»СѓС‡Р°СЋС‚СЃСЏ РќР• РёР· РїР»Р°РіРёРЅР°, Р° РЅР°СЃС‚СЂР°РёРІР°РµСЋС‚СЃСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј
 		} else {
 			bActiveFlagsChanged = true;
 		}
@@ -656,7 +656,7 @@ lReopen:
 	int nVerTextLen = 0;
 	LPCTSTR pszText = NULL;
 
-	nVerTextLen = max(lstrlen(GetMsg(MISubpluginVersionI1)),lstrlen(GetMsg(MISubpluginVersionI2)));
+	nVerTextLen = Max(lstrlen(GetMsg(MISubpluginVersionI1)),lstrlen(GetMsg(MISubpluginVersionI2)));
 	if (nVerTextLen < 20) nVerTextLen = 20;
 	
 	if (mp_Config->pData->nCurrentFlags & PVD_IP_DECODE)
@@ -686,21 +686,21 @@ lReopen:
 	}
 	
 	/*
-	// Имя
+	// РРјСЏ
 	addFarDialogItem(DI_TEXT,     5, Y, 0, 0, 0, 0, 0, 0, GetMsg(MISubpluginName));
 	if (mp_Config->pData->pPlugin) pszText = mp_Config->pData->pPlugin->pName; else pszText = mp_Config->pData->pModuleFileName;
 	iPName = addFarDialogItem(DI_EDIT,     5, Y+1, DialogWidth-nVerTextLen+3, 0, 0, 0, DIF_READONLY, 0, pszText, 0);
-	// Версия (интерфейса и самого плагина)
+	// Р’РµСЂСЃРёСЏ (РёРЅС‚РµСЂС„РµР№СЃР° Рё СЃР°РјРѕРіРѕ РїР»Р°РіРёРЅР°)
 	if (mp_Config->pData->pPlugin) pszText = GetMsg((mp_Config->pData->pPlugin->nVersion==1) ? MISubpluginVersionI1 : MISubpluginVersionI2); else pszText = GetMsg(MISubpluginVersion);
 	addFarDialogItem(DI_TEXT,     DialogWidth-nVerTextLen+5, Y, 0, 0, 0, 0, 0, 0, pszText);
 	if (mp_Config->pData->pPlugin) pszText = mp_Config->pData->pPlugin->pVersion; else pszText = L"???";
 	iPVer = addFarDialogItem(DI_EDIT,     DialogWidth-nVerTextLen+5, Y+1, DialogWidth+4, 0, 0, 0, DIF_READONLY, 0, pszText, 0);
 	Y+=2;
-	// Комментарий (информация из субплагина)
+	// РљРѕРјРјРµРЅС‚Р°СЂРёР№ (РёРЅС„РѕСЂРјР°С†РёСЏ РёР· СЃСѓР±РїР»Р°РіРёРЅР°)
 	addFarDialogItem(DI_TEXT,     5, Y, 0, 0, 0, 0, 0, 0, GetMsg(MISubpluginComments));
 	if (mp_Config->pData->pPlugin) pszText = mp_Config->pData->pPlugin->pComments; else pszText = L"";
 	iPComm = addFarDialogItem(DI_EDIT,     5, Y+1, DialogWidth-nVerTextLen+3, 0, 0, 0, DIF_READONLY, 0, pszText, 0);
-	// Флаги субплагина
+	// Р¤Р»Р°РіРё СЃСѓР±РїР»Р°РіРёРЅР°
 	memset(&ModuleFlags, 0, sizeof(ModuleFlags)); memset(ModuleFlagItems, 0, sizeof(ModuleFlagItems));
 	ModuleFlags.Items = ModuleFlagItems;
 	DWORD nFlags = mp_Config->pData->pPlugin ? mp_Config->pData->pPlugin->nFlags : mp_Config->pData->nCurrentFlags;
@@ -726,7 +726,7 @@ lReopen:
 	iPFlags = addFarDialogItem(DI_COMBOBOX, DialogWidth-nVerTextLen+5, Y+1, DialogWidth+4, Y, 0, 0, DIF_DROPDOWNLIST, 0, 0);
 	DialogItems[iPFlags].Param.ListItems = &ModuleFlags;
 	Y+=2;
-	// Полный путь к субплагину
+	// РџРѕР»РЅС‹Р№ РїСѓС‚СЊ Рє СЃСѓР±РїР»Р°РіРёРЅСѓ
 	addFarDialogItem(DI_TEXT,     5, Y++, 0, 0, 0, 0, 0, 0, GetMsg(MISubpluginFullPathName));
 	pszText = mp_Config->pData->pModulePath;
 	addFarDialogItem(DI_EDIT,     5, Y++, DialogWidth+4, 0, 0, 0, DIF_READONLY, 0, pszText, 0);
@@ -738,7 +738,7 @@ lReopen:
 
 		int nMaxHeight = 10;
 		for (int i = 0; nMaxHeight > 0 && i < mn_PvdItems; i++) {
-			TODO("Обработка 'hex:00=CMYK:01:FastRGB;Decode CMYK images in'");
+			TODO("РћР±СЂР°Р±РѕС‚РєР° 'hex:00=CMYK:01:FastRGB;Decode CMYK images in'");
 			if (!lstrcmpi(m_PvdItems[i].pszType, L"bool")) {
 				m_PvdItems[i].nID = addFarDialogItem(DI_CHECKBOX, 5, Y++, DialogWidth+4, 0, 0, m_PvdItems[i].bData, 0, 0, m_PvdItems[i].pszLabel);
 				nMaxHeight --;
@@ -760,15 +760,15 @@ lReopen:
 				nMaxHeight -= 2;
 			}
 		}
-		//TO DO("добавить кнопку 'Add' - создает новый параметр с запросом имени");
+		//TO DO("РґРѕР±Р°РІРёС‚СЊ РєРЅРѕРїРєСѓ 'Add' - СЃРѕР·РґР°РµС‚ РЅРѕРІС‹Р№ РїР°СЂР°РјРµС‚СЂ СЃ Р·Р°РїСЂРѕСЃРѕРј РёРјРµРЅРё");
 	}
 
-	// Статус субплагина
+	// РЎС‚Р°С‚СѓСЃ СЃСѓР±РїР»Р°РіРёРЅР°
 	addFarDialogItem(DI_TEXT,     5, Y++, 0, 0, 0, 0, DIF_BOXCOLOR | DIF_SEPARATOR, 0, GetMsg(MISubpluginMessages));
 	iPLog = addFarDialogItem(DI_EDIT,     5, Y++, DialogWidth+4, 0, 0, 0, DIF_READONLY, 0, mp_Config->pData->szStatus);
 
 
-	// И последнее - кнопки OK / Cancel
+	// Р РїРѕСЃР»РµРґРЅРµРµ - РєРЅРѕРїРєРё OK / Cancel
 	addFarDialogItem(
 		DI_TEXT, 5, Y, 0, 0, 0, 0, DIF_BOXCOLOR | DIF_SEPARATOR, 0, 0/*GetMsg(MIIgnoredExtensions)*/);
 	iReload = addFarDialogItem(
@@ -788,22 +788,22 @@ lReopen:
 	int ExitCode = -1;
 	if (DialogInit()) {
 		ExitCode = g_StartupInfo.DialogRun(mh_Dlg);
-		// По кнопкам Unload/Reload тоже сохраняем
+		// РџРѕ РєРЅРѕРїРєР°Рј Unload/Reload С‚РѕР¶Рµ СЃРѕС…СЂР°РЅСЏРµРј
 		if (ExitCode == iOk || ExitCode == iReload || ExitCode == iUnload) {
 			int nLen = 0;
 			if (mp_Config->pData->nCurrentFlags & PVD_IP_DECODE)
 			{
-				// Активные расширения
+				// РђРєС‚РёРІРЅС‹Рµ СЂР°СЃС€РёСЂРµРЅРёСЏ
 				LoadExtensionsFromDlg(iActiveExt, &(mp_Config->pActive));
-				// Неактивные расширения
+				// РќРµР°РєС‚РёРІРЅС‹Рµ СЂР°СЃС€РёСЂРµРЅРёСЏ
 				LoadExtensionsFromDlg(iInactiveExt, &(mp_Config->pInactive));
-				// Запрещенные расширения
+				// Р—Р°РїСЂРµС‰РµРЅРЅС‹Рµ СЂР°СЃС€РёСЂРµРЅРёСЏ
 				LoadExtensionsFromDlg(iForbiddenExt, &(mp_Config->pForbidden));
 				//
 				if (mp_Config->pTitle) free(mp_Config->pTitle); mp_Config->pTitle = NULL;
 				mp_Config->CreateTitle();
 
-				// Сразу сохранить расширения в реестр
+				// РЎСЂР°Р·Сѓ СЃРѕС…СЂР°РЅРёС‚СЊ СЂР°СЃС€РёСЂРµРЅРёСЏ РІ СЂРµРµСЃС‚СЂ
 				_ASSERTE(mp_Config->pActive && mp_Config->pInactive && mp_Config->pForbidden);
 				_ASSERTE(mp_Config->pData);
 				if (mp_Config->pData->pActive) free(mp_Config->pData->pActive);
@@ -827,11 +827,11 @@ lReopen:
 				}
 			}
 
-			// Строки внутренней настройки субплагина
+			// РЎС‚СЂРѕРєРё РІРЅСѓС‚СЂРµРЅРЅРµР№ РЅР°СЃС‚СЂРѕР№РєРё СЃСѓР±РїР»Р°РіРёРЅР°
 			if (mn_PvdItems > 0)
 			{
 				HKEY hKey = 0, hRoot = 0;
-				// Объект плагина (mp_Config->pData->pPlugin) мог быть не создан, если были ошибки инициализации
+				// РћР±СЉРµРєС‚ РїР»Р°РіРёРЅР° (mp_Config->pData->pPlugin) РјРѕРі Р±С‹С‚СЊ РЅРµ СЃРѕР·РґР°РЅ, РµСЃР»Рё Р±С‹Р»Рё РѕС€РёР±РєРё РёРЅРёС†РёР°Р»РёР·Р°С†РёРё
 				if (!RegOpenKeyEx(HKEY_CURRENT_USER, mp_Config->pData->pRegPath, 0, KEY_WRITE, &hRoot)) {
 					if (!RegOpenKeyEx(hRoot, L"Settings", 0, KEY_WRITE, &hKey)) {
 						for (int i=0; i<mn_PvdItems; i++) {
@@ -841,7 +841,7 @@ lReopen:
 								nLen = (int)g_StartupInfo.SendDlgMessage(mh_Dlg, DM_GETTEXTPTR, m_PvdItems[i].nID, 0);
 								if (nLen >= lstrlen(m_PvdItems[i].pszData)) {
 									free(m_PvdItems[i].pszData);
-									if (!(m_PvdItems[i].pszData = (wchar_t*)calloc(nLen+1,sizeof(wchar_t)))) break; // ошибка выделения памяти
+									if (!(m_PvdItems[i].pszData = (wchar_t*)calloc(nLen+1,sizeof(wchar_t)))) break; // РѕС€РёР±РєР° РІС‹РґРµР»РµРЅРёСЏ РїР°РјСЏС‚Рё
 								}
 								g_StartupInfo.SendDlgMessage(mh_Dlg, DM_GETTEXTPTR, m_PvdItems[i].nID, (LONG_PTR)m_PvdItems[i].pszData);
 
@@ -859,7 +859,7 @@ lReopen:
 								}
 
 							} else if (m_PvdItems[i].nType == REG_BINARY && m_PvdItems[i].nLen == 1) {
-								TODO("Здесь может быть радиокнопка - тогда нужно по другому, с обработкой nCount");
+								TODO("Р—РґРµСЃСЊ РјРѕР¶РµС‚ Р±С‹С‚СЊ СЂР°РґРёРѕРєРЅРѕРїРєР° - С‚РѕРіРґР° РЅСѓР¶РЅРѕ РїРѕ РґСЂСѓРіРѕРјСѓ, СЃ РѕР±СЂР°Р±РѕС‚РєРѕР№ nCount");
 								m_PvdItems[i].bData = DlgItem_GetCheck(g_StartupInfo, mh_Dlg, m_PvdItems[i].nID);
 								RegSetValueEx(hKey, m_PvdItems[i].szName, 0, m_PvdItems[i].nType, 
 									(LPBYTE)&(m_PvdItems[i].bData), 1);
@@ -870,18 +870,18 @@ lReopen:
 					RegCloseKey(hRoot); hRoot = 0;
 				}
 
-				if (mp_Config->pData->pPlugin) { // Объект плагина мог быть не создан, если были ошибки инициализации
+				if (mp_Config->pData->pPlugin) { // РћР±СЉРµРєС‚ РїР»Р°РіРёРЅР° РјРѕРі Р±С‹С‚СЊ РЅРµ СЃРѕР·РґР°РЅ, РµСЃР»Рё Р±С‹Р»Рё РѕС€РёР±РєРё РёРЅРёС†РёР°Р»РёР·Р°С†РёРё
 					mp_Config->pData->pPlugin->ReloadConfig2();
 				}
 			}
 			
 			
 		} else {
-			// -- по идее, измениться могли только расширения по умолчанию, а текущие трогаться не должны были
+			// -- РїРѕ РёРґРµРµ, РёР·РјРµРЅРёС‚СЊСЃСЏ РјРѕРіР»Рё С‚РѕР»СЊРєРѕ СЂР°СЃС€РёСЂРµРЅРёСЏ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ, Р° С‚РµРєСѓС‰РёРµ С‚СЂРѕРіР°С‚СЊСЃСЏ РЅРµ РґРѕР»Р¶РЅС‹ Р±С‹Р»Рё
 			#ifdef _DEBUG
 			int nDbg = 1;
 			#endif
-			// В результате нажатия кнопки "Reset" расширения могли измениться. Их нужно вернуть
+			// Р’ СЂРµР·СѓР»СЊС‚Р°С‚Рµ РЅР°Р¶Р°С‚РёСЏ РєРЅРѕРїРєРё "Reset" СЂР°СЃС€РёСЂРµРЅРёСЏ РјРѕРіР»Рё РёР·РјРµРЅРёС‚СЊСЃСЏ. РС… РЅСѓР¶РЅРѕ РІРµСЂРЅСѓС‚СЊ
 			//if (mp_Config->pSupported && mp_Config->pData->pPlugin) {
 			//	if (!mp_Config->pData->pPlugin->pSupported || lstrcmp(mp_Config->pData->pPlugin->pSupported, mp_Config->pSupported)) {
 			//		if (mp_Config->pData->pPlugin->pSupported) free(mp_Config->pData->pPlugin->pSupported);
@@ -898,7 +898,7 @@ lReopen:
 		DialogFree();
 		
 		if (ExitCode == iOk || ExitCode == iReload || ExitCode == iUnload)
-			lbRc = true; // НЕ сбрасывать, т.к. оно могло уже измениться...
+			lbRc = true; // РќР• СЃР±СЂР°СЃС‹РІР°С‚СЊ, С‚.Рє. РѕРЅРѕ РјРѕРіР»Рѕ СѓР¶Рµ РёР·РјРµРЅРёС‚СЊСЃСЏ...
 	}
 	FreeItems();
 	
@@ -999,7 +999,7 @@ int PVDDecoderConfigDlg::LoadItems()
 						if (!(pi.pszType = (wchar_t*)calloc(lstrlen(szName)+20,sizeof(wchar_t)))) break;
 						lstrcpy(pi.pszType, L"bool"); pi.pszLabel=pi.pszType+lstrlen(pi.pszType)+1; lstrcpy((wchar_t*)pi.pszLabel, szName);
 					} else {
-						TODO("Здесь может быть радиокнопка 'hex:00=CMYK:01:FastRGB;Decode CMYK images in'");
+						TODO("Р—РґРµСЃСЊ РјРѕР¶РµС‚ Р±С‹С‚СЊ СЂР°РґРёРѕРєРЅРѕРїРєР° 'hex:00=CMYK:01:FastRGB;Decode CMYK images in'");
 						if (lstrcmpi(pi.pszType, L"bool")) continue;
 					}
 				} else {
@@ -1079,7 +1079,7 @@ void PVDDecoderConfig::CreateTitle()
 	*/
 	lstrcpyn(pTitle, pName, POS1+2);
 	nLen = lstrlen(pTitle);
-	if (nLen>=POS1) { pTitle[POS1-1] = L'…'; nLen = POS1; }
+	if (nLen>=POS1) { pTitle[POS1-1] = L'вЂ¦'; nLen = POS1; }
 	while (nLen<POS1) pTitle[nLen++] = L' ';
 	pTitle[nLen++] = L'|';
 	if (pData->pPlugin) {
@@ -1089,7 +1089,7 @@ void PVDDecoderConfig::CreateTitle()
 				lstrcpyn(pTitle+nLen, pForbidden, POS2-POS1+2);
 				nLen = lstrlen(pTitle);
 			}
-			if (nLen>=POS2) { pTitle[POS2-1] = L'…'; nLen = POS2; }
+			if (nLen>=POS2) { pTitle[POS2-1] = L'вЂ¦'; nLen = POS2; }
 			while (nLen<POS2) pTitle[nLen++] = L' ';
 			pTitle[nLen++] = L'|';
 
@@ -1097,7 +1097,7 @@ void PVDDecoderConfig::CreateTitle()
 				lstrcpyn(pTitle+nLen, pInactive, POS3-POS2+2);
 				nLen = lstrlen(pTitle);
 			}
-			if (nLen>=POS3) { pTitle[POS3-1] = L'…'; nLen = POS3; }
+			if (nLen>=POS3) { pTitle[POS3-1] = L'вЂ¦'; nLen = POS3; }
 			while (nLen<POS3) pTitle[nLen++] = L' ';
 			pTitle[nLen++] = L'|';
 
@@ -1125,7 +1125,7 @@ void PVDDecoderConfig::CreateTitle()
 		lstrcpyn(pTitle+nLen, GetMsg(MIModuleWasNotLoaded), POS4-nLen+1);
 	}
 	MCHKHEAP;
-	if (lstrlen(pTitle) >= POS4) { pTitle[POS4-1] = L'…'; pTitle[POS4] = 0; }
+	if (lstrlen(pTitle) >= POS4) { pTitle[POS4-1] = L'вЂ¦'; pTitle[POS4] = 0; }
 	MCHKHEAP;
 	DBGOUTCFG(L"Done\n");
 }
@@ -1234,24 +1234,24 @@ bool PVDDecoderAboutDlg::Run()
 	int nVerTextLen = 0;
 	LPCTSTR pszText = NULL;
 
-	nVerTextLen = max(lstrlen(GetMsg(MISubpluginVersionI1)),lstrlen(GetMsg(MISubpluginVersionI2)));
+	nVerTextLen = Max(lstrlen(GetMsg(MISubpluginVersionI1)),lstrlen(GetMsg(MISubpluginVersionI2)));
 	if (nVerTextLen < 20) nVerTextLen = 20;
 
-	// Имя
+	// РРјСЏ
 	addFarDialogItem(DI_TEXT,     5, Y, 0, 0, 0, 0, 0, 0, GetMsg(MISubpluginName));
 	if (mp_Config->pData->pPlugin) pszText = mp_Config->pData->pPlugin->pName; else pszText = mp_Config->pData->pModuleFileName;
 	iPName = addFarDialogItem(DI_EDIT,     5, Y+1, DialogWidth-nVerTextLen+3, 0, 0, 0, DIF_READONLY, 0, pszText, 0);
-	// Версия (интерфейса и самого плагина)
+	// Р’РµСЂСЃРёСЏ (РёРЅС‚РµСЂС„РµР№СЃР° Рё СЃР°РјРѕРіРѕ РїР»Р°РіРёРЅР°)
 	if (mp_Config->pData->pPlugin) pszText = GetMsg((mp_Config->pData->pPlugin->nVersion==1) ? MISubpluginVersionI1 : MISubpluginVersionI2); else pszText = GetMsg(MISubpluginVersion);
 	addFarDialogItem(DI_TEXT,     DialogWidth-nVerTextLen+5, Y, 0, 0, 0, 0, 0, 0, pszText);
 	if (mp_Config->pData->pPlugin) pszText = mp_Config->pData->pPlugin->pVersion; else pszText = L"???";
 	iPVer = addFarDialogItem(DI_EDIT,     DialogWidth-nVerTextLen+5, Y+1, DialogWidth+4, 0, 0, 0, DIF_READONLY, 0, pszText, 0);
 	Y+=2;
-	// Комментарий (информация из субплагина)
+	// РљРѕРјРјРµРЅС‚Р°СЂРёР№ (РёРЅС„РѕСЂРјР°С†РёСЏ РёР· СЃСѓР±РїР»Р°РіРёРЅР°)
 	addFarDialogItem(DI_TEXT,     5, Y, 0, 0, 0, 0, 0, 0, GetMsg(MISubpluginComments));
 	if (mp_Config->pData->pPlugin) pszText = mp_Config->pData->pPlugin->pComments; else pszText = L"";
 	iPComm = addFarDialogItem(DI_EDIT,     5, Y+1, DialogWidth-nVerTextLen+3, 0, 0, 0, DIF_READONLY, 0, pszText, 0);
-	// Флаги субплагина
+	// Р¤Р»Р°РіРё СЃСѓР±РїР»Р°РіРёРЅР°
 	memset(&ModuleFlags, 0, sizeof(ModuleFlags)); memset(ModuleFlagItems, 0, sizeof(ModuleFlagItems));
 	ModuleFlags.Items = ModuleFlagItems;
 	DWORD nFlags = mp_Config->pData->pPlugin ? mp_Config->pData->pPlugin->nFlags : mp_Config->pData->nCurrentFlags;
@@ -1278,7 +1278,7 @@ bool PVDDecoderAboutDlg::Run()
 	iPFlags = addFarDialogItem(DI_COMBOBOX, DialogWidth-nVerTextLen+5, Y+1, DialogWidth+4, Y, 0, 0, DIF_DROPDOWNLIST, 0, 0);
 	DialogItems[iPFlags].Param.ListItems = &ModuleFlags;
 	Y+=2;
-	// Полный путь к субплагину
+	// РџРѕР»РЅС‹Р№ РїСѓС‚СЊ Рє СЃСѓР±РїР»Р°РіРёРЅСѓ
 	addFarDialogItem(DI_TEXT,     5, Y++, 0, 0, 0, 0, 0, 0, GetMsg(MISubpluginFullPathName));
 	pszText = mp_Config->pData->pModulePath;
 	addFarDialogItem(DI_EDIT,     5, Y++, DialogWidth+4, 0, 0, 0, DIF_READONLY, 0, pszText, 0);
@@ -1324,7 +1324,7 @@ bool PVDDecoderAboutDlg::Run()
 	}
 
 
-	// И последнее - кнопки OK / Cancel
+	// Р РїРѕСЃР»РµРґРЅРµРµ - РєРЅРѕРїРєРё OK / Cancel
 	addFarDialogItem(
 		DI_TEXT, 5, Y++, 0, 0, 0, 0, DIF_BOXCOLOR | DIF_SEPARATOR, 0, 0/*GetMsg(MIIgnoredExtensions)*/);
 

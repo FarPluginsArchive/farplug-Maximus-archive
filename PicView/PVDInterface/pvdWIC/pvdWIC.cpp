@@ -1,6 +1,6 @@
 
 #include <windows.h>
-#include "wincodec.h"
+#include <wincodec.h>
 #include <windowsx.h>
 #include "../PictureViewPlugin.h"
 #include "../PVD2Helper.h"
@@ -19,9 +19,9 @@ DWORD gnInterpolationMode = DEFAULT_INTERPOLATION_MODE;
 
 LPCWSTR gpszPluginKey = NULL;
 
-// Ôóíêöèÿ òðåáóåòñÿ òîëüêî äëÿ çàïîëíåíèÿ ïåðåìåííîé ghModule
-// Åñëè ïëàãèí ñîäåðæèò ñâîþ òî÷êó âõîäà - äëÿ èñïîëüçîâàíèÿ PVD1Helper
-// åìó íåîáõîäèìî çàïîëíÿòü ghModule ñàìîñòîÿòåëüíî
+// Ð¤ÑƒÐ½ÐºÑ†Ð¸Ñ Ñ‚Ñ€ÐµÐ±ÑƒÐµÑ‚ÑÑ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ð´Ð»Ñ Ð·Ð°Ð¿Ð¾Ð»Ð½ÐµÐ½Ð¸Ñ Ð¿ÐµÑ€ÐµÐ¼ÐµÐ½Ð½Ð¾Ð¹ ghModule
+// Ð•ÑÐ»Ð¸ Ð¿Ð»Ð°Ð³Ð¸Ð½ ÑÐ¾Ð´ÐµÑ€Ð¶Ð¸Ñ‚ ÑÐ²Ð¾ÑŽ Ñ‚Ð¾Ñ‡ÐºÑƒ Ð²Ñ…Ð¾Ð´Ð° - Ð´Ð»Ñ Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ð½Ð¸Ñ PVD1Helper
+// ÐµÐ¼Ñƒ Ð½ÐµÐ¾Ð±Ñ…Ð¾Ð´Ð¸Ð¼Ð¾ Ð·Ð°Ð¿Ð¾Ð»Ð½ÑÑ‚ÑŒ ghModule ÑÐ°Ð¼Ð¾ÑÑ‚Ð¾ÑÑ‚ÐµÐ»ÑŒÐ½Ð¾
 //BOOL WINAPI DllMain( HANDLE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved )
 //{
 //	if (ul_reason_for_call == DLL_PROCESS_ATTACH)
@@ -293,7 +293,7 @@ UINT32 __stdcall pvdInit2(pvdInitPlugin2* pInit)
 	}
 
 	memset(&ip,0,sizeof(ip));
-	memmove(&ip, pInit, min(sizeof(ip),pInit->cbSize));
+	memmove(&ip, pInit, (std::min)(sizeof(ip),static_cast<size_t>(pInit->cbSize)));
 	ghModule = ip.hModule;
 	
 	gpszPluginKey = pInit->pRegKey;
@@ -436,7 +436,7 @@ void __stdcall pvdGetFormats2(void *pContext, pvdFormats2* pFormats)
 	} else {
 		gsExtensions[0] = 0;
 	}
-	// Ñïèñîê ðàñøèðåíèé, êîòîðûå ðåíäåðÿòñÿ, íî íå íàõîäÿòñÿ ÷åðåç ðååñòð
+	// Ð¡Ð¿Ð¸ÑÐ¾Ðº Ñ€Ð°ÑÑˆÐ¸Ñ€ÐµÐ½Ð¸Ð¹, ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ðµ Ñ€ÐµÐ½Ð´ÐµÑ€ÑÑ‚ÑÑ, Ð½Ð¾ Ð½Ðµ Ð½Ð°Ñ…Ð¾Ð´ÑÑ‚ÑÑ Ñ‡ÐµÑ€ÐµÐ· Ñ€ÐµÐµÑÑ‚Ñ€
 	lstrcpy(gsExtensions, L",HDP,"); nAllLen = lstrlen(gsExtensions);
 	//lstrcpy(gsExtensions, L",HDP,JXR,"); nAllLen = lstrlen(gsExtensions);
 
@@ -515,8 +515,8 @@ void __stdcall pvdPluginInfo2(pvdInfoPlugin2 *pPluginInfo)
 	pPluginInfo->Priority = 0x800;
 	pPluginInfo->pName = L"WIC";
 	pPluginInfo->pVersion = GetVersion(pPluginInfo->hModule);
-	pPluginInfo->pComments = L"Copyright © 2009 Maximus5";
-	// UPSCALE WIC íå óìååò - íà èçîáðàæåíèè ïîÿâëÿþòñÿ àðòåôàêòû
+	pPluginInfo->pComments = L"Copyright Â© 2009 Maximus5";
+	// UPSCALE WIC Ð½Ðµ ÑƒÐ¼ÐµÐµÑ‚ - Ð½Ð° Ð¸Ð·Ð¾Ð±Ñ€Ð°Ð¶ÐµÐ½Ð¸Ð¸ Ð¿Ð¾ÑÐ²Ð»ÑÑŽÑ‚ÑÑ Ð°Ñ€Ñ‚ÐµÑ„Ð°ÐºÑ‚Ñ‹
 	pPluginInfo->Flags = PVD_IP_DECODE|PVD_IP_CANDESCALE;
 }
 
@@ -578,9 +578,9 @@ BOOL __stdcall pvdFileOpen2(void *pContext, const wchar_t *pFileName, INT64 lFil
 	{
 		ghLastWin32Error = pImage->pDecoder->GetFrameCount(&pImage->nFrames);
 		if (FAILED(ghLastWin32Error)) lstrcpy(gsLastErrFunc, L"GetFrameCount");
-		// Åñëè âåðíóë 0 - ñêîðåå âñåãî ôîðìàò íåðàñïîçíàí
+		// Ð•ÑÐ»Ð¸ Ð²ÐµÑ€Ð½ÑƒÐ» 0 - ÑÐºÐ¾Ñ€ÐµÐµ Ð²ÑÐµÐ³Ð¾ Ñ„Ð¾Ñ€Ð¼Ð°Ñ‚ Ð½ÐµÑ€Ð°ÑÐ¿Ð¾Ð·Ð½Ð°Ð½
 		if (pImage->nFrames == 0) {
-			// äëÿ NEF ôàéëîâ (ïî êðàéíåé ìåðå) âîçâðàùàåò 0
+			// Ð´Ð»Ñ NEF Ñ„Ð°Ð¹Ð»Ð¾Ð² (Ð¿Ð¾ ÐºÑ€Ð°Ð¹Ð½ÐµÐ¹ Ð¼ÐµÑ€Ðµ) Ð²Ð¾Ð·Ð²Ñ€Ð°Ñ‰Ð°ÐµÑ‚ 0
 			ghLastWin32Error = E_INVALIDARG;
 			pImageInfo->nErrNumber = PWE_UNKNOWN_FORMAT;
 		}
@@ -592,7 +592,7 @@ BOOL __stdcall pvdFileOpen2(void *pContext, const wchar_t *pFileName, INT64 lFil
 		//if (FAILED(ghLastWin32Error)) lstrcpy(gsLastErrFunc, L"SelectFrame(0)");
 	}
 
-	TODO("Ïîëó÷èòü GetMetadataQueryReader äëÿ EXIF");
+	TODO("ÐŸÐ¾Ð»ÑƒÑ‡Ð¸Ñ‚ÑŒ GetMetadataQueryReader Ð´Ð»Ñ EXIF");
 
 	if (SUCCEEDED(ghLastWin32Error)) {
 		pImageInfo->pImageContext = pImage;
@@ -698,7 +698,7 @@ BOOL __stdcall pvdPageDecode2(void *pContext, void *pImageContext, pvdInfoDecode
 					(WICBitmapInterpolationMode)gnInterpolationMode
 					);
 				if (FAILED(ghLastWin32Error)) lstrcpy(gsLastErrFunc, L"pScaler->Initialize()");
-				TODO("Interpolation mode ìîæíî âûíåñòè â íàñòðîéêó WIC.pvd");
+				TODO("Interpolation mode Ð¼Ð¾Ð¶Ð½Ð¾ Ð²Ñ‹Ð½ÐµÑÑ‚Ð¸ Ð² Ð½Ð°ÑÑ‚Ñ€Ð¾Ð¹ÐºÑƒ WIC.pvd");
 				if (SUCCEEDED(hr)) {
 					lDecodeWidth = pDecodeInfo->lWidth;
 					lDecodeHeight = pDecodeInfo->lHeight;
@@ -714,7 +714,7 @@ BOOL __stdcall pvdPageDecode2(void *pContext, void *pImageContext, pvdInfoDecode
 		// Format convert to 32bppBGR
 		if (SUCCEEDED(ghLastWin32Error))
 		{
-			WICDouble dbl = {0,0};
+			double dbl = 0.0;
 			
 			hr = ghLastWin32Error = pConverter->Initialize(
 				pScaler ? pScaler : pImage->pOriginalBitmapSource,   // Input bitmap to convert
@@ -738,7 +738,7 @@ BOOL __stdcall pvdPageDecode2(void *pContext, void *pImageContext, pvdInfoDecode
 		SafeRelease(pConverter);
 
 		//if (SUCCEEDED(ghLastWin32Error)) {
-		//	TODO("Ýòî íåõîðîøî ïðè Descale - îñòàâëÿòü èñõîäíèê íóæíî");
+		//	TODO("Ð­Ñ‚Ð¾ Ð½ÐµÑ…Ð¾Ñ€Ð¾ÑˆÐ¾ Ð¿Ñ€Ð¸ Descale - Ð¾ÑÑ‚Ð°Ð²Ð»ÑÑ‚ÑŒ Ð¸ÑÑ…Ð¾Ð´Ð½Ð¸Ðº Ð½ÑƒÐ¶Ð½Ð¾");
 		//	SafeRelease(pImage->pOriginalBitmapSource);
 		//	pImage->pOriginalBitmapSource = pToRenderBitmapSource;
 		//	pToRenderBitmapSource = NULL;
@@ -749,7 +749,7 @@ BOOL __stdcall pvdPageDecode2(void *pContext, void *pImageContext, pvdInfoDecode
 	if (SUCCEEDED(hr)) {
 		pDecodeInfo->lWidth = lDecodeWidth;
 		pDecodeInfo->lHeight = lDecodeHeight;
-		// lSrcWidth & lSrcHeight - íå òðîãàåì, ò.ê. ðåàëüíûå ðàçìåðû èçîáðàæåíèÿ íå ìåíÿëèñü
+		// lSrcWidth & lSrcHeight - Ð½Ðµ Ñ‚Ñ€Ð¾Ð³Ð°ÐµÐ¼, Ñ‚.Ðº. Ñ€ÐµÐ°Ð»ÑŒÐ½Ñ‹Ðµ Ñ€Ð°Ð·Ð¼ÐµÑ€Ñ‹ Ð¸Ð·Ð¾Ð±Ñ€Ð°Ð¶ÐµÐ½Ð¸Ñ Ð½Ðµ Ð¼ÐµÐ½ÑÐ»Ð¸ÑÑŒ
 		pDecodeInfo->nBPP = 32;
 		pDecodeInfo->Flags = pImage->bAlpha ? PVD_IDF_ALPHA : 0;
 		pDecodeInfo->ColorModel = pImage->bAlpha ? PVD_CM_BGRA : PVD_CM_BGR;
@@ -759,7 +759,7 @@ BOOL __stdcall pvdPageDecode2(void *pContext, void *pImageContext, pvdInfoDecode
 			pDecodeInfo->nErrNumber = PWE_NOT_ENOUGH_MEMORY;
 			return FALSE;
 		} else {
-			TODO("Ïîïðîáîâàòü ïåðåéòè íà IWICBitmap::Lock");
+			TODO("ÐŸÐ¾Ð¿Ñ€Ð¾Ð±Ð¾Ð²Ð°Ñ‚ÑŒ Ð¿ÐµÑ€ÐµÐ¹Ñ‚Ð¸ Ð½Ð° IWICBitmap::Lock");
 			hr = ghLastWin32Error = pToRenderBitmapSource->CopyPixels(
 				NULL,
 				pDecodeInfo->lImagePitch,

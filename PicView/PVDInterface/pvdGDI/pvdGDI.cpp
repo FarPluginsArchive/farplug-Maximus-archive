@@ -241,7 +241,7 @@ struct GDIPlusDecoder
 			REG_BINARY, &bDefault, &bForceSelfDisplay, sizeof(bForceSelfDisplay));
 
 		bDefault = false;
-		// Что-то в GDI+ CMYK изображения всегда загружаются сразу как PixelFormat24bppRGB
+		// Р§С‚Рѕ-С‚Рѕ РІ GDI+ CMYK РёР·РѕР±СЂР°Р¶РµРЅРёСЏ РІСЃРµРіРґР° Р·Р°РіСЂСѓР¶Р°СЋС‚СЃСЏ СЃСЂР°Р·Сѓ РєР°Рє PixelFormat24bppRGB
 		//set.GetParam(L"CMYK2RGB", L"bool;Convert CMYK to RGB internally", REG_BINARY, &bDefault, &bCMYK2RGB, sizeof(bCMYK2RGB));
 	}
 
@@ -392,7 +392,7 @@ struct GDIPlusImage
 	//
 	UINT lWidth, lHeight, pf, nBPP, nPages, lFrameTime, nActivePage, nTransparent, nImgFlags;
 	bool Animation;
-	bool bRotated; // наверное нужно только один раз выполнять
+	bool bRotated; // РЅР°РІРµСЂРЅРѕРµ РЅСѓР¶РЅРѕ С‚РѕР»СЊРєРѕ РѕРґРёРЅ СЂР°Р· РІС‹РїРѕР»РЅСЏС‚СЊ
 	wchar_t FormatName[0x80];
 
 	void AddRef() {
@@ -500,22 +500,22 @@ struct GDIPlusImage
 		lstrcpyn(szFileName, pFileName, MAX_PATH);
 		#endif
 		
-		// Практика показывает, что для GDI+ предпочтительнее работать с файлами. Меньше глюков.
+		// РџСЂР°РєС‚РёРєР° РїРѕРєР°Р·С‹РІР°РµС‚, С‡С‚Рѕ РґР»СЏ GDI+ РїСЂРµРґРїРѕС‡С‚РёС‚РµР»СЊРЅРµРµ СЂР°Р±РѕС‚Р°С‚СЊ СЃ С„Р°Р№Р»Р°РјРё. РњРµРЅСЊС€Рµ РіР»СЋРєРѕРІ.
 		if (lFileSize && pFileName && *pFileName) {
 			img = OpenBitmapFromFile(pFileName);
-			//TODO("Обязательно выставить флажок FILE_REQUIRED");
+			//TODO("РћР±СЏР·Р°С‚РµР»СЊРЅРѕ РІС‹СЃС‚Р°РІРёС‚СЊ С„Р»Р°Р¶РѕРє FILE_REQUIRED");
 			if (img)
 				return img;
 		}
 
 		if (gdi->bCoInitialized && pBuffer && lBuffer && (!lFileSize || (lFileSize == (i64)lBuffer))) {
 			strm = new MStream();
-			// Если нужно создать копию памяти - делать Write & Seek
-			// Если выделять память не нужно (использовать ссылку на pBuffer) - SetData
-			// Сейчас PicView не хранит открытый буфер
+			// Р•СЃР»Рё РЅСѓР¶РЅРѕ СЃРѕР·РґР°С‚СЊ РєРѕРїРёСЋ РїР°РјСЏС‚Рё - РґРµР»Р°С‚СЊ Write & Seek
+			// Р•СЃР»Рё РІС‹РґРµР»СЏС‚СЊ РїР°РјСЏС‚СЊ РЅРµ РЅСѓР¶РЅРѕ (РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ СЃСЃС‹Р»РєСѓ РЅР° pBuffer) - SetData
+			// РЎРµР№С‡Р°СЃ PicView РЅРµ С…СЂР°РЅРёС‚ РѕС‚РєСЂС‹С‚С‹Р№ Р±СѓС„РµСЂ
 			nLastError = strm->Write(pBuffer, lBuffer, NULL);
 			//strm->SetData(pBuffer, lBuffer);
-			// Если вдруг памяти не хватило - попробуем
+			// Р•СЃР»Рё РІРґСЂСѓРі РїР°РјСЏС‚Рё РЅРµ С…РІР°С‚РёР»Рѕ - РїРѕРїСЂРѕР±СѓРµРј
 			if (nLastError == S_OK) {
 				LARGE_INTEGER ll; ll.QuadPart = 0;
 				strm->Seek(ll, STREAM_SEEK_SET, NULL);
@@ -543,7 +543,7 @@ struct GDIPlusImage
 		img = OpenBitmap(pFileName, lFileSize, pBuffer, lBuffer);
 
 		if (!img) {
-			//nErrNumber = gdi->nErrNumber; -- ошибка УЖЕ в nErrNumber
+			//nErrNumber = gdi->nErrNumber; -- РѕС€РёР±РєР° РЈР–Р• РІ nErrNumber
 
 		} else {
 			lRc = gdi->GdipGetImageWidth(img, &lWidth);
@@ -655,7 +655,7 @@ struct GDIPlusImage
 				bRotated = true;
 				int nOrient;
 				if (GetExifTagValueAsInt(PropertyTagOrientation, nOrient)) {
-					// Теперь - крутим
+					// РўРµРїРµСЂСЊ - РєСЂСѓС‚РёРј
 					Gdiplus::RotateFlipType rft = Gdiplus::RotateNoneFlipNone;
 					switch (nOrient) {
 				        case 3: rft = Gdiplus::Rotate180FlipNone; break;
@@ -668,7 +668,7 @@ struct GDIPlusImage
 					}
 					if (rft) {
 						lRc = gdi->GdipImageRotateFlip(img, rft);
-						// Размеры обновятся ниже
+						// Р Р°Р·РјРµСЂС‹ РѕР±РЅРѕРІСЏС‚СЃСЏ РЅРёР¶Рµ
 					}
 				}
 			}
@@ -754,7 +754,7 @@ struct GDIPlusImage
 			if (!bmd) {
 				nErrNumber = PGE_NOT_ENOUGH_MEMORY;
 			} else if (lbAsDisplay) {
-				// GDI+ используется как дисплей
+				// GDI+ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РєР°Рє РґРёСЃРїР»РµР№
 				result = true;
 				pPage->bBitmapData = false;
 				BOOL lbHasAlpha = (nImgFlags & Gdiplus::ImageFlagsHasAlpha) == Gdiplus::ImageFlagsHasAlpha;
@@ -772,13 +772,13 @@ struct GDIPlusImage
 				pDecodeInfo->lParam = (LPARAM)pPage;
 				
 			} else if (SelectPage(nActivePage)) {
-				TODO("прозрачные 8-битные GIF отрисовывются на белом фоне");
+				TODO("РїСЂРѕР·СЂР°С‡РЅС‹Рµ 8-Р±РёС‚РЅС‹Рµ GIF РѕС‚СЂРёСЃРѕРІС‹РІСЋС‚СЃСЏ РЅР° Р±РµР»РѕРј С„РѕРЅРµ");
 				BOOL lbHasAlpha = (nImgFlags & Gdiplus::ImageFlagsHasAlpha) == Gdiplus::ImageFlagsHasAlpha;
 				pDecodeInfo->pPalette = NULL;
 				pDecodeInfo->Flags = PVD_IDF_READONLY;
 				pDecodeInfo->ColorModel = PVD_CM_BGR;
 				TODO("PixelFormat32bppCMYK ???");
-				// К сожалению, GDI+ декодирует CMYK СРАЗУ как YCbCrK, что не дает возможности отдать данные в CMYK
+				// Рљ СЃРѕР¶Р°Р»РµРЅРёСЋ, GDI+ РґРµРєРѕРґРёСЂСѓРµС‚ CMYK РЎР РђР—РЈ РєР°Рє YCbCrK, С‡С‚Рѕ РЅРµ РґР°РµС‚ РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё РѕС‚РґР°С‚СЊ РґР°РЅРЅС‹Рµ РІ CMYK
 				if (pf == PixelFormat1bppIndexed || pf == PixelFormat4bppIndexed || pf == PixelFormat8bppIndexed)
 				{
 					INT cbPalette = 0;
@@ -794,7 +794,7 @@ struct GDIPlusImage
 							memmove(pDecodeInfo->pPalette, pPalette->Entries, pPalette->Count*sizeof(UINT32));
 							if (lbHasAlpha) {
 								UINT32 n, nIdx = 0, nCount = 0;
-								// Найти в палитре прозрачный цвет
+								// РќР°Р№С‚Рё РІ РїР°Р»РёС‚СЂРµ РїСЂРѕР·СЂР°С‡РЅС‹Р№ С†РІРµС‚
 								for (n = 0; n < pPalette->Count; n++) {
 									if ((pPalette->Entries[n] & 0xFF000000) != 0xFF000000) {
 										if (nCount == 0) nIdx = n;
@@ -890,7 +890,7 @@ UINT32 __stdcall pvdInit2(pvdInitPlugin2* pInit)
 	}
 
 	memset(&ip,0,sizeof(ip));
-	memmove(&ip, pInit, min(sizeof(ip),pInit->cbSize));
+	memmove(&ip, pInit, (std::min)(sizeof(ip),static_cast<size_t>(pInit->cbSize)));
 	ghModule = ip.hModule;
 
 	GDIPlusDecoder *pDecoder = (GDIPlusDecoder*) CALLOC(sizeof(GDIPlusDecoder));
@@ -904,7 +904,7 @@ UINT32 __stdcall pvdInit2(pvdInitPlugin2* pInit)
 		return 0;
 	}
 
-	//pInit->pContext = pDecoder; -- Уже вернул pDecoder->Init
+	//pInit->pContext = pDecoder; -- РЈР¶Рµ РІРµСЂРЅСѓР» pDecoder->Init
 	return PVD_UNICODE_INTERFACE_VERSION;
 }
 
@@ -933,7 +933,7 @@ void __stdcall pvdPluginInfo2(pvdInfoPlugin2 *pPluginInfo)
 	pPluginInfo->Priority = 0x200;
 	pPluginInfo->pName = L"GDI+";
 	pPluginInfo->pVersion = GetVersion(pPluginInfo->hModule);
-	pPluginInfo->pComments = L"Copyright © 2009 Maximus5";
+	pPluginInfo->pComments = L"Copyright В© 2009 Maximus5";
 	pPluginInfo->Flags = PVD_IP_DECODE|PVD_IP_DISPLAY;
 }
 
@@ -1038,7 +1038,7 @@ void __stdcall pvdReloadConfig2(void *pContext)
 
 
 
-// Инициализация контекста дисплея. Используется тот pContext, который был получен в pvdInit2
+// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РєРѕРЅС‚РµРєСЃС‚Р° РґРёСЃРїР»РµСЏ. РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С‚РѕС‚ pContext, РєРѕС‚РѕСЂС‹Р№ Р±С‹Р» РїРѕР»СѓС‡РµРЅ РІ pvdInit2
 BOOL __stdcall pvdDisplayInit2(void *pContext, pvdInfoDisplayInit2* pDisplayInit)
 {
 	GDIPlusDecoder *pDecoder = (GDIPlusDecoder*)pContext;
@@ -1072,7 +1072,7 @@ typedef struct tag_GdiDrawBitmap
 	wchar_t szFileName[MAX_PATH];
 	UINT32 iPage;
 #endif
-	struct GDIPlusImage *img; // исходное изображение
+	struct GDIPlusImage *img; // РёСЃС…РѕРґРЅРѕРµ РёР·РѕР±СЂР°Р¶РµРЅРёРµ
 	Gdiplus::GpBitmap* bitmap;
 	LPBYTE pData;
 	DWORD nLastZoom;
@@ -1083,7 +1083,7 @@ typedef struct tag_GdiDrawBitmap
 
 #define Abs(i) ((i < 0) ? -(i) : (i))
 
-// Создать контекст для отображения картинки в pContext (перенос декодированных данных в видеопамять)
+// РЎРѕР·РґР°С‚СЊ РєРѕРЅС‚РµРєСЃС‚ РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РєР°СЂС‚РёРЅРєРё РІ pContext (РїРµСЂРµРЅРѕСЃ РґРµРєРѕРґРёСЂРѕРІР°РЅРЅС‹С… РґР°РЅРЅС‹С… РІ РІРёРґРµРѕРїР°РјСЏС‚СЊ)
 BOOL __stdcall pvdDisplayCreate2(void *pContext, pvdInfoDisplayCreate2* pDisplayCreate)
 {
 	_ASSERTE(pContext);
@@ -1137,8 +1137,8 @@ BOOL __stdcall pvdDisplayCreate2(void *pContext, pvdInfoDisplayCreate2* pDisplay
 	} else if (pDisplayCreate->pImage->nBPP == 32 && pDisplayCreate->pImage->ColorModel == PVD_CM_BGRA) {
 		pf = PixelFormat32bppARGB;
 	} else if (pDisplayCreate->pImage->nBPP == 32 && pDisplayCreate->pImage->ColorModel == PVD_CM_CMYK) {
-		TODO("CMYK переделать на нашу коррекцию?");
-		pf = PixelFormat32bppCMYK;
+		TODO("CMYK РїРµСЂРµРґРµР»Р°С‚СЊ РЅР° РЅР°С€Сѓ РєРѕСЂСЂРµРєС†РёСЋ?");
+		pf = 15 | (32 << 8); // PixelFormat32bppCMYK
 	} else if (pDisplayCreate->pImage->nBPP == 16 && pDisplayCreate->pImage->ColorModel == PVD_CM_BGR) {
 		pf = PixelFormat16bppRGB555;
 	} else if (pDisplayCreate->pImage->nBPP == 1 && pDisplayCreate->pImage->pPalette) {
@@ -1156,9 +1156,9 @@ BOOL __stdcall pvdDisplayCreate2(void *pContext, pvdInfoDisplayCreate2* pDisplay
 	//_ASSERTE(pDisplayCreate->pImage->pPalette == NULL);
 	//*pDisplayCreate->ppDisplayContext = (LPVOID)1;
 	Gdiplus::GpStatus stat;
-	WARNING("!!! По возможности не создавать копию изображения, а использовать существующий GDIPlusImage с его img");
-	WARNING("!!! Если в img более одного Page - делать Clone");
-	WARNING("!!! Если в img более одного Page перед Clone убедиться, что выбрана нужная страница (nActivePage)");
+	WARNING("!!! РџРѕ РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё РЅРµ СЃРѕР·РґР°РІР°С‚СЊ РєРѕРїРёСЋ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ, Р° РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёР№ GDIPlusImage СЃ РµРіРѕ img");
+	WARNING("!!! Р•СЃР»Рё РІ img Р±РѕР»РµРµ РѕРґРЅРѕРіРѕ Page - РґРµР»Р°С‚СЊ Clone");
+	WARNING("!!! Р•СЃР»Рё РІ img Р±РѕР»РµРµ РѕРґРЅРѕРіРѕ Page РїРµСЂРµРґ Clone СѓР±РµРґРёС‚СЊСЃСЏ, С‡С‚Рѕ РІС‹Р±СЂР°РЅР° РЅСѓР¶РЅР°СЏ СЃС‚СЂР°РЅРёС†Р° (nActivePage)");
 	//Gdiplus::GpBitmap* bitmap = NULL;
 	GdiDrawBitmap *p = (GdiDrawBitmap*)CALLOC(sizeof(GdiDrawBitmap));
 	if (!p) {
@@ -1169,7 +1169,7 @@ BOOL __stdcall pvdDisplayCreate2(void *pContext, pvdInfoDisplayCreate2* pDisplay
 	int lImagePitch = pDisplayCreate->pImage->lImagePitch;
 	INT lGdiStride = (((pDisplayCreate->pImage->lWidth+31)>>5)<<5)*3;
 	if (lGdiStride != Abs(pDisplayCreate->pImage->lImagePitch)) {
-		// В расчете на 32 BPP
+		// Р’ СЂР°СЃС‡РµС‚Рµ РЅР° 32 BPP
 		lGdiStride = (((pDisplayCreate->pImage->lWidth+31)>>5)<<7);
 	}
 	_ASSERTE(Abs(pDisplayCreate->pImage->lImagePitch) <= lGdiStride);
@@ -1184,13 +1184,13 @@ BOOL __stdcall pvdDisplayCreate2(void *pContext, pvdInfoDisplayCreate2* pDisplay
 
 	LPBYTE pStride0 = p->pData;
 
-	TODO("Хорошо бы сначала попробовать не выполнять наши функции преобразования. Может GDI+ сам справится");
+	TODO("РҐРѕСЂРѕС€Рѕ Р±С‹ СЃРЅР°С‡Р°Р»Р° РїРѕРїСЂРѕР±РѕРІР°С‚СЊ РЅРµ РІС‹РїРѕР»РЅСЏС‚СЊ РЅР°С€Рё С„СѓРЅРєС†РёРё РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ. РњРѕР¶РµС‚ GDI+ СЃР°Рј СЃРїСЂР°РІРёС‚СЃСЏ");
 	_ASSERTE(nSize >= nSrcSize);
 	if (nSize >= nSrcSize && !bPalette) {
 		if (pDisplayCreate->pImage->pPalette && ip.MessageLog)
 			ip.MessageLog(ip.pCallbackContext, L"pImage->pPalette will be ignored", 1);
 
-		// декодеру GDI+ исходная память требуется постоянно. придется копировать
+		// РґРµРєРѕРґРµСЂСѓ GDI+ РёСЃС…РѕРґРЅР°СЏ РїР°РјСЏС‚СЊ С‚СЂРµР±СѓРµС‚СЃСЏ РїРѕСЃС‚РѕСЏРЅРЅРѕ. РїСЂРёРґРµС‚СЃСЏ РєРѕРїРёСЂРѕРІР°С‚СЊ
 		memmove(p->pData, pDisplayCreate->pImage->pImage, nSrcSize);
 
 		if (lImagePitch < 0) {
@@ -1278,7 +1278,7 @@ BOOL __stdcall pvdDisplayCreate2(void *pContext, pvdInfoDisplayCreate2* pDisplay
 
 	
 
-	//PRAGMA_ERROR("Does not work"); // Она НЕ копирует данные, а ссылается на переданные... в итоге отрисовка падает, т.к. память уже освобождена
+	//PRAGMA_ERROR("Does not work"); // РћРЅР° РќР• РєРѕРїРёСЂСѓРµС‚ РґР°РЅРЅС‹Рµ, Р° СЃСЃС‹Р»Р°РµС‚СЃСЏ РЅР° РїРµСЂРµРґР°РЅРЅС‹Рµ... РІ РёС‚РѕРіРµ РѕС‚СЂРёСЃРѕРІРєР° РїР°РґР°РµС‚, С‚.Рє. РїР°РјСЏС‚СЊ СѓР¶Рµ РѕСЃРІРѕР±РѕР¶РґРµРЅР°
 	stat = gdi->GdipCreateBitmapFromScan0(
 		pDisplayCreate->pImage->lWidth, pDisplayCreate->pImage->lHeight,
 		lImagePitch, pf,
@@ -1321,8 +1321,8 @@ BOOL ColorFill(GDIPlusDecoder* gdi, GdiDrawContext *p, RECT ImgRect, DWORD nBack
 	BOOL lbRc = FALSE;
 	Gdiplus::GpStatus stat;
 
-	ImgRect.left = max(ImgRect.left-2,0); 
-	ImgRect.top = max(ImgRect.top-2,0);
+	ImgRect.left = (std::max)(ImgRect.left-2,0L); 
+	ImgRect.top = (std::max)(ImgRect.top-2,0L);
 	ImgRect.bottom+=2;
 	ImgRect.right+=2;
 
@@ -1340,7 +1340,7 @@ BOOL ColorFill(GDIPlusDecoder* gdi, GdiDrawContext *p, RECT ImgRect, DWORD nBack
 	return lbRc;
 }
 
-// Собственно отрисовка. Функция должна при необходимости выполнять "Stretch"
+// РЎРѕР±СЃС‚РІРµРЅРЅРѕ РѕС‚СЂРёСЃРѕРІРєР°. Р¤СѓРЅРєС†РёСЏ РґРѕР»Р¶РЅР° РїСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё РІС‹РїРѕР»РЅСЏС‚СЊ "Stretch"
 BOOL __stdcall pvdDisplayPaint2(void *pContext, void* pDisplayContext, pvdInfoDisplayPaint2* pDisplayPaint)
 {
 	_ASSERTE(pDisplayPaint->cbSize >= sizeof(pvdInfoDisplayPaint2));
@@ -1381,7 +1381,7 @@ BOOL __stdcall pvdDisplayPaint2(void *pContext, void* pDisplayContext, pvdInfoDi
 				return FALSE;
 			}
 
-			TODO("Возможно, для ускорения отрисовки вообще не создавать CompatibleDC если картинка НЕ прозрачная");
+			TODO("Р’РѕР·РјРѕР¶РЅРѕ, РґР»СЏ СѓСЃРєРѕСЂРµРЅРёСЏ РѕС‚СЂРёСЃРѕРІРєРё РІРѕРѕР±С‰Рµ РЅРµ СЃРѕР·РґР°РІР°С‚СЊ CompatibleDC РµСЃР»Рё РєР°СЂС‚РёРЅРєР° РќР• РїСЂРѕР·СЂР°С‡РЅР°СЏ");
 			p->hCompDC = CreateCompatibleDC(p->pstruct.hdc);
 			if (p->hCompDC)
 			{
@@ -1422,7 +1422,7 @@ BOOL __stdcall pvdDisplayPaint2(void *pContext, void* pDisplayContext, pvdInfoDi
 					pDisplayPaint->nErrNumber = PGE_WIN32_ERROR;
 				}
 			} else {
-				lbRc = TRUE; // все уже отрисовано
+				lbRc = TRUE; // РІСЃРµ СѓР¶Рµ РѕС‚СЂРёСЃРѕРІР°РЅРѕ
 			}
 			stat = gdi->GdipDeleteGraphics(p->pGr);
 			SelectObject(p->hCompDC, p->hOldBMP);
@@ -1441,7 +1441,7 @@ BOOL __stdcall pvdDisplayPaint2(void *pContext, void* pDisplayContext, pvdInfoDi
 	case PVD_IDP_COLORFILL:
 		{
 			if (p->hCompDC) {
-				lbRc = TRUE; // заливка идет один раз на весь CompatibleDC
+				lbRc = TRUE; // Р·Р°Р»РёРІРєР° РёРґРµС‚ РѕРґРёРЅ СЂР°Р· РЅР° РІРµСЃСЊ CompatibleDC
 			} else {
 				lbRc = ColorFill(gdi, p, pDisplayPaint->DisplayRect, pDisplayPaint->nBackColor);
 			}
@@ -1469,8 +1469,8 @@ BOOL __stdcall pvdDisplayPaint2(void *pContext, void* pDisplayContext, pvdInfoDi
 				*/
 				)
 			{
-				// Нужно вызвать полное декодирование изображения
-				// Lock - нельзя, т.к. начинает тормозить вообще все по черному
+				// РќСѓР¶РЅРѕ РІС‹Р·РІР°С‚СЊ РїРѕР»РЅРѕРµ РґРµРєРѕРґРёСЂРѕРІР°РЅРёРµ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
+				// Lock - РЅРµР»СЊР·СЏ, С‚.Рє. РЅР°С‡РёРЅР°РµС‚ С‚РѕСЂРјРѕР·РёС‚СЊ РІРѕРѕР±С‰Рµ РІСЃРµ РїРѕ С‡РµСЂРЅРѕРјСѓ
 				//Gdiplus::GpRect rect(0, 0, pb->img->lWidth, pb->img->lHeight);
 				//Gdiplus::BitmapData bmd;
 				//stat = gdi->GdipBitmapLockBits(pb->bitmap, &rect, Gdiplus::ImageLockModeRead, pb->img->pf, &bmd);
@@ -1483,9 +1483,9 @@ BOOL __stdcall pvdDisplayPaint2(void *pContext, void* pDisplayContext, pvdInfoDi
 				{
 					DebugString(L"Starning 'decoding' in 100%...");
 					Gdiplus::GpGraphics *pGr = NULL;
-					int nShowWidth  = min(pDisplayPaint->DisplayRect.right-pDisplayPaint->DisplayRect.left,
+					int nShowWidth  = (std::min)(pDisplayPaint->DisplayRect.right-pDisplayPaint->DisplayRect.left,
 					                      pDisplayPaint->ImageRect.right-pDisplayPaint->ImageRect.left);
-					int nShowHeight = min(pDisplayPaint->DisplayRect.bottom-pDisplayPaint->DisplayRect.top,
+					int nShowHeight = (std::min)(pDisplayPaint->DisplayRect.bottom-pDisplayPaint->DisplayRect.top,
 					                      pDisplayPaint->ImageRect.bottom-pDisplayPaint->ImageRect.top);
 					HBITMAP hCompBMP = (HBITMAP)CreateCompatibleBitmap(p->pstruct.hdc, nShowWidth, nShowHeight);
 					HBITMAP hOldBMP = (HBITMAP)SelectObject(hCompDC, hCompBMP);
@@ -1516,7 +1516,7 @@ BOOL __stdcall pvdDisplayPaint2(void *pContext, void* pDisplayContext, pvdInfoDi
 			
 			PaintDebugString(L"Drawing pb->bitmap in p->pGr...");
 
-			WARNING("Если падает - то следующее обращение к bitmap вызовет ObjectBusy");
+			WARNING("Р•СЃР»Рё РїР°РґР°РµС‚ - С‚Рѕ СЃР»РµРґСѓСЋС‰РµРµ РѕР±СЂР°С‰РµРЅРёРµ Рє bitmap РІС‹Р·РѕРІРµС‚ ObjectBusy");
 			stat = gdi->GdipDrawImageRectRectI(
 				p->pGr, pb->bitmap,
 				pDisplayPaint->DisplayRect.left, pDisplayPaint->DisplayRect.top,
@@ -1536,7 +1536,7 @@ BOOL __stdcall pvdDisplayPaint2(void *pContext, void* pDisplayContext, pvdInfoDi
 	return lbRc;
 }
 
-// Закрыть контекст для отображения картинки (освободить видеопамять)
+// Р—Р°РєСЂС‹С‚СЊ РєРѕРЅС‚РµРєСЃС‚ РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РєР°СЂС‚РёРЅРєРё (РѕСЃРІРѕР±РѕРґРёС‚СЊ РІРёРґРµРѕРїР°РјСЏС‚СЊ)
 void __stdcall pvdDisplayClose2(void *pContext, void* pDisplayContext)
 {
 	_ASSERTE(pContext);
@@ -1564,7 +1564,7 @@ void __stdcall pvdDisplayClose2(void *pContext, void* pDisplayContext)
 	}
 }
 
-// Закрыть модуль вывода (освобождение интерфейсов DX, отцепиться от окна)
+// Р—Р°РєСЂС‹С‚СЊ РјРѕРґСѓР»СЊ РІС‹РІРѕРґР° (РѕСЃРІРѕР±РѕР¶РґРµРЅРёРµ РёРЅС‚РµСЂС„РµР№СЃРѕРІ DX, РѕС‚С†РµРїРёС‚СЊСЃСЏ РѕС‚ РѕРєРЅР°)
 void __stdcall pvdDisplayExit2(void *pContext)
 {
 	GDIPlusDecoder *pDecoder = (GDIPlusDecoder*)pContext;
